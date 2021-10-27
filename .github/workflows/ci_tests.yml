@@ -17,7 +17,7 @@ jobs:
           toolchain: stable
           components: clippy
       - run: |
-          sudo apt-get install -y clang-12
+          sudo apt install -y clang-12
           cargo clippy -- -D warnings
 
   unittests_check:
@@ -50,7 +50,7 @@ jobs:
           python-version: ${{ matrix.python.py }}
       - run: |
           python -m pip install numpy
-          sudo apt-get install -y clang-12
+          sudo apt install -y clang-12
           cargo test --workspace --no-default-features
           cargo fmt --all -- --check
   
