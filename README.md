@@ -25,12 +25,12 @@ Based on QuEST qoqo supports the simulation of error-free and noisy quantum comp
 qoqo-quest is designed to be able to simulate all operations that are part of qoqo.
 For usage examples see the examples section of [qoqo](https://github.com/HQSquantumsimulations/qoqo/)
 
-## roqoqo-mock
+## roqoqo-quest
 
-[![Crates.io](https://img.shields.io/crates/v/roqoqo-mock)](https://crates.io/crates/roqoqo-mock)
+[![Crates.io](https://img.shields.io/crates/v/roqoqo-quest)](https://crates.io/crates/roqoqo-quest)
 [![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/ci_tests/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions)
-[![docs.rs](https://img.shields.io/docsrs/roqoqo-mock)](https://docs.rs/roqoqo-mock/)
-![Crates.io](https://img.shields.io/crates/l/roqoqo-mock)
+[![docs.rs](https://img.shields.io/docsrs/roqoqo-quest)](https://docs.rs/roqoqo-quest/)
+![Crates.io](https://img.shields.io/crates/l/roqoqo-quest)
 
 [QuEST](https://github.com/QuEST-Kit/QuEST) based simulator backend for the roqoqo quantum toolkit by [HQS Quantum Simulations](https://quantumsimulations.de).
 
