@@ -20,8 +20,7 @@ doctest = false
 
 [dependencies]
 quest-sys = {version="0.1", path="../quest-sys", default-features=false}
-roqoqo = {git="https://github.com/nfwvogt/qoqo.git", branch="pragma_change_device"}
-# roqoqo = {version ="0.7", features=["serialize"]}
+roqoqo = {version ="0.7", features=["serialize"]}
 
 qoqo_calculator = { version="0.3"}
 num-complex = {version="0.4"}

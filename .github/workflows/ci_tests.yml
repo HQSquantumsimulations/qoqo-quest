@@ -1,0 +1,137 @@
+name: ci_tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  clippy_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: clippy
+      - run: |
+          sudo apt-get install -y clang-12
+          cargo clippy -- -D warnings
+
+  unittests_check:
+    name: unittests_check-${{ matrix.combinations.runs_on }}
+    runs-on: ${{ matrix.combinations.runs_on }}
+    strategy:
+      matrix:
+        combinations: [
+          { runs_on: "macOS-latest", rust: "x86_64-apple-darwin" },
+          { runs_on: "ubuntu-latest",  rust: "x86_64-unknown-linux-gnu" },
+          { runs_on: "windows-latest", rust: "x86_64-pc-windows-msvc" },
+        ]
+        python: [
+            {py: 3.6, interpreter: "python3.6"},
+            {py: 3.7, interpreter: "python3.7"},
+            {py: 3.8, interpreter: "python3.8"},
+            {py: 3.9, interpreter: "python3.9"}
+        ]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          target: ${{ matrix.combinations.rust }}
+          default: true
+          components: rustfmt
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python.py }}
+      - run: |
+          python -m pip install numpy
+          sudo apt-get install -y clang-12
+          cargo test --workspace --no-default-features
+          cargo fmt --all -- --check
+  
+  # doctes_check:
+  #   name: unittests_check-${{ matrix.combinations.runs_on }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         target: x86_64-unknown-linux-gnu
+  #         default: true
+  #     - run: |
+  #         cargo test --doc --package=roqoqo-quest
+
+  # code_coverage_roqoqo:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #           toolchain: nightly
+  #           components: clippy
+  #           override: true
+  #     - run: |
+  #         rustup component add llvm-tools-preview
+  #         export RUSTFLAGS="-Zinstrument-coverage"
+  #         export RUSTDOCFLAGS="-Zinstrument-coverage"
+  #         cargo build --verbose
+  #         LLVM_PROFILE_FILE="coverage-%p-%m.profraw" cargo +nightly test --package=roqoqo --no-default-features
+  #         cd roqoqo-quest/
+  #         cargo install grcov
+  #         grcov . --binary-path ../target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "cargo" --ignore "/mod.rs" --ignore "/lib.rs" --ignore "*/_auto_generated_operations.rs" --keep-only "src/*" -o lcov_roqoqo.info
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v2
+  #       with:
+  #         # token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: lcov_roqoqo.info
+  #         flags: unittests
+  #         name: codecov-umbrella
+  #         fail_ci_if_error: true
+  #         verbose: true
+  
+  # code_coverage_qoqo:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@master
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #           toolchain: nightly
+  #           components: clippy
+  #           override: true
+  #     - run: |
+  #         rustup component add llvm-tools-preview
+  #         export RUSTFLAGS="-Zinstrument-coverage"
+  #         export RUSTDOCFLAGS="-Zinstrument-coverage"
+  #         python -m pip install numpy
+  #         cargo build --verbose
+  #         LLVM_PROFILE_FILE="coverage-%p-%m.profraw" cargo +nightly test --workspace --package=qoqo --no-default-features
+  #         cd qoqo-quest/
+  #         cargo install grcov
+  #         grcov . --binary-path ../target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "cargo" --ignore "/mod.rs" --ignore "/lib.rs" --ignore "*/_auto_generated_operations.rs" --keep-only "src/*" -o lcov_qoqo.info
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v2
+  #       with:
+  #         # token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: lcov_qoqo.info
+  #         flags: unittests
+  #         name: codecov-umbrella
+  #         fail_ci_if_error: true
+  #         verbose: true
+  
+  # format_check: # needs to run after test otherwise auogenerated files are not built
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         components: rustfmt
+  #     - run: cargo fmt --all -- --check

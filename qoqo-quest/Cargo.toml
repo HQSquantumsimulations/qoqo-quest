@@ -29,12 +29,9 @@ serde = { version = "1.0", features = ["derive"] }
 qoqo_calculator = {version="0.3"}
 
 qoqo_calculator_pyo3 = {version="0.4", default-features=false}
-roqoqo = {git="https://github.com/nfwvogt/qoqo.git", branch="pragma_change_device"}
-qoqo = {git="https://github.com/nfwvogt/qoqo.git", branch="pragma_change_device", default-features=false}
 
-
-# qoqo = {version="0.7", default-features=false}
-# roqoqo = {version="0.7"}
+qoqo = {version="0.7", default-features=false}
+roqoqo = {version="0.7"}
 
 roqoqo-quest = {version="0.1", path="../roqoqo-quest", default-features=false}
 bincode = "1.3"
