@@ -6629,6 +6629,8 @@ void applyQFT(Qureg qureg, int* qubits, int numQubits);
  */
 void applyProjector(Qureg qureg, int qubit, int outcome);
 
+void statevec_twoQubitUnitary(Qureg qureg, int targetQubit1, int targetQubit2, ComplexMatrix4 u);
+
 // end prevention of C++ name mangling
 #ifdef __cplusplus
 }

@@ -303,7 +303,7 @@ elseif (WIN32)
         ${QuEST_SRC}
     )
 else ()
-    add_library(QuEST SHARED
+    add_library(QuEST STATIC
         ${QuEST_SRC}
     )
 endif()
