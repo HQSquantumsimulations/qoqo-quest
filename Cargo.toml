@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    "qoqo-quest",
+    "roqoqo-quest",
+    "quest-sys",
+]
+
+[profile.release]
+lto = true
+
+[profile.bench]
+lto = true

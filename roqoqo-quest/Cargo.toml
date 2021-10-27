@@ -1,0 +1,43 @@
+[package]
+name = "roqoqo-quest"
+version = "0.1.0"
+authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
+license = "Apache-2.0"
+edition = "2018"
+categories = ["science", "simulation"]
+readme = "../README.md"
+repository = "https://github.com/HQSquantumsimulations/qoqo-quest"
+homepage = "https://github.com/HQSquantumsimulations/qoqo-quest"
+documentation = "https://docs.rs/qoqo_quest/"
+description = "QuEST simulator for the qoqo quantum computing toolkit"
+exclude = ["tests*", "examples*", "*.code-workspace"]
+
+[lib]
+name = "roqoqo_quest"
+path = "src/lib.rs"
+doctest = false
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+quest-sys = {version="0.1", path="../quest-sys", default-features=false}
+roqoqo = {version ="0.7", features=["serialize"]}
+
+qoqo_calculator = { version="0.3"}
+num-complex = {version="0.4"}
+serde = { version = "1.0", features = ["derive"]}
+rand = "0.8"
+ndarray="0.15"
+
+[dev-dependencies]
+test-case="1.2"
+criterion = "0.3"
+
+[features]
+default = ["openmp"]
+openmp = ["quest-sys/openmp"]
+
+
+[[bench]]
+name = "circuit_execution_benchmark"
+harness = false
+path = "benches/benchmark.rs"
