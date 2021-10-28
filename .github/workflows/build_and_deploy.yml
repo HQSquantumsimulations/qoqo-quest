@@ -27,46 +27,46 @@ jobs:
         cargo publish --manifest-path=qoqo-quest/Cargo.toml
 
 
-  build_maturin_builds_linux_windows:
-    name: maturin_build-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
-    strategy:
-      matrix:
-        combinations: [
-          { runs_on: 'ubuntu-latest',  rust: "x86_64-unknown-linux-gnu" },
-        ]
-        python: [
-            {py: 3.6, interpreter: "python3.6"},
-            {py: 3.7, interpreter: "python3.7"},
-            {py: 3.8, interpreter: "python3.8"},
-            {py: 3.9, interpreter: "python3.9"}
-        ]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: ${{ matrix.combinations.rust }}
-          default: true
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python.py }}
-      - name: linux wheels
-        uses: messense/maturin-action@v1
-        with:
-          maturin-version: latest
-          command: build
-          manylinux: 2010
-          args: -i python${{ matrix.python.py }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml --release --cargo-extra-args="--no-default-features --features=extension-module"
-      - name: test install
-        run: |
-          pip install wheels/* --force-reinstall
-      - name: store artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: py_wheels
-          path: wheels
+  # build_maturin_builds_linux:
+  #   name: maturin_build-${{ matrix.combinations.runs_on }}
+  #   runs-on: ${{ matrix.combinations.runs_on }}
+  #   strategy:
+  #     matrix:
+  #       combinations: [
+  #         { runs_on: 'ubuntu-latest',  rust: "x86_64-unknown-linux-gnu" },
+  #       ]
+  #       python: [
+  #           {py: 3.6, interpreter: "python3.6"},
+  #           {py: 3.7, interpreter: "python3.7"},
+  #           {py: 3.8, interpreter: "python3.8"},
+  #           {py: 3.9, interpreter: "python3.9"}
+  #       ]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         target: ${{ matrix.combinations.rust }}
+  #         default: true
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: ${{ matrix.python.py }}
+  #     - name: linux wheels
+  #       uses: messense/maturin-action@v1
+  #       with:
+  #         maturin-version: latest
+  #         command: build
+  #         manylinux: 2010
+  #         args: -i python${{ matrix.python.py }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml --release --cargo-extra-args="--no-default-features --features=extension-module"
+  #     - name: test install
+  #       run: |
+  #         pip install wheels/* --force-reinstall
+  #     - name: store artifact
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: py_wheels
+  #         path: wheels
   
   # build_maturin_builds_windows:
   #   name: maturin_build-${{ matrix.combinations.runs_on }}
@@ -151,7 +151,7 @@ jobs:
           path: wheels
 
   deploy:
-      needs: [deploy_cratesio, build_maturin_builds_macos, build_maturin_builds_linux, build_maturin_builds_windows]
+      needs: [deploy_cratesio, build_maturin_builds_macos]
       runs-on: ubuntu-latest
       steps:
       - uses: actions/setup-python@v2
