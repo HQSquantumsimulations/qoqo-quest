@@ -226,7 +226,7 @@ pub fn call_operation_with_device(
                 let workspace_pp = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
                 if !op.circuit().is_empty() {
                     call_circuit_with_device(
-                        &op.circuit(),
+                        op.circuit(),
                         qureg,
                         bit_registers,
                         float_registers,

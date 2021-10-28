@@ -73,7 +73,7 @@ impl EvaluatingBackend for Backend {
     }
 }
 
-impl Backend{
+impl Backend {
     /// Runs each available operation obtained from an iterator over operations on the backend.
     ///
     /// An iterator over operations is passed to the backend and executed.
@@ -233,7 +233,7 @@ impl Backend{
                                         &mut float_registers_internal,
                                         &mut complex_registers_internal,
                                         &mut bit_registers_output,
-                                        device
+                                        device,
                                     )?;
                                     repeated_measurement_pragma = None;
                                 }
@@ -245,7 +245,7 @@ impl Backend{
                                     &mut float_registers_internal,
                                     &mut complex_registers_internal,
                                     &mut bit_registers_output,
-                                    device
+                                    device,
                                 )?;
                             }
                         }
@@ -258,7 +258,7 @@ impl Backend{
                                 &mut float_registers_internal,
                                 &mut complex_registers_internal,
                                 &mut bit_registers_output,
-                                device
+                                device,
                             )?;
                         }
                     }
@@ -273,7 +273,7 @@ impl Backend{
                         &mut float_registers_internal,
                         &mut complex_registers_internal,
                         &mut bit_registers_output,
-                        device
+                        device,
                     )?;
                 }
             }
