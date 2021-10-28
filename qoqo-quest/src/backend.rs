@@ -298,13 +298,26 @@ impl BackendWrapper {
     ///     TypeError: Measurement evaluate function could not be used
     ///     RuntimeError: Internal error measurement.evaluation returned unknown type
     pub fn run_measurement(&self, measurement: &PyAny) -> PyResult<Option<HashMap<String, f64>>> {
-        let (bit_registers, float_registers, complex_registers) = self.run_measurement_registers(measurement)?;
+        let (bit_registers, float_registers, complex_registers) =
+            self.run_measurement_registers(measurement)?;
         let get_expectation_values = measurement
-            .call_method1("evaluate", (bit_registers, float_registers, complex_registers))
-            .map_err(|err| PyTypeError::new_err(format!("Measurement evaluate function could not be used: {:?}", err)))?;
+            .call_method1(
+                "evaluate",
+                (bit_registers, float_registers, complex_registers),
+            )
+            .map_err(|err| {
+                PyTypeError::new_err(format!(
+                    "Measurement evaluate function could not be used: {:?}",
+                    err
+                ))
+            })?;
         get_expectation_values
             .extract::<Option<HashMap<String, f64>>>()
-            .map_err(|_| PyRuntimeError::new_err("Internal error measurement.evaluation returned unknown type"))
+            .map_err(|_| {
+                PyRuntimeError::new_err(
+                    "Internal error measurement.evaluation returned unknown type",
+                )
+            })
     }
 }
 

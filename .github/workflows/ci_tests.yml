@@ -183,11 +183,11 @@ jobs:
       - name: macos wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version < '3.8'}}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml --features=rebuild
       - name: universal wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version >= '3.8' }}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --universal2 --out wheels --no-sdist -m qoqo-quest/Cargo.toml
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --universal2 --out wheels --no-sdist -m qoqo-quest/Cargo.toml --features=rebuild
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
