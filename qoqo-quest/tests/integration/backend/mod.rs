@@ -45,6 +45,7 @@ fn test_creating_backend() {
 
 #[test]
 fn test_running_circuit() {
+    pyo3::prepare_freethreaded_python();
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("readout".to_string(), 3, true);
     circuit += operations::RotateX::new(0, 0.0.into());
@@ -69,6 +70,7 @@ fn test_running_circuit() {
 
 #[test]
 fn test_running_measurement() {
+    pyo3::prepare_freethreaded_python();
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("readout".to_string(), 3, true);
     circuit += operations::RotateX::new(0, 0.0.into());
