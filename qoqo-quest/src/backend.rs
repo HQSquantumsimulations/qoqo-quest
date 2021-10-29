@@ -191,7 +191,7 @@ impl BackendWrapper {
     ///     Tuple[Dict[str, List[List[bool]]], Dict[str, List[List[float]]]], Dict[str, List[List[complex]]]]: The output registers written by the evaluated circuits.
     ///
     /// Raises:
-    ///     TypeError: Circuit argument cannot be converted to qoqo Circuit
+    ///     TypeError: Cannot extract constant circuit from measurement
     ///     RuntimeError: Running Circuit failed
     pub fn run_measurement_registers(&self, measurement: &PyAny) -> PyResult<Registers> {
         let mut run_circuits: Vec<Circuit> = Vec::new();
@@ -283,6 +283,41 @@ impl BackendWrapper {
             }
         }
         Ok((bit_registers, float_registers, complex_registers))
+    }
+
+    /// Evaluates expectation values of a measurement with the backend.
+    ///
+    ///
+    /// Args:
+    ///     measurement (Measurement): The measurement that is run on the backend.
+    ///
+    /// Returns:
+    ///     Optional[Dict[str, float]]: The  dictionary of expectation values.
+    ///
+    /// Raises:
+    ///     TypeError: Measurement evaluate function could not be used
+    ///     RuntimeError: Internal error measurement.evaluation returned unknown type
+    pub fn run_measurement(&self, measurement: &PyAny) -> PyResult<Option<HashMap<String, f64>>> {
+        let (bit_registers, float_registers, complex_registers) =
+            self.run_measurement_registers(measurement)?;
+        let get_expectation_values = measurement
+            .call_method1(
+                "evaluate",
+                (bit_registers, float_registers, complex_registers),
+            )
+            .map_err(|err| {
+                PyTypeError::new_err(format!(
+                    "Measurement evaluate function could not be used: {:?}",
+                    err
+                ))
+            })?;
+        get_expectation_values
+            .extract::<Option<HashMap<String, f64>>>()
+            .map_err(|_| {
+                PyRuntimeError::new_err(
+                    "Internal error measurement.evaluation returned unknown type",
+                )
+            })
     }
 }
 

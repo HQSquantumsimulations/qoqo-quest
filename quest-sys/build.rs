@@ -1,8 +1,11 @@
 use cmake::Config;
+#[cfg(feature = "rebuild")]
 use std::env;
+#[cfg(feature = "rebuild")]
 use std::path::PathBuf;
 
 fn main() {
+    #[cfg(feature = "rebuild")]
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     // use CMake to build quest and return path where the static library is placed
@@ -16,6 +19,7 @@ fn main() {
         // .define("CMAKE_C_COMPILER", "clang")
         .build()
         .join("build/");
+
     #[cfg(not(feature = "openmp"))]
     let quest_library_path = Config::new("QuEST/QuEST")
         .no_build_target(true)
@@ -33,6 +37,7 @@ fn main() {
     println!("cargo:rerun-if-changed=wrapper.h");
 
     // list functions for which bindings should be created
+    #[cfg(feature = "rebuild")]
     let builder = bindgen::Builder::default()
         .header("wrapper.h")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
@@ -70,8 +75,10 @@ fn main() {
         .allowlist_function("statevec_twoQubitUnitary")
         .allowlist_function("calc.*");
 
+    #[cfg(feature = "rebuild")]
     let bindings = builder.generate().expect("Unable to generate bindings");
 
+    #[cfg(feature = "rebuild")]
     bindings
         .write_to_file(out_dir_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");

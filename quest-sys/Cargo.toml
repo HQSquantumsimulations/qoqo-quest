@@ -22,12 +22,13 @@ path = "src/lib.rs"
 doctest = false
 
 [dependencies]
-openmp-sys ={version = "1.2.0", features=[], optional=true}
+openmp-sys ={version = "1.2.0", features=["static"], optional=true}
 
 [build-dependencies]
 cmake = {version ="0.1", features=[]}
-bindgen = "0.59"
+bindgen = {version="0.59", optional=true}
 
 [features]
 default = ["openmp"]
 openmp = ["openmp-sys"]
+rebuild = ["bindgen"]
