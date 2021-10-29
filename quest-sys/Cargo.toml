@@ -29,6 +29,6 @@ cmake = {version ="0.1", features=[]}
 bindgen = {version="0.59", optional=true}
 
 [features]
-default = ["openmp"]
+default = []
 openmp = ["openmp-sys"]
 rebuild = ["bindgen"]
