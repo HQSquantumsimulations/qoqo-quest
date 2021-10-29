@@ -24,6 +24,7 @@ qoqo-quest allows to simulate the execution of qoqo quantum circuits with the he
 Based on QuEST qoqo supports the simulation of error-free and noisy quantum computers.
 qoqo-quest is designed to be able to simulate all operations that are part of qoqo.
 For usage examples see the examples section of [qoqo](https://github.com/HQSquantumsimulations/qoqo/)
+At the moment due to build problems in manylinux containers only python packages for macOS are created automatically and added to PyPi.
 
 ## roqoqo-quest
 
