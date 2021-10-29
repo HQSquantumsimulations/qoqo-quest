@@ -555,7 +555,7 @@ pub fn call_operation_with_device(
         }
         Operation::PragmaChangeDevice(op) => {
             if let Some(device_box) = device {
-                device_box.change_device(&op.wrapped_operation)?;
+                device_box.change_device(&op.wrapped_hqslang, &op.wrapped_operation)?;
             }
             Ok(())
         }

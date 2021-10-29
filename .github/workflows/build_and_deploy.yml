@@ -107,6 +107,7 @@ jobs:
   
   build_maturin_builds_macos:
     name: maturin_build-${{ matrix.combinations.runs_on }}
+    needs: deploy_cratesio
     runs-on: ${{ matrix.combinations.runs_on }}
     strategy:
       matrix:
