@@ -21,7 +21,7 @@ doctest = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies.pyo3]
-version = "0.14"
+version = "0.15"
 features = ["num-complex"]
 
 [dependencies]
