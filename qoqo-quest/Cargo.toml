@@ -26,7 +26,7 @@ features = ["num-complex"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-qoqo_calculator = {version="0.3"}
+qoqo_calculator = {version="0.5"}
 
 qoqo_calculator_pyo3 = {version="0.4", default-features=false}
 
