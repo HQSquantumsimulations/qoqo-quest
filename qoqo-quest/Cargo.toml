@@ -1,6 +1,6 @@
 [package]
 name = "qoqo-quest"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2018"
@@ -21,14 +21,14 @@ doctest = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies.pyo3]
-version = "0.14"
+version = "0.15"
 features = ["num-complex"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
-qoqo_calculator = {version="0.3"}
+qoqo_calculator = {version="0.5"}
 
-qoqo_calculator_pyo3 = {version="0.4", default-features=false}
+qoqo_calculator_pyo3 = {version="0.5", default-features=false}
 
 qoqo = {version="0.8", default-features=false}
 roqoqo = {version="0.8"}
