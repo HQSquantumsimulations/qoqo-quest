@@ -42,7 +42,7 @@ test-case = "1.2.0"
 
 [features]
 extension-module = ["pyo3/extension-module"]
-default = ["extension-module", "openmp"]
+default = ["extension-module"]
 openmp = ["roqoqo-quest/openmp"]
 
 [package.metadata.maturin]
