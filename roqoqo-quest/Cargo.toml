@@ -1,6 +1,6 @@
 [package]
 name = "roqoqo-quest"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2018"
@@ -22,7 +22,7 @@ doctest = false
 quest-sys = {version="0.1", path="../quest-sys", default-features=false}
 roqoqo = {version ="0.8", features=["serialize"]}
 
-qoqo_calculator = { version="0.3"}
+qoqo_calculator = { version="0.5"}
 num-complex = {version="0.4"}
 serde = { version = "1.0", features = ["derive"]}
 rand = "0.8"
