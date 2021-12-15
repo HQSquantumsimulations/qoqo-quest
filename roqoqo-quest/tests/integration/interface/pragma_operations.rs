@@ -243,9 +243,14 @@ fn test_store_load_density_matrix_qureg() {
 }
 
 // #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaGeneralNoise::new(0, 0.01.into(),  array![[0.1, 0.0, 0.0],[0.0, 0.2, 0.0],[0.0, 0.0, 0.3]])); "PragmaGeneralNoise")]
-#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDamping::new(0, 0.01.into(),  2.0.into())); "PragmaDamping")]
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDamping::new(0, 0.01.into(),  2.0.into())); "PragmaDamping001")]
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDamping::new(0, 0.1.into(),  2.0.into())); "PragmaDamping01")]
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDamping::new(0, 1.0.into(),  2.0.into())); "PragmaDamping1")]
 #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDephasing::new(0, 0.01.into(),  2.0.into())); "PragmaDephasing")]
-#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDepolarising::new(0, 0.01.into(),  2.0.into())); "PragmaDepolarising")]
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDepolarising::new(0, 0.01.into(),  2.0.into())); "PragmaDepolarising001")]
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDepolarising::new(0, 0.1.into(),  2.0.into())); "PragmaDepolarising01")]
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDepolarising::new(0, 1.0.into(),  2.0.into())); "PragmaDepolarising1")]
+
 // #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaRandomNoise::new(0, 0.01.into(),  2.0.into(), 0.0.into())); "PragmaRandomNoise")]
 fn test_general_noise(operation: PragmaNoiseOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
