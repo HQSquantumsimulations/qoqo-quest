@@ -1,33 +1,23 @@
-
 [package]
-name = "quest-sys"
-version = "0.2.0"
+name = "cmake-find-openmp"
+version = "0.1.0"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
 rust-version = "1.56"
-categories = ["science", "simulation"]
+categories = ["build-dependencies"]
 readme = "../README.md"
 repository = "https://github.com/HQSquantumsimulations/qoqo-quest"
 homepage = "https://github.com/HQSquantumsimulations/qoqo-quest"
 documentation = "https://docs.rs/quest-sys/"
-description = "Bindings to the QuEST quantum computer simulator C library"
+description = "Use CMake to create right linking options for openmp"
 exclude = ["tests*", "examples*", "*.code-workspace"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
-name = "quest_sys"
+name = "cmake_find_openmp"
 path = "src/lib.rs"
 doctest = false
 
-
-[build-dependencies]
+[dependencies]
 cmake = {version ="0.1", features=[]}
-bindgen = {version="0.59", optional=true}
-cmake-find-openmp = {version="0.1", path="../cmake-find-openmp"}
-
-[features]
-default = []
-openmp = []
-rebuild = ["bindgen"]

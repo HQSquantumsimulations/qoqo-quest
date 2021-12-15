@@ -23,8 +23,6 @@
 #[cfg(feature = "rebuild")]
 use std::env;
 use std::include;
-#[cfg(feature = "openmp")]
-extern crate openmp_sys;
 
 #[cfg(feature = "rebuild")]
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
