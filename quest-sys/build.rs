@@ -1,4 +1,6 @@
 use cmake::Config;
+#[cfg(feature = "openmp")]
+use cmake_find_openmp::get_variables_c;
 #[cfg(feature = "rebuild")]
 use std::env;
 #[cfg(feature = "rebuild")]
@@ -7,7 +9,13 @@ use std::path::PathBuf;
 fn main() {
     #[cfg(feature = "rebuild")]
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").unwrap());
-
+    #[cfg(feature = "openmp")]
+    let (
+        openmp_c_flags,
+        _openmp_c_libraries,
+        lib_location,
+        lib_name,
+    )= get_variables_c();
     // use CMake to build quest and return path where the static library is placed
     #[cfg(feature = "openmp")]
     let quest_library_path = Config::new("QuEST/QuEST")
@@ -34,6 +42,15 @@ fn main() {
         quest_library_path.display()
     );
     println!("cargo:rustc-link-lib=static=QuEST");
+    // set compiler flags
+    #[cfg(feature = "openmp")]
+    println!("cargo:flag={}", openmp_c_flags);
+    // get compiler flags
+    #[cfg(feature = "openmp")]
+    println!("cargo:rustc-link-search=native={}", lib_location);
+    //get compiler flags
+    #[cfg(feature = "openmp")]
+    println!("cargo:rustc-link-lib={}", lib_name);
     println!("cargo:rerun-if-changed=wrapper.h");
 
     // list functions for which bindings should be created
