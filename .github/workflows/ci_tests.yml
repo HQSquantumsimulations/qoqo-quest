@@ -25,7 +25,7 @@ jobs:
         pip install ./qoqo-quest
     - name: test
       run: |
-        pytest ./qoqo-quest/
+        pytest ./qoqo-quest/python_tests/
 
   clippy_check:
     runs-on: ubuntu-latest
