@@ -21,13 +21,14 @@ name = "quest_sys"
 path = "src/lib.rs"
 doctest = false
 
+[dependencies]
+openmp-sys ={version = "1.2.0", features=["static"], optional=true}
 
 [build-dependencies]
 cmake = {version ="0.1", features=[]}
 bindgen = {version="0.59", optional=true}
-cmake-find-openmp = {version="0.1", path="../cmake-find-openmp"}
 
 [features]
 default = []
-openmp = []
+openmp = ["openmp-sys"]
 rebuild = ["bindgen"]
