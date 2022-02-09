@@ -3,7 +3,6 @@ members = [
     "qoqo-quest",
     "roqoqo-quest",
     "quest-sys",
-    "cmake-find-openmp"
 ]
 
 [profile.release]
