@@ -10,7 +10,7 @@ repository = "https://github.com/HQSquantumsimulations/qoqo-quest"
 homepage = "https://github.com/HQSquantumsimulations/qoqo-quest"
 documentation = "https://docs.rs/qoqo_quest/"
 description = "QuEST simulator for the qoqo quantum computing toolkit"
-exclude = ["tests*", "examples*", "*.code-workspace"]
+include = ["src*", "LICENSE"]
 
 [lib]
 name = "roqoqo_quest"
