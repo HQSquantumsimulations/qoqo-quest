@@ -27,7 +27,7 @@ from typing import List
      (ops.PragmaGetPauliProduct(qubit_paulis={0: 1, 1: 2}, readout='ro', circuit=Circuit()), float, 1),
      (ops.PragmaGetOccupationProbability(readout='ro', circuit=Circuit()), float, 1),
      (ops.PragmaGetStateVector(readout='ro', circuit=Circuit()), complex, 2),
-     (ops.PragmaGetDensityMatrix(readout='ro', circuit=Circuit()), int, 2),
+     (ops.PragmaGetDensityMatrix(readout='ro', circuit=Circuit()), complex, 2),
     ])
 def test_mocked_backend(measurement):
     """Test mocked backend"""
