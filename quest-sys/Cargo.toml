@@ -1,7 +1,7 @@
 
 [package]
 name = "quest-sys"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
@@ -12,7 +12,7 @@ repository = "https://github.com/HQSquantumsimulations/qoqo-quest"
 homepage = "https://github.com/HQSquantumsimulations/qoqo-quest"
 documentation = "https://docs.rs/quest-sys/"
 description = "Bindings to the QuEST quantum computer simulator C library"
-exclude = ["tests*", "examples*", "*.code-workspace"]
+include = ["src*", "QuEST*", "build.rs", "Cargo.toml", "wrapper.h", "LICENSE", "MIT_LICENSE", "BSD_LICENSE"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
