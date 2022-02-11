@@ -7,6 +7,26 @@ on:
     branches: [main]
 
 jobs:
+  test_pyproject_install:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        default: true
+    - name: Install dependencies
+      run: |
+        pip install maturin pytest numpy
+        pip install ./qoqo-quest
+    - name: test
+      run: |
+        pytest ./qoqo-quest/python_tests/
+
   clippy_check:
     runs-on: ubuntu-latest
     steps:
@@ -132,10 +152,11 @@ jobs:
   #         { runs_on: 'windows-latest', rust: "x86_64-pc-windows-msvc" },
   #       ]
   #       python: [
-  #           {py: 3.6, interpreter: "python3.6"},
-  #           {py: 3.7, interpreter: "python3.7"},
-  #           {py: 3.8, interpreter: "python3.8"},
-  #           {py: 3.9, interpreter: "python3.9"}
+  #           {py: '3.6', interpreter: "python3.6"},
+  #           {py: '3.7', interpreter: "python3.7"},
+  #           {py: '3.8', interpreter: "python3.8"},
+  #           {py: '3.9', interpreter: "python3.9"}
+  #           {py: '3.10', interpreter: "python3.10"}
   #       ]
   #   steps:
   #     - uses: actions/checkout@v2
@@ -153,7 +174,7 @@ jobs:
   #       with:
   #         maturin-version: latest
   #         command: build
-  #         args: -i python --out wheels --no-sdist -m qoqo-quest/Cargo.toml
+  #         args: -i python --out wheels --no-sdist -m qoqo-quest/Cargo.toml --cargo-extra-args="--locked"
 
   test_maturin_builds_macos:
     name: maturin_check-${{ matrix.combinations.runs_on }}
@@ -196,7 +217,71 @@ jobs:
         run: |
           pip install wheels/* --force-reinstall
   
-  doctes_check:
+  # test_src_dist_builds_linux:
+  #   name: maturin_check-${{ matrix.combinations.runs_on }}
+  #   runs-on: ${{ matrix.combinations.runs_on }}
+  #   strategy:
+  #     matrix:
+  #       combinations: [
+  #         { runs_on: 'ubuntu-latest',  rust: "x86_64-unknown-linux-gnu" },
+  #       ]
+  #       python: [
+  #           {py: '3.9', interpreter: "python3.9"},
+  #       ]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         target: ${{ matrix.combinations.rust }}
+  #         default: true
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: ${{ matrix.python.py }}
+  #     - name: linux wheels
+  #       uses: messense/maturin-action@v1
+  #       with:
+  #         maturin-version: latest
+  #         command: sdist
+  #         args: --out wheels -m qoqo-quest/Cargo.toml
+  #     - name: test install
+  #       run: |
+  #         pip install wheels/* --force-reinstall
+  
+  # test_maturin_src_builds_macos:
+  #   name: maturin_check-${{ matrix.combinations.runs_on }}
+  #   runs-on: ${{ matrix.combinations.runs_on }}
+  #   strategy:
+  #     matrix:
+  #       combinations: [
+  #         { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
+  #       ]
+  #       python: [
+  #           {py: '3.10', interpreter: "python3.10"}
+  #       ]
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         target: "aarch64-apple-darwin"
+  #         default: true
+  #     - uses: actions/setup-python@v2
+  #       with:
+  #         python-version: ${{ matrix.python.py }}
+  #     - name: Install dependencies
+  #       run: |
+  #         python -m pip install --upgrade pip maturin pytest numpy twine        
+  #     - name: universal wheels
+  #       run: |
+  #         maturin sdist --out wheels -m qoqo-quest/Cargo.toml
+  #     - name: test install
+  #       run: |
+  #         RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" pip install wheels/* --force-reinstall
+  
+  doctest_check:
     name: unittests_check-${{ matrix.combinations.runs_on }}
     runs-on: ubuntu-latest
     steps:
@@ -209,71 +294,3 @@ jobs:
           default: true
       - run: |
           cargo test --doc --package=roqoqo-quest
-
-  # code_coverage_roqoqo:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@master
-  #     - uses: actions-rs/toolchain@v1
-  #       with:
-  #           toolchain: nightly
-  #           components: clippy
-  #           override: true
-  #     - run: |
-  #         rustup component add llvm-tools-preview
-  #         export RUSTFLAGS="-Zinstrument-coverage"
-  #         export RUSTDOCFLAGS="-Zinstrument-coverage"
-  #         cargo build --verbose
-  #         LLVM_PROFILE_FILE="coverage-%p-%m.profraw" cargo +nightly test --package=roqoqo --no-default-features
-  #         cd roqoqo-quest/
-  #         cargo install grcov
-  #         grcov . --binary-path ../target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "cargo" --ignore "/mod.rs" --ignore "/lib.rs" --ignore "*/_auto_generated_operations.rs" --keep-only "src/*" -o lcov_roqoqo.info
-  #     - name: Upload coverage to Codecov
-  #       uses: codecov/codecov-action@v2
-  #       with:
-  #         # token: ${{ secrets.CODECOV_TOKEN }}
-  #         files: lcov_roqoqo.info
-  #         flags: unittests
-  #         name: codecov-umbrella
-  #         fail_ci_if_error: true
-  #         verbose: true
-  
-  # code_coverage_qoqo:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@master
-  #     - uses: actions-rs/toolchain@v1
-  #       with:
-  #           toolchain: nightly
-  #           components: clippy
-  #           override: true
-  #     - run: |
-  #         rustup component add llvm-tools-preview
-  #         export RUSTFLAGS="-Zinstrument-coverage"
-  #         export RUSTDOCFLAGS="-Zinstrument-coverage"
-  #         python -m pip install numpy
-  #         cargo build --verbose
-  #         LLVM_PROFILE_FILE="coverage-%p-%m.profraw" cargo +nightly test --workspace --package=qoqo --no-default-features
-  #         cd qoqo-quest/
-  #         cargo install grcov
-  #         grcov . --binary-path ../target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "cargo" --ignore "/mod.rs" --ignore "/lib.rs" --ignore "*/_auto_generated_operations.rs" --keep-only "src/*" -o lcov_qoqo.info
-  #     - name: Upload coverage to Codecov
-  #       uses: codecov/codecov-action@v2
-  #       with:
-  #         # token: ${{ secrets.CODECOV_TOKEN }}
-  #         files: lcov_qoqo.info
-  #         flags: unittests
-  #         name: codecov-umbrella
-  #         fail_ci_if_error: true
-  #         verbose: true
-  
-  # format_check: # needs to run after test otherwise auogenerated files are not built
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - uses: actions-rs/toolchain@v1
-  #       with:
-  #         profile: minimal
-  #         toolchain: stable
-  #         components: rustfmt
-  #     - run: cargo fmt --all -- --check
