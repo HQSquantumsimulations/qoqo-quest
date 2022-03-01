@@ -1,6 +1,6 @@
 # Changelog
 
-This changelog track changes to the qoqo project starting at version 0.1.0
+This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Not released
 
