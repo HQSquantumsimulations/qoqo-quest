@@ -37,7 +37,7 @@ A source distribution now exists but requires a Rust install with a rust version
 
 [QuEST](https://github.com/QuEST-Kit/QuEST) based simulator backend for the roqoqo quantum toolkit by [HQS Quantum Simulations](https://quantumsimulations.de).
 
-roqoqo-quest allows to simulate the execution of roqoqo quantum circuits directly form rust code with the help of the QuEST quantum simulator.
+roqoqo-quest allows to simulate the execution of roqoqo quantum circuits directly from rust code with the help of the QuEST quantum simulator.
 roqoqo-quest is designed to be able to simulate all operations that are part of roqoqo.
 For usage examples see the examples section of [roqoqo](https://github.com/HQSquantumsimulations/qoqo/).
 
