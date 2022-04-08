@@ -64,7 +64,7 @@ jobs:
         run: |
           pip install wheels/* --force-reinstall
       - name: store artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: py_wheels
           path: wheels
@@ -101,7 +101,7 @@ jobs:
   #         command: build
   #         args: -i python --out wheels --no-sdist -m qoqo-quest/Cargo.toml --release
   #     - name: store artifact
-  #       uses: actions/upload-artifact@v2
+  #       uses: actions/upload-artifact@v3
   #       with:
   #         name: py_wheels
   #         path: wheels
@@ -147,7 +147,7 @@ jobs:
         run: |
           pip install wheels/* --force-reinstall
       - name: store artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: py_wheels
           path: wheels
