@@ -12,7 +12,7 @@
 
 use crate::interface::call_operation_with_device;
 use roqoqo::backends::EvaluatingBackend;
-use roqoqo::CalculatorFloat;
+use qoqo_calculator::CalculatorFloat;
 // use roqoqo::measurements::Measure;
 use crate::Qureg;
 use roqoqo::backends::RegisterResult;
