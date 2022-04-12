@@ -22,6 +22,12 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 * Updated to qoqo 0.11
 
+## 0.4.0
+
+### Changed 0.4.0
+
+* Updated to qoqo 0.11
+
 ## 0.3.0
 
 ### Added 0.3.0
