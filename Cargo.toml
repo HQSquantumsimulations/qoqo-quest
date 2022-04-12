@@ -10,3 +10,4 @@ lto = "thin"
 
 [profile.bench]
 lto = "thin"
+

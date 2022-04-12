@@ -13,7 +13,7 @@
 use bincode::{deserialize, serialize};
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
-use pyo3::types::PyByteArray;
+use pyo3::types::{PyByteArray, PyType};
 use qoqo::convert_into_circuit;
 use qoqo::QoqoBackendError;
 use roqoqo::backends::EvaluatingBackend;
@@ -97,7 +97,8 @@ impl BackendWrapper {
     /// Raises:
     ///     TypeError: Input cannot be converted to byte array.
     ///     ValueError: Input cannot be deserialized to Backend.
-    pub fn from_bincode(&self, input: &PyAny) -> PyResult<BackendWrapper> {
+    #[classmethod]
+    pub fn from_bincode(_cls: &PyType, input: &PyAny) -> PyResult<BackendWrapper> {
         let bytes = input
             .extract::<Vec<u8>>()
             .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
@@ -131,7 +132,8 @@ impl BackendWrapper {
     ///
     /// Raises:
     ///     ValueError: Input cannot be deserialized to Backend.
-    fn from_json(&self, input: &str) -> PyResult<BackendWrapper> {
+    #[classmethod]
+    fn from_json(_cls: &PyType, input: &str) -> PyResult<BackendWrapper> {
         Ok(BackendWrapper {
             internal: serde_json::from_str(input)
                 .map_err(|_| PyValueError::new_err("Input cannot be deserialized to Backend"))?,

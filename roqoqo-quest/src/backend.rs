@@ -11,8 +11,8 @@
 // limitations under the License.
 
 use crate::interface::call_operation_with_device;
+use qoqo_calculator::CalculatorFloat;
 use roqoqo::backends::EvaluatingBackend;
-use roqoqo::CalculatorFloat;
 // use roqoqo::measurements::Measure;
 use crate::Qureg;
 use roqoqo::backends::RegisterResult;
