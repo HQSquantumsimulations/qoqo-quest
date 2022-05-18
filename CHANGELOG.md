@@ -2,7 +2,12 @@
 
 This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
-## Not released
+## 0.5.0
+
+### Changed 0.5.0
+
+* Updated to qoqo 1.0.0-alpha.1
+* Dependencies updated for github workflows.
 
 ## 0.4.0
 
