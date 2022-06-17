@@ -28,7 +28,7 @@ features = ["num-complex"]
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 qoqo_calculator = {version="0.7"}
-qoqo_calculator_pyo3 = {version="0.7", default-features=false}
+qoqo_calculator_pyo3 = {version="0.8", default-features=false}
 qoqo = {version="1.0.0-alpha.1", default-features=false}
 roqoqo = {version="1.0.0-alpha.1"}
 roqoqo-quest = {version="0.5", path="../roqoqo-quest", default-features=false}
