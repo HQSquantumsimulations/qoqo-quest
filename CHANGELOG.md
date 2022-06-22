@@ -2,6 +2,13 @@
 
 This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
+## 0.6.0
+
+### Changed 0.6.0
+
+* Updated to qoqo 1.0.0-alpha.2
+* Updated to qoqo_calculator(_pyo3) 0.8.3
+
 ## 0.5.0
 
 ### Changed 0.5.0
