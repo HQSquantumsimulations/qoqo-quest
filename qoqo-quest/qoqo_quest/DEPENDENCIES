@@ -1007,7 +1007,7 @@ limitations under the License.
 
 
 ====================================================
-bumpalo 3.9.1
+bumpalo 3.10.0
 https://github.com/fitzgen/bumpalo
 by Nick Fitzgerald <fitzgen@gmail.com>
 A fast bump allocation arena for Rust.
@@ -2834,7 +2834,7 @@ limitations under the License.
 
 
 ====================================================
-crossbeam-channel 0.5.4
+crossbeam-channel 0.5.5
 https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-channel
 by 
 Multi-producer multi-consumer channels for message passing
@@ -3917,7 +3917,7 @@ limitations under the License.
 
 
 ====================================================
-crossbeam-epoch 0.9.8
+crossbeam-epoch 0.9.9
 https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-epoch
 by 
 Epoch-based garbage collection
@@ -4160,7 +4160,7 @@ limitations under the License.
 
 
 ====================================================
-crossbeam-utils 0.8.8
+crossbeam-utils 0.8.9
 https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-utils
 by 
 Utilities for concurrent programming
@@ -4779,7 +4779,7 @@ limitations under the License.
 
 
 ====================================================
-getrandom 0.2.6
+getrandom 0.2.7
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -5026,6 +5026,11 @@ https://github.com/starkat99/half-rs
 by Kathryn Long <squeeself@gmail.com>
 Half-precision floating point f16 and bf16 types for Rust implementing the IEEE 754-2008 standard binary16 and bfloat16 types.
 License: MIT OR Apache-2.0
+----------------------------------------------------
+LICENSE:
+
+MIT OR Apache-2.0
+
 ----------------------------------------------------
 
 ====================================================
@@ -6228,7 +6233,7 @@ limitations under the License.
 
 
 ====================================================
-js-sys 0.3.57
+js-sys 0.3.58
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Bindings for all JS global objects and functions in all JS environments like
@@ -8456,7 +8461,7 @@ limitations under the License.
 
 
 ====================================================
-num-complex 0.4.1
+num-complex 0.4.2
 https://github.com/rust-num/num-complex
 by The Rust Project Developers
 Complex numbers implementation for Rust
@@ -9692,7 +9697,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
-once_cell 1.10.0
+once_cell 1.12.0
 https://github.com/matklad/once_cell
 by Aleksey Kladov <aleksey.kladov@gmail.com>
 Single assignment cells and lazy values.
@@ -9962,11 +9967,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ====================================================
-parking_lot 0.12.0
+parking_lot 0.12.1
 https://github.com/Amanieu/parking_lot
 by Amanieu d'Antras <amanieu@gmail.com>
 More compact and efficient implementations of the standard synchronization primitives.
-License: Apache-2.0/MIT
+License: MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-MIT:
 
@@ -11496,7 +11501,7 @@ limitations under the License.
 
 
 ====================================================
-proc-macro2 1.0.39
+proc-macro2 1.0.40
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple
@@ -13167,7 +13172,7 @@ LICENSE:
 
 
 ====================================================
-qoqo 1.0.0-alpha.1
+qoqo 1.0.0-alpha.2
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Quantum computing circuit toolkit. Python interface of roqoqo
@@ -13379,7 +13384,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-macros 1.0.0-alpha.1
+qoqo-macros 1.0.0-alpha.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the qoqo crate
 License: Apache-2.0
@@ -13590,7 +13595,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.5.0
+qoqo-quest 0.6.0
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -13802,7 +13807,7 @@ LICENSE:
 
 
 ====================================================
-qoqo_calculator 0.7.0
+qoqo_calculator 0.8.3
 https://github.com/HQSquantumsimulations/qoqo_calculator
 by HQS Quantum Simulations <info@quantumsimulations.de>
 qoqo-calculator is the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -14014,7 +14019,7 @@ LICENSE:
 
 
 ====================================================
-qoqo_calculator_pyo3 0.7.0
+qoqo_calculator_pyo3 0.8.3
 https://github.com/HQSquantumsimulations/qoqo_calculator_pyo3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface to qoqo calculator, the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -14226,7 +14231,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.5.0
+quest-sys 0.6.0
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -14501,7 +14506,7 @@ Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ====================================================
-quote 1.0.18
+quote 1.0.20
 https://github.com/dtolnay/quote
 by David Tolnay <dtolnay@gmail.com>
 Quasi-quoting macro quote!(...)
@@ -16434,7 +16439,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-regex 1.5.5
+regex 1.5.6
 https://github.com/rust-lang/regex
 by The Rust Project Developers
 An implementation of regular expressions for Rust. This implementation uses
@@ -16744,11 +16749,11 @@ For more information, please refer to <http://unlicense.org/>
 
 
 ====================================================
-regex-syntax 0.6.25
+regex-syntax 0.6.26
 https://github.com/rust-lang/regex
 by The Rust Project Developers
 A regular expression parser.
-License: MIT/Apache-2.0
+License: MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-MIT:
 
@@ -16985,7 +16990,7 @@ limitations under the License.
 
 
 ====================================================
-roqoqo 1.0.0-alpha.1
+roqoqo 1.0.0-alpha.2
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Rust Quantum Computing Toolkit by HQS
@@ -17197,7 +17202,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-derive 1.0.0-alpha.1
+roqoqo-derive 1.0.0-alpha.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the roqoqo crate
 License: Apache-2.0
@@ -17408,7 +17413,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.5.0
+roqoqo-quest 0.6.0
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
@@ -18436,7 +18441,7 @@ limitations under the License.
 
 
 ====================================================
-semver 1.0.9
+semver 1.0.10
 https://github.com/dtolnay/semver
 by David Tolnay <dtolnay@gmail.com>
 Parser and evaluator for Cargo's flavor of Semantic Versioning
@@ -20080,7 +20085,7 @@ limitations under the License.
 
 
 ====================================================
-syn 1.0.95
+syn 1.0.98
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -20319,7 +20324,7 @@ limitations under the License.
 
 
 ====================================================
-target-lexicon 0.12.3
+target-lexicon 0.12.4
 https://github.com/bytecodealliance/target-lexicon
 by Dan Gohman <sunfish@mozilla.com>
 Targeting utilities for compilers and related tools
@@ -20550,7 +20555,7 @@ Software.
 
 
 ====================================================
-test-case 2.0.2
+test-case 2.1.0
 https://github.com/frondeus/test-case
 by Marcin Sas-Szymanski <marcin.sas-szymanski@anixe.pl>, Wojciech Polak <frondeus@gmail.com>, Łukasz Biel <lukasz.p.biel@gmail.com>
 Provides #[test_case(...)] procedural macro attribute for generating parametrized test cases easily
@@ -20580,6 +20585,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+
+====================================================
+test-case-macros 2.1.0
+https://github.com/frondeus/test-case
+by Marcin Sas-Szymanski <marcin.sas-szymanski@anixe.pl>, Wojciech Polak <frondeus@gmail.com>, Łukasz Biel <lukasz.p.biel@gmail.com>
+Provides #[test_case(...)] procedural macro attribute for generating parametrized test cases easily
+License: MIT
 
 ====================================================
 textwrap 0.11.0
@@ -21348,6 +21360,10 @@ Typenum is a Rust library for type-level numbers evaluated at
     implementation is incomplete.
 License: MIT OR Apache-2.0
 ----------------------------------------------------
+LICENSE:
+
+MIT OR Apache-2.0
+----------------------------------------------------
 LICENSE-MIT:
 
 The MIT License (MIT)
@@ -21372,10 +21388,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-----------------------------------------------------
-LICENSE:
-
-MIT OR Apache-2.0
 ----------------------------------------------------
 LICENSE-APACHE:
 
@@ -21582,7 +21594,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 ====================================================
-unicode-ident 1.0.0
+unicode-ident 1.0.1
 https://github.com/dtolnay/unicode-ident
 by David Tolnay <dtolnay@gmail.com>
 Determine whether characters have the XID_Start or XID_Continue properties according to Unicode Standard Annex #31
@@ -22605,7 +22617,7 @@ For more information, please refer to <http://unlicense.org/>
 
 
 ====================================================
-wasi 0.10.2+wasi-snapshot-preview1
+wasi 0.11.0+wasi-snapshot-preview1
 https://github.com/bytecodealliance/wasi
 by The Cranelift Project Developers
 Experimental WASI API bindings for Rust
@@ -23068,7 +23080,7 @@ limitations under the License.
 
 
 ====================================================
-wasm-bindgen 0.2.80
+wasm-bindgen 0.2.81
 https://rustwasm.github.io/
 by The wasm-bindgen Developers
 Easy support for interacting between JS and Rust.
@@ -23310,7 +23322,7 @@ limitations under the License.
 
 
 ====================================================
-wasm-bindgen-backend 0.2.80
+wasm-bindgen-backend 0.2.81
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Backend code generation of the wasm-bindgen tool
@@ -23552,7 +23564,7 @@ limitations under the License.
 
 
 ====================================================
-wasm-bindgen-macro 0.2.80
+wasm-bindgen-macro 0.2.81
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Definition of the `#[wasm_bindgen]` attribute, an internal dependency
@@ -23794,7 +23806,7 @@ limitations under the License.
 
 
 ====================================================
-wasm-bindgen-macro-support 0.2.80
+wasm-bindgen-macro-support 0.2.81
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 The part of the implementation of the `#[wasm_bindgen]` attribute that is not in the shared backend crate
@@ -24036,7 +24048,7 @@ limitations under the License.
 
 
 ====================================================
-wasm-bindgen-shared 0.2.80
+wasm-bindgen-shared 0.2.81
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Shared support between wasm-bindgen and wasm-bindgen cli, an internal
@@ -24279,7 +24291,7 @@ limitations under the License.
 
 
 ====================================================
-web-sys 0.3.57
+web-sys 0.3.58
 https://rustwasm.github.io/wasm-bindgen/web-sys/index.html
 by The wasm-bindgen Developers
 Bindings for all Web APIs, a procedurally generated crate from WebIDL
@@ -24865,31 +24877,6 @@ by Microsoft
 Rust for Windows
 License: MIT OR Apache-2.0
 ----------------------------------------------------
-license-mit:
-
-    MIT License
-
-    Copyright (c) Microsoft Corporation.
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE
-
-----------------------------------------------------
 license-apache:
 
                                  Apache License
@@ -25093,6 +25080,31 @@ license-apache:
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+----------------------------------------------------
+license-mit:
+
+    MIT License
+
+    Copyright (c) Microsoft Corporation.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
 
 
 ====================================================
