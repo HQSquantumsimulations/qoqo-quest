@@ -154,12 +154,13 @@ impl Backend {
         let mut number_measurements: Option<usize> = None;
         let mut repeated_measurement_readout: String = "".to_string();
         let mut replace_measurements = false;
+        let mut uses_repeated_measurement_pragma = false;
         for op in circuit_vec.iter() {
             match op {
                 Operation::PragmaRepeatedMeasurement(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone()}
+                        None => {uses_repeated_measurement_pragma = true; number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone()}
                     }
                 }
                 Operation::PragmaSetNumberOfMeasurements(o) => {
@@ -178,9 +179,10 @@ impl Backend {
                     Some(nm) => {
                         if o.readout() != &repeated_measurement_readout
                             || measured_qubits.contains(o.qubit())
+                            || uses_repeated_measurement_pragma
                         {
                             replace_measurements = false;
-                            repetitions = nm;
+                            repetitions = nm * self.repetitions;
                             number_measurements = None;
                         }
                     }
@@ -227,6 +229,9 @@ impl Backend {
             } else {
                 None
             };
+        dbg!(repetitions);
+        dbg!(number_measurements);
+        dbg!(replace_measurements);
         for _ in 0..repetitions {
             let mut bit_registers_internal: HashMap<String, BitRegister> = HashMap::new();
             let mut float_registers_internal: HashMap<String, FloatRegister> = HashMap::new();
