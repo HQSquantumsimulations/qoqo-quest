@@ -1,7 +1,7 @@
 
 [package]
 name = "quest-sys"
-version = "0.6.0"
+version = "0.6.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
@@ -26,7 +26,7 @@ openmp-sys ={version = "1.2.0", features=["static"], optional=true}
 
 [build-dependencies]
 cmake = {version ="0.1", features=[]}
-bindgen = {version="0.59", optional=true}
+bindgen = {version="0.60", optional=true}
 
 [features]
 default = []

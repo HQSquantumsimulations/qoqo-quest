@@ -134,7 +134,7 @@ impl Backend {
         // or when allowing for stochastic overrotations where coherent gates are applied
         // with a stocastic offset
         // (when PragmaOverrotation is present in circuit)
-        let repetitions = match circuit_vec.iter().find(|x| {
+        let mut repetitions = match circuit_vec.iter().find(|x| {
             matches!(
                 x,
                 Operation::PragmaRandomNoise(_) | Operation::PragmaOverrotation(_)
@@ -154,12 +154,13 @@ impl Backend {
         let mut number_measurements: Option<usize> = None;
         let mut repeated_measurement_readout: String = "".to_string();
         let mut replace_measurements = false;
+        let mut uses_repeated_measurement_pragma = false;
         for op in circuit_vec.iter() {
             match op {
                 Operation::PragmaRepeatedMeasurement(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone()}
+                        None => {uses_repeated_measurement_pragma = true; number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone();  replace_measurements=true;}
                     }
                 }
                 Operation::PragmaSetNumberOfMeasurements(o) => {
@@ -168,6 +169,27 @@ impl Backend {
                         None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=true;}
                     }
                 }
+                _ => ()
+            }
+        }
+        let mut measured_qubits: Vec<usize> = Vec::new();
+        for op in circuit_vec.iter() {
+            match op {
+                Operation::MeasureQubit(o) => match number_measurements {
+                    Some(nm) => {
+                        if o.readout() != &repeated_measurement_readout
+                            || measured_qubits.contains(o.qubit())
+                            || uses_repeated_measurement_pragma
+                        {
+                            replace_measurements = false;
+                            repetitions = nm * self.repetitions;
+                            number_measurements = None;
+                        }
+                    }
+                    None => {
+                        measured_qubits.push(*o.qubit());
+                    }
+                },
                 Operation::DefinitionBit(def) => {
                     if *def.is_output() {
                         bit_registers_output.insert(def.name().clone(), Vec::new());
@@ -207,6 +229,9 @@ impl Backend {
             } else {
                 None
             };
+        dbg!(repetitions);
+        dbg!(number_measurements);
+        dbg!(replace_measurements);
         for _ in 0..repetitions {
             let mut bit_registers_internal: HashMap<String, BitRegister> = HashMap::new();
             let mut float_registers_internal: HashMap<String, FloatRegister> = HashMap::new();
@@ -266,15 +291,39 @@ impl Backend {
                 // Standard path when not using PragmaSetRepeatedMeasurements
             } else {
                 for op in circuit_vec.iter() {
-                    call_operation_with_device(
-                        op,
-                        &mut qureg,
-                        &mut bit_registers_internal,
-                        &mut float_registers_internal,
-                        &mut complex_registers_internal,
-                        &mut bit_registers_output,
-                        device,
-                    )?;
+                    match op {
+                        Operation::PragmaRepeatedMeasurement(rm) => {
+                            for qb in 0..self.number_qubits {
+                                let ro_index = match rm.qubit_mapping() {
+                                    Some(mp) => mp.get(&qb).unwrap_or(&qb),
+                                    None => &qb,
+                                };
+                                let mqb_new: Operation =
+                                    MeasureQubit::new(qb, rm.readout().to_owned(), *ro_index)
+                                        .into();
+                                call_operation_with_device(
+                                    &mqb_new,
+                                    &mut qureg,
+                                    &mut bit_registers_internal,
+                                    &mut float_registers_internal,
+                                    &mut complex_registers_internal,
+                                    &mut bit_registers_output,
+                                    device,
+                                )?;
+                            }
+                        }
+                        _ => {
+                            call_operation_with_device(
+                                op,
+                                &mut qureg,
+                                &mut bit_registers_internal,
+                                &mut float_registers_internal,
+                                &mut complex_registers_internal,
+                                &mut bit_registers_output,
+                                device,
+                            )?;
+                        }
+                    }
                 }
             }
 
