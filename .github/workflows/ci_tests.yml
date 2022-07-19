@@ -19,6 +19,7 @@ jobs:
         profile: minimal
         toolchain: stable
         default: true
+    - uses: Swatinem/rust-cache@v2.0.0
     - name: Install dependencies
       run: |
         pip install maturin pytest numpy
@@ -47,6 +48,7 @@ jobs:
           profile: minimal
           toolchain: stable
           components: clippy
+      - uses: Swatinem/rust-cache@v2.0.0
       - run: |
           sudo apt install -y clang-12
           cargo clippy -- -D warnings
@@ -75,6 +77,7 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
           components: rustfmt
+      - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.py }}
@@ -106,6 +109,7 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
           components: rustfmt
+      - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.py }}
@@ -137,6 +141,7 @@ jobs:
           toolchain: stable
           target: ${{ matrix.combinations.rust }}
           default: true
+      - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.py }}
@@ -146,7 +151,7 @@ jobs:
           maturin-version: latest
           command: build
           manylinux: 2010
-          args: -i python${{ matrix.python.py }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml
+          args: -i python${{ matrix.python.py }} --out wheels -m qoqo-quest/Cargo.toml --locked
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
@@ -181,7 +186,7 @@ jobs:
   #       with:
   #         maturin-version: latest
   #         command: build
-  #         args: -i python --out wheels --no-sdist -m qoqo-quest/Cargo.toml --cargo-extra-args="--locked"
+  #         args: -i python --out wheels -m qoqo-quest/Cargo.toml --locked
 
   test_maturin_builds_macos:
     name: maturin_check-${{ matrix.combinations.runs_on }}
@@ -205,6 +210,7 @@ jobs:
           toolchain: stable
           target: ${{ matrix.combinations.rust }}
           default: true
+      - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.py }}
@@ -214,11 +220,11 @@ jobs:
       - name: macos wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version < '3.8'}}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo-quest/Cargo.toml --locked
       - name: universal wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version >= '3.8' }}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo-quest/Cargo.toml --locked
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
@@ -298,5 +304,6 @@ jobs:
           toolchain: stable
           target: x86_64-unknown-linux-gnu
           default: true
+      - uses: Swatinem/rust-cache@v2.0.0
       - run: |
           cargo test --doc --package=roqoqo-quest

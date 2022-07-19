@@ -325,8 +325,6 @@ fn test_general_noise(operation: PragmaNoiseOperation) {
             &mut bit_registers_output,
         )
         .unwrap();
-        dbg!(&test_density_matrix);
-        dbg!(&complex_registers.get("density_matrix").unwrap());
         for (index, (check_value, calculated_value)) in test_density_matrix
             .into_iter()
             .zip(complex_registers.get("density_matrix").unwrap().into_iter())
