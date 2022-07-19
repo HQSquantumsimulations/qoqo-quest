@@ -229,9 +229,6 @@ impl Backend {
             } else {
                 None
             };
-        dbg!(repetitions);
-        dbg!(number_measurements);
-        dbg!(replace_measurements);
         for _ in 0..repetitions {
             let mut bit_registers_internal: HashMap<String, BitRegister> = HashMap::new();
             let mut float_registers_internal: HashMap<String, FloatRegister> = HashMap::new();
