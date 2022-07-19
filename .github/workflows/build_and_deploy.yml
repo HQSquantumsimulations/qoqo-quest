@@ -97,7 +97,7 @@ jobs:
           maturin-version: latest
           command: build
           manylinux: 2010
-          args: -i python${{ matrix.python.py }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml --release --cargo-extra-args="--locked"
+          args: -i python${{ matrix.python.py }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
@@ -137,7 +137,7 @@ jobs:
   #       with:
   #         maturin-version: latest
   #         command: build
-  #         args: -i python --out wheels --no-sdist -m qoqo-quest/Cargo.toml --release
+  #         args: -i python --out wheels  -m qoqo-quest/Cargo.toml --release --locked
   #     - name: store artifact
   #       uses: actions/upload-artifact@v3
   #       with:
@@ -176,11 +176,11 @@ jobs:
       - name: macos wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version < '3.8'}}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" OPENMP_STATIC=1 maturin build -i ${{ matrix.python.interpreter }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml --release --cargo-extra-args="--locked"
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" OPENMP_STATIC=1 maturin build -i ${{ matrix.python.interpreter }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
       - name: universal wheels
         if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version >= '3.8' }}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" OPENMP_STATIC=1 maturin build -i ${{ matrix.python.interpreter }} --out wheels --no-sdist -m qoqo-quest/Cargo.toml --release --cargo-extra-args="--locked"
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" OPENMP_STATIC=1 maturin build -i ${{ matrix.python.interpreter }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
