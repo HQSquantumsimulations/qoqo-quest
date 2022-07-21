@@ -2,6 +2,10 @@
 
 This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
+## Unpublished
+
+* Support for `InputBit` operation expected in qoqo 1.1.0
+
 ## 0.7.0
 
 * Fixed: Using `PragmaRepeatedMeasurement` and `PragmaSetNumberOfMeasurements` now repeats the numerical circuit when other Measurements are present in the circuits.
