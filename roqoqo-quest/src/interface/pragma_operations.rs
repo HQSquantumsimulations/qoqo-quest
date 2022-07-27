@@ -33,7 +33,10 @@ pub fn execute_pragma_repeated_measurement(
             msg: format!("Probabilites from quantum register {:?}", err),
         })?;
     let mut rng = thread_rng();
-    let existing_register = bit_registers.get(operation.readout()).map(|x| x.to_owned()).unwrap_or_else(|| vec![false; usize::try_from(number_qubits).unwrap()]);
+    let existing_register = bit_registers
+        .get(operation.readout())
+        .map(|x| x.to_owned())
+        .unwrap_or_else(|| vec![false; usize::try_from(number_qubits).unwrap()]);
     let output_register: &mut BitOutputRegister = bit_registers_output
         .get_mut(operation.readout())
         .ok_or(RoqoqoBackendError::GenericError {
@@ -48,7 +51,10 @@ pub fn execute_pragma_repeated_measurement(
             for _ in 0..*operation.number_measurements() {
                 let index = distribution.sample(&mut rng);
                 let mut tmp = existing_register.clone();
-                for (a,b) in index_to_qubits(index, number_qubits).into_iter().enumerate(){
+                for (a, b) in index_to_qubits(index, number_qubits)
+                    .into_iter()
+                    .enumerate()
+                {
                     tmp[a] = b
                 }
                 output_register.push(tmp)
@@ -167,17 +173,18 @@ pub fn execute_pragma_set_density_matrix(
 
 pub fn execute_pragma_input_bit(
     operation: &InputBit,
-    bit_registers: &mut HashMap<String, BitRegister>
+    bit_registers: &mut HashMap<String, BitRegister>,
 ) -> Result<(), RoqoqoBackendError> {
-    let existing_register : &mut BitRegister = bit_registers
-    .get_mut(operation.name())
-    .ok_or(RoqoqoBackendError::GenericError {
-        msg: format!(
-            "Trying to write readout to non-existent register {}",
-            operation.name()
-        ),
-    })?;
-    if operation.index() >= &existing_register.len(){
+    let existing_register: &mut BitRegister =
+        bit_registers
+            .get_mut(operation.name())
+            .ok_or(RoqoqoBackendError::GenericError {
+                msg: format!(
+                    "Trying to write readout to non-existent register {}",
+                    operation.name()
+                ),
+            })?;
+    if operation.index() >= &existing_register.len() {
         return Err(RoqoqoBackendError::GenericError {
             msg: format!(
                 "Trying to write readout to non-existent index {}",
