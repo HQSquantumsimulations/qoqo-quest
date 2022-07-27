@@ -924,6 +924,46 @@ fn test_get_state_vector_error() {
     );
 }
 
+#[test]
+fn test_input_bit() {
+    let op = operations::InputBit::new("ro".to_string(), 1, true);
+    let mut qureg = Qureg::new(1, true);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    let res = call_operation(
+        &op.clone().into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(res.is_err());
+    bit_registers.insert("ro".to_string(), vec![false; 1]);
+    let res = call_operation(
+        &op.clone().into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(res.is_err());
+    bit_registers.insert("ro".to_string(), vec![false; 2]);
+    let res = call_operation(
+        &op.clone().into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(res.is_ok());
+    let test = bit_registers.get("ro").unwrap();
+    assert_eq!(test, &vec![false, true])
+}
+
 fn is_close(a: Complex64, b: Complex64) -> bool {
     (a - b).norm() < 1e-10
 }
