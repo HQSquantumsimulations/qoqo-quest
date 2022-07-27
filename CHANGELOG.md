@@ -2,6 +2,12 @@
 
 This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
+## Unpublished
+
+## 0.8.0
+
+* Support for `InputBit` operation expected in qoqo 1.1.0
+
 ## 0.7.4
 
 * Updated to qoqo 1.0.0
@@ -17,6 +23,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 ## 0.7.1
 
 * Fixed: Bug in calculating result for PragmaGetPauliProduct
+
+
 
 ## 0.7.0
 
