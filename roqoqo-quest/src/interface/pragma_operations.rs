@@ -33,6 +33,10 @@ pub fn execute_pragma_repeated_measurement(
             msg: format!("Probabilites from quantum register {:?}", err),
         })?;
     let mut rng = thread_rng();
+    let existing_register = bit_registers
+        .get(operation.readout())
+        .map(|x| x.to_owned())
+        .unwrap_or_else(|| vec![false; usize::try_from(number_qubits).unwrap()]);
     let output_register: &mut BitOutputRegister = bit_registers_output
         .get_mut(operation.readout())
         .ok_or(RoqoqoBackendError::GenericError {
@@ -46,20 +50,27 @@ pub fn execute_pragma_repeated_measurement(
         None => {
             for _ in 0..*operation.number_measurements() {
                 let index = distribution.sample(&mut rng);
-                output_register.push(index_to_qubits(index, number_qubits))
+                let mut tmp = existing_register.clone();
+                for (a, b) in index_to_qubits(index, number_qubits)
+                    .into_iter()
+                    .enumerate()
+                {
+                    tmp[a] = b
+                }
+                output_register.push(tmp)
             }
         }
         Some(mapping) => {
             for _ in 0..*operation.number_measurements() {
                 let index = distribution.sample(&mut rng);
                 let tmp_output = index_to_qubits(index, number_qubits);
-                let mut new_output: Vec<bool> = vec![false; number_qubits as usize];
-                for (k, val) in tmp_output.iter().enumerate() {
+                let mut new_output: Vec<bool> = existing_register.clone();
+                for (k, val) in tmp_output.into_iter().enumerate() {
                     let tmp_index = match mapping.get(&k) {
                         Some(ind) => ind,
                         None => &k,
                     };
-                    new_output[*tmp_index] = *val;
+                    new_output[*tmp_index] = val;
                 }
                 output_register.push(new_output);
             }
@@ -158,6 +169,31 @@ pub fn execute_pragma_set_density_matrix(
             msg: "Density matrix can not be set on state vector quantum register".to_string(),
         })
     }
+}
+
+pub fn execute_pragma_input_bit(
+    operation: &InputBit,
+    bit_registers: &mut HashMap<String, BitRegister>,
+) -> Result<(), RoqoqoBackendError> {
+    let existing_register: &mut BitRegister =
+        bit_registers
+            .get_mut(operation.name())
+            .ok_or(RoqoqoBackendError::GenericError {
+                msg: format!(
+                    "Trying to write readout to non-existent register {}",
+                    operation.name()
+                ),
+            })?;
+    if operation.index() >= &existing_register.len() {
+        return Err(RoqoqoBackendError::GenericError {
+            msg: format!(
+                "Trying to write readout to non-existent index {}",
+                operation.index()
+            ),
+        });
+    }
+    existing_register[*operation.index()] = *operation.value();
+    Ok(())
 }
 
 // pub fn execute_pragma_random_noise(
