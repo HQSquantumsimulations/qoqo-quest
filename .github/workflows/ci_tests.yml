@@ -40,7 +40,6 @@ jobs:
       matrix:
         combinations: [
           { runs_on: "macOS-latest", rust: "x86_64-apple-darwin" },
-          { runs_on: "windows-latest", rust: "x86_64-pc-windows-msvc" },
         ]
         python: [
             {py: '3.7', interpreter: "python3.7"},
