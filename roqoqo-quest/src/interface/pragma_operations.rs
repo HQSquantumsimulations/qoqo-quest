@@ -14,6 +14,7 @@ use crate::Qureg;
 use num_complex::Complex64;
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
+use roqoqo::devices::Device;
 use roqoqo::operations::*;
 use roqoqo::registers::{BitOutputRegister, BitRegister, ComplexRegister};
 use roqoqo::RoqoqoBackendError;
@@ -291,4 +292,77 @@ fn index_to_qubits(index: usize, number_qubits: u32) -> Vec<bool> {
         binary_list.push(index.div_euclid(2usize.pow(k)).rem_euclid(2) == 1)
     }
     binary_list
+}
+
+pub fn execute_get_pauli_prod(
+    op: &PragmaGetPauliProduct,
+    float_registers: &mut HashMap<String, Vec<f64>>,
+    qureg: &mut Qureg,
+    bit_registers: &mut HashMap<String, Vec<bool>>,
+    complex_registers: &mut HashMap<String, Vec<num_complex::Complex<f64>>>,
+    bit_registers_output: &mut HashMap<String, Vec<Vec<bool>>>,
+    device: &mut Option<Box<dyn Device>>,
+) -> Result<(), RoqoqoBackendError> {
+    if op.qubit_paulis().is_empty() {
+        float_registers.insert(op.readout().clone(), vec![1.0]);
+        return Ok(());
+    }
+    let workspace_pp = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
+
+    let mut qubits: Vec<i32> = op
+        .qubit_paulis()
+        .keys()
+        .cloned()
+        .map(|x| x as i32)
+        .collect();
+    let mut paulis: Vec<u32> = op
+        .qubit_paulis()
+        .values()
+        .cloned()
+        .map(|x| x as u32)
+        .collect();
+
+    let pp = if !op.circuit().is_empty() {
+        let mut workspace = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
+        unsafe {
+            quest_sys::cloneQureg(workspace.quest_qureg, qureg.quest_qureg);
+        }
+        crate::interface::call_circuit_with_device(
+            op.circuit(),
+            &mut workspace,
+            bit_registers,
+            float_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+        )?;
+        unsafe {
+            let pauliprod = quest_sys::calcExpecPauliProd(
+                workspace.quest_qureg,
+                qubits.as_mut_ptr(),
+                paulis.as_mut_ptr(),
+                qubits.len() as i32,
+                workspace_pp.quest_qureg,
+            );
+            drop(workspace);
+            drop(workspace_pp);
+            pauliprod
+        }
+    } else {
+        unsafe {
+            let pp = quest_sys::calcExpecPauliProd(
+                qureg.quest_qureg,
+                qubits.as_mut_ptr(),
+                paulis.as_mut_ptr(),
+                qubits.len() as i32,
+                workspace_pp.quest_qureg,
+            );
+            drop(workspace_pp);
+            pp
+        }
+    };
+
+    float_registers.insert(op.readout().clone(), vec![pp]);
+
+    Ok(())
 }
