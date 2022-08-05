@@ -12,10 +12,12 @@
 //
 //! Integration test for call_operation for pragma operations
 
+const TOLERANCE: f64 = 1e-8;
 use ndarray::{array, Array1, Array2};
 use num_complex::{Complex, Complex64};
+use qoqo_calculator::CalculatorFloat;
 use roqoqo::operations::{
-    self, PragmaGetDensityMatrix, PragmaGetStateVector, PragmaNoiseOperation,
+    self, Operation, PragmaGetDensityMatrix, PragmaGetStateVector, PragmaNoiseOperation,
     PragmaSetDensityMatrix, PragmaSetStateVector,
 };
 use roqoqo::prelude::{OperatePragmaNoise, RoqoqoBackendError};
@@ -597,6 +599,69 @@ fn test_skipped_operations(pragma: operations::Operation) {
             }
         }
     }
+}
+
+#[test_case(1, vec![],0.0;"X")]
+#[test_case(2, vec![],0.0;"Y")]
+#[test_case(3, vec![],1.0;"Z")]
+#[test_case(1, vec![Operation::from(operations::Hadamard::new(0))],1.0;"X H")]
+#[test_case(2, vec![Operation::from(operations::Hadamard::new(0))],0.0;"Y H")]
+#[test_case(3, vec![Operation::from(operations::Hadamard::new(0))],0.0;"Z H")]
+#[test_case(1, vec![Operation::from(operations::RotateX::new(0, -CalculatorFloat::FRAC_PI_2))],0.0;"X R")]
+#[test_case(2, vec![Operation::from(operations::RotateX::new(0, -CalculatorFloat::FRAC_PI_2))],1.0;"Y R")]
+#[test_case(3, vec![Operation::from(operations::RotateX::new(0, -CalculatorFloat::FRAC_PI_2))],0.0;"Z R")]
+fn test_pragma_get_pauli_product(pauli: usize, circ: Vec<Operation>, exp_val: f64) {
+    let circuit_internal: Circuit = circ.into_iter().collect();
+    let pragma = operations::PragmaGetPauliProduct::new(
+        HashMap::from([(0, pauli)]),
+        "ro".into(),
+        circuit_internal,
+    );
+    let mut qureg = Qureg::new(1, true);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    // Apply tested operation to output
+    let _error = call_operation(
+        &pragma.clone().into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(float_registers.contains_key("ro"));
+    assert_eq!(float_registers.get("ro").unwrap().len(), 1);
+    assert!((float_registers.get("ro").unwrap()[0] - exp_val).abs() < TOLERANCE)
+}
+
+#[test]
+fn test_pragma_get_pauli_product_multiple() {
+    let mut circuit_internal: Circuit = Circuit::new();
+    circuit_internal += operations::Hadamard::new(0);
+    circuit_internal += operations::RotateX::new(1, -CalculatorFloat::FRAC_PI_2);
+    circuit_internal += operations::PauliX::new(2);
+    let pragma = operations::PragmaGetPauliProduct::new(
+        HashMap::from([(0, 1), (1, 2), (2, 3)]),
+        "ro".into(),
+        circuit_internal,
+    );
+    let mut qureg = Qureg::new(3, true);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    // Apply tested operation to output
+    let _error = call_operation(
+        &pragma.clone().into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(float_registers.contains_key("ro"));
+    assert_eq!(float_registers.get("ro").unwrap().len(), 1);
+    assert!((float_registers.get("ro").unwrap()[0] - (-1.0)).abs() < TOLERANCE)
 }
 
 #[test]
