@@ -794,7 +794,7 @@ dependencies = [
  "pyo3",
  "pyo3-build-config",
  "qoqo-macros",
- "qoqo_calculator",
+ "qoqo_calculator 0.8.3",
  "qoqo_calculator_pyo3",
  "quote",
  "roqoqo",
@@ -823,7 +823,7 @@ dependencies = [
  "pyo3",
  "pyo3-build-config",
  "qoqo",
- "qoqo_calculator",
+ "qoqo_calculator 0.8.3",
  "qoqo_calculator_pyo3",
  "roqoqo",
  "roqoqo-quest",
@@ -844,6 +844,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "qoqo_calculator"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a5598b18921d688d12413ac8a1e7ce7d5a5270d6fb0ab4b7f096aa5e31f3dca3"
+dependencies = [
+ "num-complex",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
 name = "qoqo_calculator_pyo3"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -851,7 +862,7 @@ checksum = "f11ec1ab10a4c3e258b0a3ac52e881277ee87189e6ac6633ec1facf3fb975f72"
 dependencies = [
  "num-complex",
  "pyo3",
- "qoqo_calculator",
+ "qoqo_calculator 0.8.3",
  "serde",
  "thiserror",
 ]
@@ -978,16 +989,16 @@ checksum = "a3f87b73ce11b1619a3c6332f45341e0047173771e8b8b73f87bfeefb7b56244"
 
 [[package]]
 name = "roqoqo"
-version = "1.0.0-alpha.5"
+version = "1.0.0-beta.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bb7d360d3826bbe19baa6b6e88acc1029d4d5f78a10075f4fd9e5499763805a6"
+checksum = "1b8cb4f50c3a266254ae60e0eebf629245455e6f14cb87cf4fbfcfa0eed98d10"
 dependencies = [
  "bincode",
  "nalgebra",
  "ndarray",
  "num-complex",
  "proc-macro2",
- "qoqo_calculator",
+ "qoqo_calculator 1.0.0",
  "quote",
  "rand",
  "rand_distr",
@@ -999,9 +1010,9 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-derive"
-version = "1.0.0-alpha.5"
+version = "1.0.0-beta.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6736355a6a2ec86461fbd886209ad1a31d500fd0d872d50a5e97b1c094faf134"
+checksum = "f58e19915961859f4da0ab619efb6c2ac919ab6d5596897c4345ed486d204485"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1015,7 +1026,7 @@ dependencies = [
  "criterion",
  "ndarray",
  "num-complex",
- "qoqo_calculator",
+ "qoqo_calculator 0.8.3",
  "quest-sys",
  "rand",
  "roqoqo",
