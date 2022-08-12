@@ -13,7 +13,7 @@
 #![deny(missing_docs)]
 #![deny(missing_crate_level_docs)]
 #![deny(missing_debug_implementations)]
-
+#![allow(clippy::borrow_deref_ref)]
 //! Qoqo quantum computing toolkit
 //!
 //! Quantum Operation Quantum Operation

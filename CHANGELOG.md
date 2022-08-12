@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## 0.7.1
 
+* Updated dependencies
+
+## 0.7.1
+
 * Fixed: Bug in calculating result for PragmaGetPauliProduct
 
 ## 0.7.0
