@@ -6717,7 +6717,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-libc 0.2.127
+libc 0.2.131
 https://github.com/rust-lang/libc
 by The Rust Project Developers
 Raw FFI bindings to platform libraries like libc.
@@ -6934,7 +6934,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-libm 0.2.3
+libm 0.2.5
 https://github.com/rust-lang/libm
 by Jorge Aparicio <jorge@japaric.io>
 libm in pure Rust
@@ -13095,7 +13095,7 @@ LICENSE:
 
 
 ====================================================
-qoqo 1.0.0-alpha.5
+qoqo 1.0.0-beta.1
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Quantum computing circuit toolkit. Python interface of roqoqo
@@ -13307,7 +13307,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-macros 1.0.0-alpha.5
+qoqo-macros 1.0.0-beta.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the qoqo crate
 License: Apache-2.0
@@ -13518,7 +13518,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.7.1
+qoqo-quest 0.7.2
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -13730,7 +13730,7 @@ LICENSE:
 
 
 ====================================================
-qoqo_calculator 0.8.3
+qoqo_calculator 1.0.0
 https://github.com/HQSquantumsimulations/qoqo_calculator
 by HQS Quantum Simulations <info@quantumsimulations.de>
 qoqo-calculator is the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -13942,7 +13942,7 @@ LICENSE:
 
 
 ====================================================
-qoqo_calculator_pyo3 0.8.3
+qoqo_calculator_pyo3 1.0.0
 https://github.com/HQSquantumsimulations/qoqo_calculator_pyo3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Python interface to qoqo calculator, the calculator backend of the qoqo quantum computing toolkit by HQS Quantum Simulations
@@ -14154,7 +14154,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.7.1
+quest-sys 0.7.2
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -16913,7 +16913,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-roqoqo 1.0.0-alpha.5
+roqoqo 1.0.0-beta.1
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Rust Quantum Computing Toolkit by HQS
@@ -17125,7 +17125,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-derive 1.0.0-alpha.5
+roqoqo-derive 1.0.0-beta.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the roqoqo crate
 License: Apache-2.0
@@ -17336,7 +17336,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.7.1
+roqoqo-quest 0.7.2
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
@@ -18123,7 +18123,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde 1.0.142
+serde 1.0.143
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -18597,7 +18597,7 @@ THE SOFTWARE.
 
 
 ====================================================
-serde_derive 1.0.142
+serde_derive 1.0.143
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]

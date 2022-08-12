@@ -25,7 +25,7 @@ use std::collections::HashMap;
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
 #[pyclass(name = "Backend", module = "qoqo_quest")]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BackendWrapper {
     /// Internal storage of [roqoqo_quest::Backend]
     pub internal: roqoqo_quest::Backend,
