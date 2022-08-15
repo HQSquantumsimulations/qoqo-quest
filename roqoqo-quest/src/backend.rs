@@ -26,7 +26,7 @@ use std::collections::HashMap;
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
-#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Backend {
     /// Number of qubits supported by the backend
     pub number_qubits: usize,

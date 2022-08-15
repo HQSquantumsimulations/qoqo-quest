@@ -216,51 +216,15 @@ pub fn call_operation_with_device(
         Operation::PragmaGetDensityMatrix(op) => {
             execute_pragma_get_density_matrix(op, qureg, complex_registers)
         }
-        Operation::PragmaGetPauliProduct(op) => {
-            if op.qubit_paulis().is_empty() {
-                float_registers.insert(op.readout().clone(), vec![1.0]);
-                return Ok(());
-            }
-            unsafe {
-                let workspace = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
-                let workspace_pp = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
-                if !op.circuit().is_empty() {
-                    call_circuit_with_device(
-                        op.circuit(),
-                        qureg,
-                        bit_registers,
-                        float_registers,
-                        complex_registers,
-                        bit_registers_output,
-                        device,
-                    )?;
-                }
-                quest_sys::cloneQureg(workspace.quest_qureg, qureg.quest_qureg);
-                let mut qubits: Vec<i32> = op
-                    .qubit_paulis()
-                    .keys()
-                    .cloned()
-                    .map(|x| x as i32)
-                    .collect();
-                let mut paulis: Vec<u32> = op
-                    .qubit_paulis()
-                    .values()
-                    .cloned()
-                    .map(|x| x as u32)
-                    .collect();
-                let pp = quest_sys::calcExpecPauliProd(
-                    workspace.quest_qureg,
-                    qubits.as_mut_ptr(),
-                    paulis.as_mut_ptr(),
-                    qubits.len() as i32,
-                    workspace_pp.quest_qureg,
-                );
-                drop(workspace);
-                drop(workspace_pp);
-                float_registers.insert(op.readout().clone(), vec![pp]);
-            }
-            Ok(())
-        }
+        Operation::PragmaGetPauliProduct(op) => execute_get_pauli_prod(
+            op,
+            float_registers,
+            qureg,
+            bit_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+        ),
         Operation::PragmaGetOccupationProbability(op) => {
             unsafe {
                 let mut workspace = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
