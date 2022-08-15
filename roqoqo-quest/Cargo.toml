@@ -31,12 +31,11 @@ ndarray="0.15"
 
 [dev-dependencies]
 test-case="2.0"
-criterion = "0.3"
+criterion = {version="0.3"}
 
 [features]
 default = []
 openmp = ["quest-sys/openmp"]
-
 
 [[bench]]
 name = "circuit_execution_benchmark"

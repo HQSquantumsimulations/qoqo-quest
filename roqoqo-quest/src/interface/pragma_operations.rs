@@ -161,10 +161,18 @@ pub fn execute_pragma_set_density_matrix(
         let mut reals: Vec<f64> = density_matrix.t().iter().map(|x| x.re).collect();
         let mut imags: Vec<f64> = density_matrix.t().iter().map(|x| x.im).collect();
         let start_row: ::std::os::raw::c_longlong = 0;
-        let start_column : ::std::os::raw::c_longlong = 0;
-        let number_amplitudes: ::std::os::raw::c_longlong = imags.len() as ::std::os::raw::c_longlong;
+        let start_column: ::std::os::raw::c_longlong = 0;
+        let number_amplitudes: ::std::os::raw::c_longlong =
+            imags.len() as ::std::os::raw::c_longlong;
         unsafe {
-            quest_sys::setDensityAmps(qureg.quest_qureg, start_row,start_column,reals.as_mut_ptr(), imags.as_mut_ptr(), number_amplitudes)
+            quest_sys::setDensityAmps(
+                qureg.quest_qureg,
+                start_row,
+                start_column,
+                reals.as_mut_ptr(),
+                imags.as_mut_ptr(),
+                number_amplitudes,
+            )
         }
         Ok(())
     } else {

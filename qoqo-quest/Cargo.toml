@@ -47,7 +47,7 @@ default = ["extension-module"]
 openmp = ["roqoqo-quest/openmp"]
 
 [package.metadata.maturin]
-requires-dist = ["numpy", "qoqo>=1.0.0a2", "qoqo_calculator_pyo3>=0.7.0"]
+requires-dist = ["numpy", "qoqo>=1.1.0b1", "qoqo_calculator_pyo3>=1.0"]
 maintainer = "HQS Quantum Simulations GmbH"
 maintainer-email = "info@quantumsimulations.de"
 requires-python = ">=3.7"
