@@ -1248,7 +1248,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-bytemuck 1.11.0
+bytemuck 1.12.0
 https://github.com/Lokathor/bytemuck
 by Lokathor <zefria@gmail.com>
 A crate for mucking around with piles of bytes.
@@ -13095,7 +13095,7 @@ LICENSE:
 
 
 ====================================================
-qoqo 1.0.0-beta.1
+qoqo 1.1.0-beta.1
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Quantum computing circuit toolkit. Python interface of roqoqo
@@ -13307,7 +13307,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-macros 1.0.0-beta.1
+qoqo-macros 1.1.0-beta.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the qoqo crate
 License: Apache-2.0
@@ -13518,7 +13518,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.7.2
+qoqo-quest 0.8.0-alpha.1
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -14154,7 +14154,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.7.2
+quest-sys 0.8.0-alpha.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -16913,7 +16913,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-roqoqo 1.0.0-beta.1
+roqoqo 1.1.0-beta.1
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Rust Quantum Computing Toolkit by HQS
@@ -17125,7 +17125,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-derive 1.0.0-beta.1
+roqoqo-derive 1.1.0-beta.1
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the roqoqo crate
 License: Apache-2.0
@@ -17336,7 +17336,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.7.2
+roqoqo-quest 0.8.0-alpha.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
