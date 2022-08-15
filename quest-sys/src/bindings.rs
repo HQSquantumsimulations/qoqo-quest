@@ -2324,7 +2324,8 @@ extern "C" {
     pub fn initStateFromAmps(qureg: Qureg, reals: *mut f64, imags: *mut f64);
 }
 extern "C" {
-    #[doc = " Overwrites a subset of the amplitudes in state-vector \\p qureg, with those passed in \\p reals and \\p imags."]
+    #[doc = " Overwrites a contiguous subset of the amplitudes in state-vector \\p qureg,"]
+    #[doc = " with those passed in \\p reals and \\p imags."]
     #[doc = ""]
     #[doc = " Only amplitudes with indices in <b>[</b>\\p startInd<b>,</b> \\p startInd <b>+</b> \\p numAmps<b>]</b>"]
     #[doc = " will be changed. The resulting \\p qureg may not necessarily be in an L2 normalised state."]
@@ -2352,6 +2353,7 @@ extern "C" {
     #[doc = ""]
     #[doc = ""]
     #[doc = " @see"]
+    #[doc = " - setDensityAmps()"]
     #[doc = " - setWeightedQureg()"]
     #[doc = " - initStateFromAmps()"]
     #[doc = " - initBlankState()"]
@@ -2371,6 +2373,45 @@ extern "C" {
     pub fn setAmps(
         qureg: Qureg,
         startInd: ::std::os::raw::c_longlong,
+        reals: *mut f64,
+        imags: *mut f64,
+        numAmps: ::std::os::raw::c_longlong,
+    );
+}
+extern "C" {
+    #[doc = " Overwrites a contiguous subset of the amplitudes in density-matrix \\p qureg,"]
+    #[doc = " with those passed in \\p reals and \\p imags, intrepreted column-wise."]
+    #[doc = ""]
+    #[doc = " Only the first \\p numAmp amplitudes starting from row-column index (\\p startRow, \\p startCol), and"]
+    #[doc = " proceeding down the column (wrapping around between rows) will be modified."]
+    #[doc = " The resulting \\p qureg may not necessarily be a valid density matrix normalisation."]
+    #[doc = ""]
+    #[doc = " In distributed mode, this function assumes the subset \\p reals and \\p imags exist"]
+    #[doc = " (at least) on the node(s) containing the ultimately updated elements.\\n"]
+    #[doc = ""]
+    #[doc = ""]
+    #[doc = " @see"]
+    #[doc = " - setAmps()"]
+    #[doc = " - initStateFromAmps()"]
+    #[doc = ""]
+    #[doc = " @ingroup init"]
+    #[doc = " @param[in,out] qureg the density-matrix to modify"]
+    #[doc = " @param[in] startRow the row-index of the first amplitude in \\p qureg to modify"]
+    #[doc = " @param[in] startCol the column-index of the first amplitude in \\p qureg to modify"]
+    #[doc = " @param[in] reals array of the real components of the new amplitudes"]
+    #[doc = " @param[in] imags array of the imaginary components of the new amplitudes"]
+    #[doc = " @param[in] numAmps the length of each of the reals and imags arrays"]
+    #[doc = " @throws invalidQuESTInputError()"]
+    #[doc = " - if \\p qureg is not a density matrix (i.e. is a state-vector)"]
+    #[doc = " - if \\p startRow is outside [0, `1 << qureg.numQubitsRepresented`]"]
+    #[doc = " - if \\p startCol is outside [0, `1 << qureg.numQubitsRepresented`]"]
+    #[doc = " - if \\p numAmps is outside [0, `qureg.numAmpsTotal`]"]
+    #[doc = " - if \\p numAmps is larger than the remaining number of amplitudes from (`startRow`, `startCol`), column-wise"]
+    #[doc = " @author Tyson Jones"]
+    pub fn setDensityAmps(
+        qureg: Qureg,
+        startRow: ::std::os::raw::c_longlong,
+        startCol: ::std::os::raw::c_longlong,
         reals: *mut f64,
         imags: *mut f64,
         numAmps: ::std::os::raw::c_longlong,
@@ -5338,13 +5379,14 @@ extern "C" {
     #[doc = " \\f["]
     #[doc = "\\sum \\limits_i^{\\text{numOps}} K_i^\\dagger K_i = I"]
     #[doc = " \\f]"]
-    #[doc = " where \\f$ I \\f$ is the identity matrix."]
+    #[doc = " where \\f$ I \\f$ is the identity matrix. Use mixNonTPKrausMap() to relax this condition."]
     #[doc = ""]
     #[doc = " Note that in distributed mode, this routine requires that each node contains at least 4 amplitudes."]
     #[doc = " This means an q-qubit register can be distributed by at most 2^(q-2) numTargs nodes."]
     #[doc = ""]
     #[doc = " @see"]
     #[doc = " - ::ComplexMatrix2"]
+    #[doc = " - mixNonTPKrausMap()"]
     #[doc = " - mixTwoQubitKrausMap()"]
     #[doc = " - mixMultiQubitKrausMap()"]
     #[doc = " - mixDephasing()"]
@@ -5383,7 +5425,8 @@ extern "C" {
     #[doc = " \\f["]
     #[doc = "\\sum \\limits_i^{\\text{numOps}} K_i^\\dagger K_i = I"]
     #[doc = " \\f]"]
-    #[doc = " where \\f$ I \\f$ is the identity matrix."]
+    #[doc = " where \\f$ I \\f$ is the identity matrix. Use mixNonTPTwoQubitKrausMap() to relax this"]
+    #[doc = " this condition."]
     #[doc = ""]
     #[doc = " \\p targetQubit1 is treated as the \\p least significant qubit in each op in \\p ops."]
     #[doc = ""]
@@ -5392,6 +5435,7 @@ extern "C" {
     #[doc = ""]
     #[doc = " @see"]
     #[doc = " - ::ComplexMatrix4"]
+    #[doc = " - mixNonTPTwoQubitKrausMap()"]
     #[doc = " - mixMultiQubitKrausMap()"]
     #[doc = " - mixKrausMap()"]
     #[doc = ""]
@@ -5427,7 +5471,8 @@ extern "C" {
     #[doc = " \\f["]
     #[doc = "\\sum \\limits_i^{\\text{numOps}} K_i^\\dagger K_i = I"]
     #[doc = " \\f]"]
-    #[doc = " where \\f$ I \\f$ is the identity matrix."]
+    #[doc = " where \\f$ I \\f$ is the identity matrix. Use mixNonTPMultiQubitKrausMap() to relax"]
+    #[doc = " this condition."]
     #[doc = ""]
     #[doc = " The first qubit in \\p targets is treated as the \\p least significant qubit in each op in \\p ops."]
     #[doc = ""]
@@ -5447,6 +5492,7 @@ extern "C" {
     #[doc = " @see"]
     #[doc = " - createComplexMatrixN()"]
     #[doc = " - initComplexMatrixN()"]
+    #[doc = " - mixNonTPMultiQubitKrausMap()"]
     #[doc = " - mixKrausMap()"]
     #[doc = " - mixTwoQubitKrausMap()"]
     #[doc = ""]
@@ -5467,6 +5513,148 @@ extern "C" {
     #[doc = " @author Tyson Jones"]
     #[doc = " @author Balint Koczor"]
     pub fn mixMultiQubitKrausMap(
+        qureg: Qureg,
+        targets: *mut ::std::os::raw::c_int,
+        numTargets: ::std::os::raw::c_int,
+        ops: *mut ComplexMatrixN,
+        numOps: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " Apply a general non-trace-preserving single-qubit Kraus map to a density matrix,"]
+    #[doc = " as specified by at most four operators, \\f$K_i\\f$ (\\p ops)."]
+    #[doc = " This effects"]
+    #[doc = " \\f["]
+    #[doc = "\\rho \\to \\sum\\limits_i^{\\text{numOps}} K_i \\rho K_i^\\dagger"]
+    #[doc = " \\f]"]
+    #[doc = " where \\f$K_i\\f$ are permitted to be any matrix. This means the density matrix"]
+    #[doc = " can enter a non-physical state."]
+    #[doc = ""]
+    #[doc = " Use mixKrausMap() to enforce that the channel is trace preserving and completely positive."]
+    #[doc = ""]
+    #[doc = " Note that in distributed mode, this routine requires that each node contains at least 4 amplitudes."]
+    #[doc = " This means an q-qubit register can be distributed by at most 2^(q-2) numTargs nodes."]
+    #[doc = ""]
+    #[doc = " @see"]
+    #[doc = " - ::ComplexMatrix2"]
+    #[doc = " - mixKrausMap()"]
+    #[doc = " - mixNonTPTwoQubitKrausMap()"]
+    #[doc = " - mixNonTPMultiQubitKrausMap()"]
+    #[doc = ""]
+    #[doc = " @ingroup decoherence"]
+    #[doc = " @param[in,out] qureg the density matrix to which to apply the map"]
+    #[doc = " @param[in] target the target qubit of the map"]
+    #[doc = " @param[in] ops an array of at most 4 Kraus operators"]
+    #[doc = " @param[in] numOps the number of operators in \\p ops which must be >0 and <= 4."]
+    #[doc = " @throws invalidQuESTInputError()"]
+    #[doc = " - if \\p qureg is not a density matrix"]
+    #[doc = " - if \\p target is outside of [0, \\p qureg.numQubitsRepresented)"]
+    #[doc = " - if \\p numOps is outside [1, 4]"]
+    #[doc = " - if a node cannot fit 4 amplitudes in distributed mode"]
+    #[doc = " @author Tyson Jones"]
+    #[doc = " @author Balint Koczor (backend code)"]
+    pub fn mixNonTPKrausMap(
+        qureg: Qureg,
+        target: ::std::os::raw::c_int,
+        ops: *mut ComplexMatrix2,
+        numOps: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " Apply a general non-trace-preserving two-qubit Kraus map to a density matrix,"]
+    #[doc = " as specified by at most sixteen operators, \\f$K_i\\f$ (\\p ops)."]
+    #[doc = ""]
+    #[doc = " This effects"]
+    #[doc = " \\f["]
+    #[doc = "\\rho \\to \\sum\\limits_i^{\\text{numOps}} K_i \\rho K_i^\\dagger"]
+    #[doc = " \\f]"]
+    #[doc = " where the matrices \\f$K_i\\f$ are unconstrained, and hence the effective map is permitted"]
+    #[doc = " to be non-completely-positive and non-trace-preserving."]
+    #[doc = " Use mixTwoQubitKrausMap() to enforce that the map be completely positive."]
+    #[doc = ""]
+    #[doc = " \\p targetQubit1 is treated as the \\p least significant qubit in each op in \\p ops."]
+    #[doc = ""]
+    #[doc = " Note that in distributed mode, this routine requires that each node contains at least 16 amplitudes."]
+    #[doc = " This means an q-qubit register can be distributed by at most 2^(q-4) numTargs nodes."]
+    #[doc = ""]
+    #[doc = " @see"]
+    #[doc = " - ::ComplexMatrix4"]
+    #[doc = " - mixTwoQubitKrausMap()"]
+    #[doc = " - mixNonTPKrausMap()"]
+    #[doc = " - mixNonTPMultiQubitKrausMap()"]
+    #[doc = ""]
+    #[doc = " @ingroup decoherence"]
+    #[doc = " @param[in,out] qureg the density matrix to which to apply the map"]
+    #[doc = " @param[in] target1 the least significant target qubit in \\p ops"]
+    #[doc = " @param[in] target2 the most significant target qubit in \\p ops"]
+    #[doc = " @param[in] ops an array of at most 16 Kraus operators"]
+    #[doc = " @param[in] numOps the number of operators in \\p ops which must be >0 and <= 16."]
+    #[doc = " @throws invalidQuESTInputError()"]
+    #[doc = " - if \\p qureg is not a density matrix"]
+    #[doc = " - if either \\p target1 or \\p target2 is outside of [0, \\p qureg.numQubitsRepresented)"]
+    #[doc = " - if \\p target1 = \\p target2"]
+    #[doc = " - if \\p numOps is outside [1, 16]"]
+    #[doc = " - if a node cannot fit 16 amplitudes in distributed mode"]
+    #[doc = " @author Tyson Jones"]
+    #[doc = " @author Balint Koczor (backend code)"]
+    pub fn mixNonTPTwoQubitKrausMap(
+        qureg: Qureg,
+        target1: ::std::os::raw::c_int,
+        target2: ::std::os::raw::c_int,
+        ops: *mut ComplexMatrix4,
+        numOps: ::std::os::raw::c_int,
+    );
+}
+extern "C" {
+    #[doc = " Apply a general N-qubit non-trace-preserving Kraus map to a density matrix,"]
+    #[doc = " as specified by at most (2N)^2 operators."]
+    #[doc = ""]
+    #[doc = " This effects"]
+    #[doc = " \\f["]
+    #[doc = "\\rho \\to \\sum\\limits_i^{\\text{numOps}} K_i \\rho K_i^\\dagger"]
+    #[doc = " \\f]"]
+    #[doc = " where the matrices \\f$ K_i \\f$ are unconstrained, and hence the effective map is permitted"]
+    #[doc = " to be non-completely-positive and non-trace-preserving."]
+    #[doc = " Use mixMultiQubitKrausMap() to enforce that the map be completely positive."]
+    #[doc = ""]
+    #[doc = " The first qubit in \\p targets is treated as the \\p least significant qubit in each op in \\p ops."]
+    #[doc = ""]
+    #[doc = " Note that in distributed mode, this routine requires that each node contains at least (2N)^2 amplitudes."]
+    #[doc = " This means an q-qubit register can be distributed by at most 2^(q-2)/N^2 nodes."]
+    #[doc = ""]
+    #[doc = " Note too that this routine internally creates a 'superoperator'; a complex matrix of dimensions"]
+    #[doc = " 2^(2*numTargets) by 2^(2*numTargets). Therefore, invoking this function incurs,"]
+    #[doc = " for numTargs={1,2,3,4,5, ...}, an additional memory overhead of (at double-precision)"]
+    #[doc = " {0.25 KiB, 4 KiB, 64 KiB, 1 MiB, 16 MiB, ...} (respectively)."]
+    #[doc = " At quad precision (usually 10 B per number, but possibly 16 B due to alignment),"]
+    #[doc = " this costs at most double the amount of memory."]
+    #[doc = " For numTargets < 4, this superoperator will be created in the runtime"]
+    #[doc = " stack. For numTargs >= 4, the superoperator will be allocated in the heap and"]
+    #[doc = " therefore this routine may suffer an anomalous slowdown."]
+    #[doc = ""]
+    #[doc = " @see"]
+    #[doc = " - createComplexMatrixN()"]
+    #[doc = " - initComplexMatrixN()"]
+    #[doc = " - mixMultiQubitKrausMap()"]
+    #[doc = " - mixNonTPKrausMap()"]
+    #[doc = " - mixNonTPTwoQubitKrausMap()"]
+    #[doc = ""]
+    #[doc = " @ingroup decoherence"]
+    #[doc = " @param[in,out] qureg the density matrix to which to apply the map"]
+    #[doc = " @param[in] targets a list of target qubit indices, the first of which is treated as least significant in each op in \\p ops"]
+    #[doc = " @param[in] numTargets the length of \\p targets"]
+    #[doc = " @param[in] ops an array of at most (2N)^2 Kraus operators"]
+    #[doc = " @param[in] numOps the number of operators in \\p ops which must be >0 and <= (2N)^2."]
+    #[doc = " @throws invalidQuESTInputError()"]
+    #[doc = " - if \\p qureg is not a density matrix"]
+    #[doc = " - if any target in \\p targets is outside of [0, \\p qureg.numQubitsRepresented)"]
+    #[doc = " - if any qubit in \\p targets is repeated"]
+    #[doc = " - if \\p numOps is outside [1, (2 \\p numTargets)^2]"]
+    #[doc = " - if any ComplexMatrixN in \\p ops does not have op.numQubits == \\p numTargets"]
+    #[doc = " - if a node cannot fit (2N)^2 amplitudes in distributed mode"]
+    #[doc = " @author Tyson Jones"]
+    #[doc = " @author Balint Koczor (backend code)"]
+    pub fn mixNonTPMultiQubitKrausMap(
         qureg: Qureg,
         targets: *mut ::std::os::raw::c_int,
         numTargets: ::std::os::raw::c_int,
@@ -7122,7 +7310,7 @@ extern "C" {
     #[doc = " @ingroup operator"]
     #[doc = " @param[in,out] qureg a state-vector or density matrix to modify"]
     #[doc = " @param[in] qubit the qubit to which to apply the projector"]
-    #[doc = " @param[in] the single-qubit outcome (`0` or `1`) to project \\p qubit into"]
+    #[doc = " @param[in] outcome the single-qubit outcome (`0` or `1`) to project \\p qubit into"]
     #[doc = " @throws invalidQuESTInputError()"]
     #[doc = " - if \\p qubit is outside [0, `qureg.numQubitsRepresented`)"]
     #[doc = " - if \\p outcome is not in {0,1}"]

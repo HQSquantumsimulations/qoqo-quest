@@ -21,7 +21,7 @@ doctest = false
 
 [dependencies]
 quest-sys = {version="0.8.0-alpha.1", path="../quest-sys", default-features=false}
-roqoqo = {version ="1.1.0-alpha.1", features=["serialize"]}
+roqoqo = {version ="1.1.0-beta.1", features=["serialize"]}
 
 qoqo_calculator = { version="1.0"}
 num-complex = {version="0.4"}
@@ -31,12 +31,11 @@ ndarray="0.15"
 
 [dev-dependencies]
 test-case="2.0"
-criterion = "0.3"
+criterion = {version="0.3"}
 
 [features]
 default = []
 openmp = ["quest-sys/openmp"]
-
 
 [[bench]]
 name = "circuit_execution_benchmark"
