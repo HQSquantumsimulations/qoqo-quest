@@ -1,7 +1,7 @@
 
 [package]
 name = "quest-sys"
-version = "0.7.2"
+version = "0.7.3"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0 AND MIT AND BSD-3-Clause"
 edition = "2021"

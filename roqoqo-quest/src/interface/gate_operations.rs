@@ -200,86 +200,86 @@ pub fn execute_generic_two_qubit_operation(
     Ok(())
 }
 
-// pub fn execute_generic_single_qubit_noise(
-//     operation: &PragmaNoiseOperation,
-//     qureg: &mut Qureg,
-// ) -> Result<(), RoqoqoBackendError> {
-//     if !qureg.is_density_matrix {
-//         return Err(RoqoqoBackendError::GenericError {
-//             msg: "Noise operator can not be applied to state vector quantum register".to_string(),
-//         });
-//     }
-//     let number_qubits = qureg.number_qubits();
-//     let unitary_matrix = operation.superoperator_column_major()?;
-//     let complex_matrix = quest_sys::ComplexMatrix4 {
-//         // Row major version
-//         real: [
-//             [
-//                 unitary_matrix[(0, 0)],
-//                 unitary_matrix[(0, 1)],
-//                 unitary_matrix[(0, 2)],
-//                 unitary_matrix[(0, 3)],
-//             ],
-//             [
-//                 unitary_matrix[(1, 0)],
-//                 unitary_matrix[(1, 1)],
-//                 unitary_matrix[(1, 2)],
-//                 unitary_matrix[(1, 3)],
-//             ],
-//             [
-//                 unitary_matrix[(2, 0)],
-//                 unitary_matrix[(2, 1)],
-//                 unitary_matrix[(2, 2)],
-//                 unitary_matrix[(2, 3)],
-//             ],
-//             [
-//                 unitary_matrix[(3, 0)],
-//                 unitary_matrix[(3, 1)],
-//                 unitary_matrix[(3, 2)],
-//                 unitary_matrix[(3, 3)],
-//             ],
-//         ],
-//         // // Column major version
-//         // real: [
-//         //     [
-//         //         unitary_matrix[(0, 0)],
-//         //         unitary_matrix[(1, 0)],
-//         //         unitary_matrix[(2, 0)],
-//         //         unitary_matrix[(3, 0)],
-//         //     ],
-//         //     [
-//         //         unitary_matrix[(0, 1)],
-//         //         unitary_matrix[(1, 1)],
-//         //         unitary_matrix[(2, 1)],
-//         //         unitary_matrix[(3, 1)],
-//         //     ],
-//         //     [
-//         //         unitary_matrix[(0, 2)],
-//         //         unitary_matrix[(1, 2)],
-//         //         unitary_matrix[(2, 2)],
-//         //         unitary_matrix[(3, 2)],
-//         //     ],
-//         //     [
-//         //         unitary_matrix[(0, 3)],
-//         //         unitary_matrix[(1, 3)],
-//         //         unitary_matrix[(2, 3)],
-//         //         unitary_matrix[(3, 3)],
-//         //     ],
-//         // ],
-//         imag: [
-//             [0.0, 0.0, 0.0, 0.0],
-//             [0.0, 0.0, 0.0, 0.0],
-//             [0.0, 0.0, 0.0, 0.0],
-//             [0.0, 0.0, 0.0, 0.0],
-//         ],
-//     };
-//     unsafe {
-//         quest_sys::statevec_twoQubitUnitary(
-//             qureg.quest_qureg,
-//             *operation.qubit() as i32,
-//             *operation.qubit() as i32 + number_qubits as i32,
-//             complex_matrix,
-//         )
-//     }
-//     Ok(())
-// }
+pub fn execute_generic_single_qubit_noise(
+    operation: &PragmaGeneralNoise,
+    qureg: &mut Qureg,
+) -> Result<(), RoqoqoBackendError> {
+    if !qureg.is_density_matrix {
+        return Err(RoqoqoBackendError::GenericError {
+            msg: "Noise operator can not be applied to state vector quantum register".to_string(),
+        });
+    }
+    let number_qubits = qureg.number_qubits();
+    let unitary_matrix = operation.superoperator()?;
+    let complex_matrix = quest_sys::ComplexMatrix4 {
+        // Row major version
+        real: [
+            [
+                unitary_matrix[(0, 0)],
+                unitary_matrix[(0, 1)],
+                unitary_matrix[(0, 2)],
+                unitary_matrix[(0, 3)],
+            ],
+            [
+                unitary_matrix[(1, 0)],
+                unitary_matrix[(1, 1)],
+                unitary_matrix[(1, 2)],
+                unitary_matrix[(1, 3)],
+            ],
+            [
+                unitary_matrix[(2, 0)],
+                unitary_matrix[(2, 1)],
+                unitary_matrix[(2, 2)],
+                unitary_matrix[(2, 3)],
+            ],
+            [
+                unitary_matrix[(3, 0)],
+                unitary_matrix[(3, 1)],
+                unitary_matrix[(3, 2)],
+                unitary_matrix[(3, 3)],
+            ],
+        ],
+        // Column major version
+        // real: [
+        //     [
+        //         unitary_matrix[(0, 0)],
+        //         unitary_matrix[(1, 0)],
+        //         unitary_matrix[(2, 0)],
+        //         unitary_matrix[(3, 0)],
+        //     ],
+        //     [
+        //         unitary_matrix[(0, 1)],
+        //         unitary_matrix[(1, 1)],
+        //         unitary_matrix[(2, 1)],
+        //         unitary_matrix[(3, 1)],
+        //     ],
+        //     [
+        //         unitary_matrix[(0, 2)],
+        //         unitary_matrix[(1, 2)],
+        //         unitary_matrix[(2, 2)],
+        //         unitary_matrix[(3, 2)],
+        //     ],
+        //     [
+        //         unitary_matrix[(0, 3)],
+        //         unitary_matrix[(1, 3)],
+        //         unitary_matrix[(2, 3)],
+        //         unitary_matrix[(3, 3)],
+        //     ],
+        // ],
+        imag: [
+            [0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0],
+        ],
+    };
+    unsafe {
+        quest_sys::statevec_twoQubitUnitary(
+            qureg.quest_qureg,
+            *operation.qubit() as i32,
+            *operation.qubit() as i32 + number_qubits as i32,
+            complex_matrix,
+        )
+    }
+    Ok(())
+}
