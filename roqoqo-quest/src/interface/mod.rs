@@ -517,7 +517,7 @@ pub fn call_operation_with_device(
             }
             Ok(())
         }
-        Operation::PragmaGeneralNoise(op) => execute_generic_single_qubit_noise(&op, qureg),
+        Operation::PragmaGeneralNoise(op) => execute_generic_single_qubit_noise(op, qureg),
         Operation::PragmaChangeDevice(op) => {
             if let Some(device_box) = device {
                 device_box.change_device(&op.wrapped_hqslang, &op.wrapped_operation)?;
