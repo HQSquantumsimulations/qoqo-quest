@@ -6,8 +6,7 @@ members = [
 ]
 
 [profile.release]
-lto = "thin"
+lto = true
 
 [profile.bench]
-lto = "thin"
-
+lto = true
