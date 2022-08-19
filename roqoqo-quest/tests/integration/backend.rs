@@ -11,15 +11,15 @@
 // limitations under the License.
 
 use roqoqo::backends::EvaluatingBackend;
+use roqoqo::measurements::ClassicalRegister;
 use roqoqo::operations;
 use roqoqo::Circuit;
 use roqoqo_quest::Backend;
-use roqoqo::measurements::ClassicalRegister;
 
-#[cfg(feature="async")]
-use roqoqo::backends::AsyncEvaluatingBackend;
-#[cfg(feature="async")]
+#[cfg(feature = "async")]
 use futures::executor::block_on;
+#[cfg(feature = "async")]
+use roqoqo::backends::AsyncEvaluatingBackend;
 
 #[test]
 fn test_measurement_with_repeated_measurement() {
@@ -28,7 +28,10 @@ fn test_measurement_with_repeated_measurement() {
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let measurement = ClassicalRegister{ constant_circuit: Some(constant_circuit), circuits: vec![circuit] };
+    let measurement = ClassicalRegister {
+        constant_circuit: Some(constant_circuit),
+        circuits: vec![circuit],
+    };
     let backend = Backend::new(4);
     let (bit_result, float_result, complex_result) =
         backend.run_measurement_registers(&measurement).unwrap();
@@ -45,7 +48,7 @@ fn test_measurement_with_repeated_measurement() {
     }
 }
 
-#[cfg(feature="async")]
+#[cfg(feature = "async")]
 #[test]
 fn test_measurement_with_repeated_measurement_async() {
     let mut constant_circuit = Circuit::new();
@@ -53,7 +56,10 @@ fn test_measurement_with_repeated_measurement_async() {
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let measurement = ClassicalRegister{ constant_circuit: Some(constant_circuit), circuits: vec![circuit] };
+    let measurement = ClassicalRegister {
+        constant_circuit: Some(constant_circuit),
+        circuits: vec![circuit],
+    };
     let backend = Backend::new(4);
     let (bit_result, float_result, complex_result) =
         block_on(backend.async_run_measurement_registers(&measurement)).unwrap();
@@ -161,7 +167,7 @@ fn test_circuit_with_set_measurement_number() {
     }
 }
 
-#[cfg(feature="async")]
+#[cfg(feature = "async")]
 #[test]
 fn test_circuit_with_repeated_measurement_async() {
     let mut circuit = Circuit::new();
