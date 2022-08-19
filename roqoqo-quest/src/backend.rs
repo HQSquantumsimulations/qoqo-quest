@@ -11,8 +11,20 @@
 // limitations under the License.
 
 use crate::interface::call_operation_with_device;
+#[cfg(feature = "async")]
+use async_trait::async_trait;
 use qoqo_calculator::CalculatorFloat;
+#[cfg(feature = "parallelization")]
+use rayon::prelude::*;
+#[cfg(feature = "async")]
+use roqoqo::backends::AsyncEvaluatingBackend;
 use roqoqo::backends::EvaluatingBackend;
+#[cfg(feature = "parallelization")]
+use roqoqo::measurements::Measure;
+#[cfg(feature = "parallelization")]
+use roqoqo::registers::Registers;
+#[cfg(feature = "parallelization")]
+use roqoqo::Circuit;
 // use roqoqo::measurements::Measure;
 use crate::Qureg;
 use roqoqo::backends::RegisterResult;
@@ -70,6 +82,55 @@ impl EvaluatingBackend for Backend {
         circuit: impl Iterator<Item = &'a Operation>,
     ) -> RegisterResult {
         self.run_circuit_iterator_with_device(circuit, &mut None)
+    }
+
+    #[cfg(feature = "parallelization")]
+    fn run_measurement_registers<T>(&self, measurement: &T) -> RegisterResult
+    where
+        T: Measure,
+    {
+        let mut bit_registers: HashMap<String, BitOutputRegister> = HashMap::new();
+        let mut float_registers: HashMap<String, FloatOutputRegister> = HashMap::new();
+        let mut complex_registers: HashMap<String, ComplexOutputRegister> = HashMap::new();
+
+        let circuits: Vec<&Circuit> = measurement.circuits().collect();
+        let constant_circuit = match measurement.constant_circuit() {
+            Some(c) => Some(c),
+            None => None,
+        };
+        let tmp_regs_res: Result<Vec<Registers>, RoqoqoBackendError> = circuits
+            .par_iter()
+            .map(|circuit| match constant_circuit {
+                Some(x) => self.run_circuit_iterator(x.iter().chain(circuit.iter())),
+                None => self.run_circuit_iterator(circuit.iter()),
+            })
+            .collect();
+        let tmp_regs = tmp_regs_res?;
+
+        for (tmp_bit_reg, tmp_float_reg, tmp_complex_reg) in tmp_regs.into_iter() {
+            for (key, mut val) in tmp_bit_reg.into_iter() {
+                if let Some(x) = bit_registers.get_mut(&key) {
+                    x.append(&mut val);
+                } else {
+                    let _ = bit_registers.insert(key, val);
+                }
+            }
+            for (key, mut val) in tmp_float_reg.into_iter() {
+                if let Some(x) = float_registers.get_mut(&key) {
+                    x.append(&mut val);
+                } else {
+                    let _ = float_registers.insert(key, val);
+                }
+            }
+            for (key, mut val) in tmp_complex_reg.into_iter() {
+                if let Some(x) = complex_registers.get_mut(&key) {
+                    x.append(&mut val);
+                } else {
+                    let _ = complex_registers.insert(key, val);
+                }
+            }
+        }
+        Ok((bit_registers, float_registers, complex_registers))
     }
 }
 
@@ -348,5 +409,25 @@ impl Backend {
             float_registers_output,
             complex_registers_output,
         ))
+    }
+}
+
+#[cfg(feature = "async")]
+#[async_trait]
+impl AsyncEvaluatingBackend for Backend {
+    async fn async_run_circuit_iterator<'a>(
+        &self,
+        circuit: impl Iterator<Item = &'a Operation> + std::marker::Send,
+    ) -> RegisterResult {
+        self.run_circuit_iterator(circuit)
+    }
+
+    #[cfg(feature = "parallelization")]
+    async fn async_run_measurement_registers<T>(&self, measurement: &T) -> RegisterResult
+    where
+        T: Measure,
+        T: std::marker::Sync,
+    {
+        self.run_measurement_registers(measurement)
     }
 }
