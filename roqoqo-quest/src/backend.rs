@@ -23,6 +23,7 @@ use roqoqo::registers::Registers;
 use roqoqo::measurements::Measure;
 #[cfg(feature="parallelization")]
 use rayon::prelude::*;
+#[cfg(feature="parallelization")]
 use roqoqo::Circuit;
 // use roqoqo::measurements::Measure;
 use crate::Qureg;
