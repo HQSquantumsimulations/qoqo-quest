@@ -14,6 +14,61 @@ use roqoqo::backends::EvaluatingBackend;
 use roqoqo::operations;
 use roqoqo::Circuit;
 use roqoqo_quest::Backend;
+use roqoqo::measurements::ClassicalRegister;
+
+#[cfg(feature="async")]
+use roqoqo::backends::AsyncEvaluatingBackend;
+#[cfg(feature="async")]
+use futures::executor::block_on;
+
+#[test]
+fn test_measurement_with_repeated_measurement() {
+    let mut constant_circuit = Circuit::new();
+    constant_circuit += operations::PauliX::new(1);
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
+    circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
+    let measurement = ClassicalRegister{ constant_circuit: Some(constant_circuit), circuits: vec![circuit] };
+    let backend = Backend::new(4);
+    let (bit_result, float_result, complex_result) =
+        backend.run_measurement_registers(&measurement).unwrap();
+    assert!(float_result.is_empty());
+    assert!(complex_result.is_empty());
+    assert!(bit_result.contains_key("ro"));
+    let nested_vec = bit_result.get("ro").unwrap();
+    assert!(nested_vec.len() == 10);
+    for repetition in nested_vec {
+        assert!(repetition.len() == 4);
+        assert_eq!(repetition[0], false);
+        assert_eq!(repetition[1], true);
+        assert_eq!(repetition[2], false);
+    }
+}
+
+#[cfg(feature="async")]
+#[test]
+fn test_measurement_with_repeated_measurement_async() {
+    let mut constant_circuit = Circuit::new();
+    constant_circuit += operations::PauliX::new(1);
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
+    circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
+    let measurement = ClassicalRegister{ constant_circuit: Some(constant_circuit), circuits: vec![circuit] };
+    let backend = Backend::new(4);
+    let (bit_result, float_result, complex_result) =
+        block_on(backend.async_run_measurement_registers(&measurement)).unwrap();
+    assert!(float_result.is_empty());
+    assert!(complex_result.is_empty());
+    assert!(bit_result.contains_key("ro"));
+    let nested_vec = bit_result.get("ro").unwrap();
+    assert!(nested_vec.len() == 10);
+    for repetition in nested_vec {
+        assert!(repetition.len() == 4);
+        assert_eq!(repetition[0], false);
+        assert_eq!(repetition[1], true);
+        assert_eq!(repetition[2], false);
+    }
+}
 
 #[test]
 fn test_circuit_with_repeated_measurement() {
@@ -93,6 +148,29 @@ fn test_circuit_with_set_measurement_number() {
     let backend = Backend::new(4);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
+    assert!(float_result.is_empty());
+    assert!(complex_result.is_empty());
+    assert!(bit_result.contains_key("ro"));
+    let nested_vec = bit_result.get("ro").unwrap();
+    assert!(nested_vec.len() == 10);
+    for repetition in nested_vec {
+        assert!(repetition.len() == 4);
+        assert_eq!(repetition[0], false);
+        assert_eq!(repetition[1], true);
+        assert_eq!(repetition[2], false);
+    }
+}
+
+#[cfg(feature="async")]
+#[test]
+fn test_circuit_with_repeated_measurement_async() {
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
+    circuit += operations::PauliX::new(1);
+    circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
+    let backend = Backend::new(4);
+    let (bit_result, float_result, complex_result) =
+        block_on(backend.async_run_circuit_iterator(circuit.iter())).unwrap();
     assert!(float_result.is_empty());
     assert!(complex_result.is_empty());
     assert!(bit_result.contains_key("ro"));
