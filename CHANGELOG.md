@@ -2,6 +2,10 @@
 
 This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
+## 0.7.4
+
+* Updated to qoqo 1.0.0
+
 ## 0.7.3
 
 * Fixed general noise pragma simulation
