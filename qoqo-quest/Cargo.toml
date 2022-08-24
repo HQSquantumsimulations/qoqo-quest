@@ -39,7 +39,7 @@ serde_json = "1.0"
 test-case = "2.0.0"
 
 [build-dependencies]
-pyo3-build-config = "0.16"
+pyo3-build-config = "0.17"
 
 [features]
 extension-module = ["pyo3/extension-module"]
