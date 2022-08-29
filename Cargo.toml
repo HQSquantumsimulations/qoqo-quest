@@ -12,5 +12,5 @@ lto = "thin"
 lto = "thin"
 
 [patch.crates-io]
-roqoqo = {git="https://github.com/HQSquantumsimulations/qoqo.git", branch="1.1.0"}
-qoqo = {git="https://github.com/HQSquantumsimulations/qoqo.git", branch="1.1.0"}
+roqoqo = {git="https://github.com/HQSquantumsimulations/qoqo.git", branch="main"}
+qoqo = {git="https://github.com/HQSquantumsimulations/qoqo.git", branch="main"}
