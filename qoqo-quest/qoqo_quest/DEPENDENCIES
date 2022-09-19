@@ -6478,7 +6478,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-itertools 0.10.3
+itertools 0.10.4
 https://github.com/rust-itertools/itertools
 by bluss
 Extra iterator adaptors, iterator methods, free functions, and macros.
@@ -7197,7 +7197,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-js-sys 0.3.59
+js-sys 0.3.60
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Bindings for all JS global objects and functions in all JS environments like
@@ -10625,7 +10625,7 @@ THE SOFTWARE.
 
 
 ====================================================
-numpy 0.17.1
+numpy 0.17.2
 https://github.com/PyO3/rust-numpy
 by The rust-numpy Project Developers, PyO3 Project and Contributors <https://github.com/PyO3>
 PyO3-based Rust bindings of the NumPy C-API
@@ -14300,7 +14300,7 @@ LICENSE:
 
 
 ====================================================
-qoqo 1.1.0-beta.1
+qoqo 1.1.0-beta.2
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Quantum computing circuit toolkit. Python interface of roqoqo
@@ -14512,7 +14512,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-macros 1.1.0-beta.1
+qoqo-macros 1.1.0-beta.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the qoqo crate
 License: Apache-2.0
@@ -14723,7 +14723,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.8.0-beta.1
+qoqo-quest 0.8.0-beta.2
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -15359,7 +15359,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.8.0-beta.1
+quest-sys 0.8.0-beta.2
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -16336,7 +16336,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-rand_core 0.6.3
+rand_core 0.6.4
 https://rust-random.github.io/book
 by The Rand Project Developers, The Rust Project Developers
 Core random number generator traits and tools for implementation.
@@ -16532,20 +16532,6 @@ APPENDIX: How to apply the Apache License to your work.
    file or class name and description of purpose be included on the
    same "printed page" as the copyright notice for easier
    identification within third-party archives.
-
-Copyright [yyyy] [name of copyright owner]
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-	https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 
 ----------------------------------------------------
 LICENSE-MIT:
@@ -18118,7 +18104,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-roqoqo 1.1.0-beta.1
+roqoqo 1.1.0-beta.2
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Rust Quantum Computing Toolkit by HQS
@@ -18330,7 +18316,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-derive 1.1.0-beta.1
+roqoqo-derive 1.1.0-beta.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the roqoqo crate
 License: Apache-2.0
@@ -18541,7 +18527,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.8.0-beta.1
+roqoqo-quest 0.8.0-beta.2
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
@@ -20733,7 +20719,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-syn 1.0.99
+syn 1.0.100
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -21280,7 +21266,7 @@ SOFTWARE.
 
 
 ====================================================
-thiserror 1.0.34
+thiserror 1.0.35
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 derive(Error)
@@ -21519,7 +21505,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-thiserror-impl 1.0.34
+thiserror-impl 1.0.35
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 Implementation detail of the `thiserror` crate
@@ -22242,7 +22228,7 @@ SOFTWARE.
 
 
 ====================================================
-unicode-ident 1.0.3
+unicode-ident 1.0.4
 https://github.com/dtolnay/unicode-ident
 by David Tolnay <dtolnay@gmail.com>
 Determine whether characters have the XID_Start or XID_Continue properties according to Unicode Standard Annex #31
@@ -22531,7 +22517,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-unicode-width 0.1.9
+unicode-width 0.1.10
 https://github.com/unicode-rs/unicode-width
 by kwantam <kwantam@gmail.com>, Manish Goregaokar <manishsmail@gmail.com>
 Determine displayed width of `char` and `str` types
@@ -23778,7 +23764,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen 0.2.82
+wasm-bindgen 0.2.83
 https://rustwasm.github.io/
 by The wasm-bindgen Developers
 Easy support for interacting between JS and Rust.
@@ -24020,7 +24006,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-backend 0.2.82
+wasm-bindgen-backend 0.2.83
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Backend code generation of the wasm-bindgen tool
@@ -24262,7 +24248,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-macro 0.2.82
+wasm-bindgen-macro 0.2.83
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Definition of the `#[wasm_bindgen]` attribute, an internal dependency
@@ -24504,7 +24490,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-macro-support 0.2.82
+wasm-bindgen-macro-support 0.2.83
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 The part of the implementation of the `#[wasm_bindgen]` attribute that is not in the shared backend crate
@@ -24746,7 +24732,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-shared 0.2.82
+wasm-bindgen-shared 0.2.83
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Shared support between wasm-bindgen and wasm-bindgen cli, an internal
@@ -24989,7 +24975,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-web-sys 0.3.59
+web-sys 0.3.60
 https://rustwasm.github.io/wasm-bindgen/web-sys/index.html
 by The wasm-bindgen Developers
 Bindings for all Web APIs, a procedurally generated crate from WebIDL

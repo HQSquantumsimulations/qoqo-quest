@@ -147,23 +147,28 @@ fn test_circuit_with_set_measurement_number() {
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
     circuit += operations::PauliX::new(1);
+    circuit += operations::PauliX::new(5);
     circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
     circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+    circuit += operations::MeasureQubit::new(5, "ro".to_string(), 3);
+    circuit += operations::PauliX::new(1);
+    circuit += operations::PauliX::new(2);
     circuit += operations::MeasureQubit::new(2, "ro".to_string(), 2);
-    circuit += operations::PragmaSetNumberOfMeasurements::new(10, "ro".to_string());
-    let backend = Backend::new(4);
+    circuit += operations::PragmaSetNumberOfMeasurements::new(2, "ro".to_string());
+    let backend = Backend::new(6);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
     assert!(float_result.is_empty());
     assert!(complex_result.is_empty());
     assert!(bit_result.contains_key("ro"));
     let nested_vec = bit_result.get("ro").unwrap();
-    assert!(nested_vec.len() == 10);
+    assert!(nested_vec.len() == 2);
     for repetition in nested_vec {
         assert!(repetition.len() == 4);
         assert_eq!(repetition[0], false);
         assert_eq!(repetition[1], true);
-        assert_eq!(repetition[2], false);
+        assert_eq!(repetition[2], true);
+        assert_eq!(repetition[3], true);
     }
 }
 

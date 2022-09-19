@@ -145,7 +145,7 @@ impl Backend {
     /// The results of each repetition are concatenated in OutputRegisters
     /// ([crate::registers::BitOutputRegister], [crate::registers::FloatOutputRegister] and [crate::registers::ComplexOutputRegister]).  
     ///
-    /// /// When the optional device parameter is not None availability checks will be performed.
+    /// When the optional device parameter is not None availability checks will be performed.
     /// The availability of the operation on a specific device is checked first.
     /// The function returns an error if the operation is not available on the device
     /// even if it can be simulated with the QuEST simulator.
@@ -227,13 +227,16 @@ impl Backend {
                 Operation::PragmaSetNumberOfMeasurements(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=true;}
+                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=true;
+
+                        }
                     }
                 }
                 _ => ()
             }
         }
         let mut measured_qubits: Vec<usize> = Vec::new();
+        let mut repeated_output_length = 0;
         for op in circuit_vec.iter() {
             match op {
                 Operation::MeasureQubit(o) => match number_measurements {
@@ -253,6 +256,9 @@ impl Backend {
                 },
                 Operation::DefinitionBit(def) => {
                     if *def.is_output() {
+                        if def.name() == &repeated_measurement_readout {
+                            repeated_output_length = *def.length();
+                        }
                         bit_registers_output.insert(def.name().clone(), Vec::new());
                     }
                 }
@@ -269,27 +275,34 @@ impl Backend {
                 _ => (),
             }
         }
-
+        if replace_measurements && !uses_repeated_measurement_pragma {
+            let mut bit_output_register: BitOutputRegister = Vec::new();
+            let vec: Vec<bool> = vec![false; repeated_output_length];
+            for _ in 0..number_measurements.unwrap_or(0) {
+                bit_output_register.push(vec.clone());
+            }
+            bit_registers_output.insert(repeated_measurement_readout.clone(), bit_output_register);
+        }
         // Create a repeated measurement operation
-        let mut repeated_measurement_pragma: Option<PragmaRepeatedMeasurement> =
-            if replace_measurements {
-                let name = repeated_measurement_readout.clone();
-                let mut reordering_map: HashMap<usize, usize> = HashMap::new();
-                // Go through operations to build up hash map when readout_index is not equal to measured qubit
-                for op in circuit_vec.iter() {
-                    if let Operation::MeasureQubit(measure) = op {
-                        reordering_map.insert(*measure.qubit(), *measure.readout_index());
-                    }
+        let repeated_measurement_pragma: Option<PragmaRepeatedMeasurement> = if replace_measurements
+        {
+            let name = repeated_measurement_readout.clone();
+            let mut reordering_map: HashMap<usize, usize> = HashMap::new();
+            // Go through operations to build up hash map when readout_index is not equal to measured qubit
+            for op in circuit_vec.iter() {
+                if let Operation::MeasureQubit(measure) = op {
+                    reordering_map.insert(*measure.qubit(), *measure.readout_index());
                 }
-                Some(PragmaRepeatedMeasurement::new(
-                    name,
-                    number_measurements
-                        .expect("Cannot find number of repeated measurement output internal bug"),
-                    Some(reordering_map),
-                ))
-            } else {
-                None
-            };
+            }
+            Some(PragmaRepeatedMeasurement::new(
+                name,
+                number_measurements
+                    .expect("Cannot find number of repeated measurement output internal bug"),
+                Some(reordering_map),
+            ))
+        } else {
+            None
+        };
         for _ in 0..repetitions {
             let mut bit_registers_internal: HashMap<String, BitRegister> = HashMap::new();
             let mut float_registers_internal: HashMap<String, FloatRegister> = HashMap::new();
@@ -297,6 +310,7 @@ impl Backend {
             // If the SetNumberMeasurements pragma is used go through operations and replace first
             // instance of MeasureQubit with matching
             if replace_measurements {
+                let mut repeated_measurement_cache: Option<BitOutputRegister> = None;
                 for op in circuit_vec.iter() {
                     match op {
                         // Find measurement operation
@@ -306,19 +320,69 @@ impl Backend {
                                 // Check if repeated_measurement_pragma is Some(x).
                                 //Will be reset to None after replacing first measurement
                                 // with matching readout
-                                if let Some(rm) = repeated_measurement_pragma.clone() {
-                                    let repeated_measure = rm.clone();
-                                    // replace normal measurement operation call with repeated Pragma
-                                    call_operation_with_device(
-                                        &Operation::from(repeated_measure),
-                                        &mut qureg,
-                                        &mut bit_registers_internal,
-                                        &mut float_registers_internal,
-                                        &mut complex_registers_internal,
-                                        &mut bit_registers_output,
-                                        device,
-                                    )?;
-                                    repeated_measurement_pragma = None;
+                                if let Some(cache) = &repeated_measurement_cache {
+                                    // Get mutable access and lenght of named register to write chaced values into it.
+                                    let correct_register = bit_registers_output
+                                        .get_mut(&repeated_measurement_readout)
+                                        .expect("Internal error, readout register not found");
+                                    let correct_length = if correct_register.len()
+                                        > number_measurements.unwrap_or(0)
+                                    {
+                                        correct_register.len() - number_measurements.unwrap_or(0)
+                                    } else {
+                                        number_measurements.unwrap_or(0)
+                                    };
+                                    for (index, correct_vector) in correct_register
+                                        .iter_mut()
+                                        .skip(correct_length - number_measurements.unwrap_or(0))
+                                        .enumerate()
+                                    {
+                                        correct_vector[*measure_op.readout_index()] =
+                                            cache[index][*measure_op.readout_index()];
+                                    }
+                                } else {
+                                    let mut tmp_outputs: HashMap<String, BitOutputRegister> =
+                                        HashMap::new();
+                                    tmp_outputs
+                                        .insert(repeated_measurement_readout.clone(), Vec::new());
+                                    let mut tmp_bit_registers = HashMap::new();
+                                    if let Some(rm) = repeated_measurement_pragma.clone() {
+                                        // replace normal measurement operation call with repeated Pragma
+                                        call_operation_with_device(
+                                            &Operation::from(rm),
+                                            &mut qureg,
+                                            &mut tmp_bit_registers,
+                                            &mut float_registers_internal,
+                                            &mut complex_registers_internal,
+                                            &mut tmp_outputs,
+                                            device,
+                                        )?;
+                                        let correct_register = bit_registers_output
+                                            .get_mut(&repeated_measurement_readout)
+                                            .expect("Internal error, readout register not found");
+                                        let tmp_register = tmp_outputs
+                                            .remove(&repeated_measurement_readout)
+                                            .expect(
+                                                "Correct output vector not found internal error",
+                                            );
+                                        let correct_length = if correct_register.len()
+                                            > number_measurements.unwrap_or(0)
+                                        {
+                                            correct_register.len()
+                                                - number_measurements.unwrap_or(0)
+                                        } else {
+                                            number_measurements.unwrap_or(0)
+                                        };
+                                        for (index, correct_vector) in correct_register
+                                            .iter_mut()
+                                            .skip(correct_length - number_measurements.unwrap_or(0))
+                                            .enumerate()
+                                        {
+                                            correct_vector[*measure_op.readout_index()] =
+                                                tmp_register[index][*measure_op.readout_index()];
+                                        }
+                                        repeated_measurement_cache = Some(tmp_register);
+                                    }
                                 }
                             } else {
                                 call_operation_with_device(
@@ -330,6 +394,7 @@ impl Backend {
                                     &mut bit_registers_output,
                                     device,
                                 )?;
+                                repeated_measurement_cache = None;
                             }
                         }
                         // Normal Operation call for non-measurements
@@ -343,6 +408,7 @@ impl Backend {
                                 &mut bit_registers_output,
                                 device,
                             )?;
+                            repeated_measurement_cache = None;
                         }
                     }
                 }
@@ -388,7 +454,9 @@ impl Backend {
             // Append bit result of one circuit execution to output register
             for (name, register) in bit_registers_output.iter_mut() {
                 if let Some(tmp_reg) = bit_registers_internal.get(name) {
-                    register.push(tmp_reg.to_owned())
+                    if !replace_measurements || name != &repeated_measurement_readout {
+                        register.push(tmp_reg.to_owned())
+                    }
                 }
             }
             // Append float result of one circuit execution to output register

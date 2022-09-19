@@ -80,6 +80,54 @@ pub fn execute_pragma_repeated_measurement(
     Ok(())
 }
 
+// pub fn execute_measure_qubit_repeated(
+//     operation: &MeasureQubit,
+//     qureg: &mut Qureg,
+//     number_measurements: usize,
+//     bit_registers: &mut HashMap<String, BitRegister>,
+//     bit_registers_output: &mut HashMap<String, BitOutputRegister>,
+// ) -> Result<(), RoqoqoBackendError> {
+//     let mapping: HashMap<usize, usize> = [(*operation.qubit(), *operation.readout_index())]
+//         .into_iter()
+//         .collect();
+//     let number_qubits = qureg.number_qubits();
+//     let probabilities = qureg.probabilites();
+//     let distribution =
+//         WeightedIndex::new(&probabilities).map_err(|err| RoqoqoBackendError::GenericError {
+//             msg: format!("Probabilites from quantum register {:?}", err),
+//         })?;
+//     let mut rng = thread_rng();
+//     let existing_register = bit_registers
+//         .get(operation.readout())
+//         .map(|x| x.to_owned())
+//         .unwrap_or_else(|| vec![false; usize::try_from(number_qubits).unwrap()]);
+//     let output_register: &mut BitOutputRegister = bit_registers_output
+//         .get_mut(operation.readout())
+//         .ok_or(RoqoqoBackendError::GenericError {
+//             msg: format!(
+//                 "Trying to write readout to non-existent register {}",
+//                 operation.readout()
+//             ),
+//         })?;
+//     bit_registers.remove(operation.readout());
+
+//     for _ in 0..number_measurements {
+//         let index = distribution.sample(&mut rng);
+//         let tmp_output = index_to_qubits(index, number_qubits);
+//         let mut new_output: Vec<bool> = existing_register.clone();
+//         for (k, val) in tmp_output.into_iter().enumerate() {
+//             let tmp_index = match mapping.get(&k) {
+//                 Some(ind) => ind,
+//                 None => &k,
+//             };
+//             new_output[*tmp_index] = val;
+//         }
+//         output_register.push(new_output);
+//     }
+
+//     Ok(())
+// }
+
 pub fn execute_pragma_set_state_vector(
     operation: &PragmaSetStateVector,
     qureg: &mut Qureg,
