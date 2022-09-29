@@ -4158,7 +4158,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-crossbeam-epoch 0.9.10
+crossbeam-epoch 0.9.11
 https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-epoch
 by 
 Epoch-based garbage collection
@@ -4401,7 +4401,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-crossbeam-utils 0.8.11
+crossbeam-utils 0.8.12
 https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-utils
 by 
 Utilities for concurrent programming
@@ -6478,7 +6478,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-itertools 0.10.4
+itertools 0.10.5
 https://github.com/rust-itertools/itertools
 by bluss
 Extra iterator adaptors, iterator methods, free functions, and macros.
@@ -7681,7 +7681,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-libc 0.2.132
+libc 0.2.134
 https://github.com/rust-lang/libc
 by The Rust Project Developers
 Raw FFI bindings to platform libraries like libc.
@@ -8139,7 +8139,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-lock_api 0.4.8
+lock_api 0.4.9
 https://github.com/Amanieu/parking_lot
 by Amanieu d'Antras <amanieu@gmail.com>
 Wrappers to create fully-featured Mutex and RwLock types. Compatible with no_std.
@@ -10661,7 +10661,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
-once_cell 1.14.0
+once_cell 1.15.0
 https://github.com/matklad/once_cell
 by Aleksey Kladov <aleksey.kladov@gmail.com>
 Single assignment cells and lazy values.
@@ -12631,7 +12631,7 @@ SOFTWARE.
 
 
 ====================================================
-proc-macro2 1.0.43
+proc-macro2 1.0.46
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple token-based libraries from the procedural macro use case.
@@ -14300,7 +14300,7 @@ LICENSE:
 
 
 ====================================================
-qoqo 1.1.0-beta.2
+qoqo 1.1.0-beta.3
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Quantum computing circuit toolkit. Python interface of roqoqo
@@ -14512,7 +14512,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-macros 1.1.0-beta.2
+qoqo-macros 1.1.0-beta.3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the qoqo crate
 License: Apache-2.0
@@ -14723,7 +14723,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.8.0-beta.2
+qoqo-quest 0.8.0-beta.3
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -15359,7 +15359,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.8.0-beta.2
+quest-sys 0.8.0-beta.3
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -18104,7 +18104,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-roqoqo 1.1.0-beta.2
+roqoqo 1.1.0-beta.3
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Rust Quantum Computing Toolkit by HQS
@@ -18316,7 +18316,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-derive 1.1.0-beta.2
+roqoqo-derive 1.1.0-beta.3
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the roqoqo crate
 License: Apache-2.0
@@ -18527,7 +18527,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.8.0-beta.2
+roqoqo-quest 0.8.0-beta.3
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
@@ -19314,7 +19314,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde 1.0.144
+serde 1.0.145
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -19788,7 +19788,7 @@ THE SOFTWARE.
 
 
 ====================================================
-serde_derive 1.0.144
+serde_derive 1.0.145
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]
@@ -20719,7 +20719,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-syn 1.0.100
+syn 1.0.101
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -21266,7 +21266,7 @@ SOFTWARE.
 
 
 ====================================================
-thiserror 1.0.35
+thiserror 1.0.37
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 derive(Error)
@@ -21505,7 +21505,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-thiserror-impl 1.0.35
+thiserror-impl 1.0.37
 https://github.com/dtolnay/thiserror
 by David Tolnay <dtolnay@gmail.com>
 Implementation detail of the `thiserror` crate

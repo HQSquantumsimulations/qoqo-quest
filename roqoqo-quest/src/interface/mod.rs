@@ -524,6 +524,15 @@ pub fn call_operation_with_device(
             }
             Ok(())
         }
+        Operation::PragmaLoop(op) => execute_pragma_loop(
+            op,
+            qureg,
+            bit_registers,
+            float_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+        ),
         Operation::InputBit(op) => execute_pragma_input_bit(op, bit_registers),
         // Operation::PragmaRandomNoise(op) => execute_pragma_random_noise(op, qureg),
         _ => {

@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.8.0-beta.3
+
+* Added support for PragmaLoop
+
 ## 0.8.0-beta.2
 
 * Fixed bug using MeasureQubit with PragmaSetNumberMeasurements for only subset of qubits

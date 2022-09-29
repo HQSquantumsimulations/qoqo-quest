@@ -10,3 +10,7 @@ lto = true
 
 [profile.bench]
 lto = true
+
+[patch.crates-io]
+roqoqo = { git = 'https://github.com/HQSQuantumsimulations/qoqo', branch="main" }
+qoqo = { git = 'https://github.com/HQSQuantumsimulations/qoqo', branch="main" }
