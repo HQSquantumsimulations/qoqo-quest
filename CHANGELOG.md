@@ -2,6 +2,27 @@
 
 This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
+## Unpublished
+
+## 0.8.0-beta.2
+
+* Fixed bug using MeasureQubit with PragmaSetNumberMeasurements for only subset of qubits
+
+## 0.8.0-beta.1
+
+* Support for `InputBit` operation expected in qoqo 1.1.0
+* Support for `async` feature providing an `AsyncEvaluatingBackend` interface in roqoqo
+* Support for `parallelization` feature, evaluating circuits from one `Measurement` in parallel
+* Updated to QuEST 3.5.0
+
+## 0.7.2
+
+* Updated dependencies
+
+## 0.7.1
+
+* Fixed: Bug in calculating result for PragmaGetPauliProduct
+
 ## 0.7.4
 
 * Updated to qoqo 1.0.0
@@ -17,6 +38,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 ## 0.7.1
 
 * Fixed: Bug in calculating result for PragmaGetPauliProduct
+
+
 
 ## 0.7.0
 
@@ -35,12 +58,6 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 * Updated to qoqo 1.0.0-alpha.1
 * Dependencies updated for github workflows.
-
-## 0.4.0
-
-### Changed 0.4.0
-
-* Updated to qoqo 0.11
 
 ## 0.4.0
 

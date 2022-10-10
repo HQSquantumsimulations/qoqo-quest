@@ -32,15 +32,19 @@ from typing import List
 def test_mocked_backend(measurement):
     """Test mocked backend"""
     circuit = Circuit()
-    circuit += ops.DefinitionFloat(name='ro', length=1, is_output=True)
-    circuit += ops.DefinitionComplex(name='ro', length=1, is_output=True)
-    circuit += ops.DefinitionBit(name='ro', length=1, is_output=True)
+    circuit += ops.DefinitionFloat(name='ro', length=2, is_output=True)
+    circuit += ops.DefinitionComplex(name='ro', length=4, is_output=True)
+    circuit += ops.DefinitionBit(name='ro', length=2, is_output=True)
     circuit += ops.PauliX(qubit=0)
     circuit += measurement[0]
 
     backend = Backend(2)
 
-    results = backend.run_circuit(circuit=circuit)[measurement[2]]['ro'][0]
+    results = backend.run_circuit(circuit=circuit)
+    index = measurement[2]
+    print(results)
+    print(index)
+    results = results[measurement[2]]['ro'][0]
     if isinstance(results[0], List):
         assert isinstance(results[0][0], measurement[1])
     else:
