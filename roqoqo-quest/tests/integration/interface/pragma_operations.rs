@@ -651,6 +651,51 @@ fn test_pragma_get_pauli_product(pauli: usize, circ: Vec<Operation>, exp_val: f6
     assert!((float_registers.get("ro").unwrap()[0] - exp_val).abs() < TOLERANCE)
 }
 
+#[test_case(2.0.into(), 1.0; "two")]
+#[test_case(2.1.into(), 1.0; "two and a bit")]
+#[test_case(3.0.into(), 0.0; "three")]
+#[test_case((-3.0).into(), 1.0; "negative")]
+fn test_pragma_loop(repetitions: CalculatorFloat, zero_state_prob: f64) {
+    let mut circuit_internal: Circuit = Circuit::new();
+    circuit_internal += operations::PauliX::new(0);
+    let pragma = operations::PragmaLoop::new(repetitions, circuit_internal);
+    let mut qureg = Qureg::new(1, false);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    complex_registers.insert("state_vec".to_string(), vec![Complex64::new(0.0, 0.0); 2]);
+    // Apply tested operation to output
+    call_operation(
+        &pragma.clone().into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    )
+    .unwrap();
+    let extract_state_vector_operation: operations::Operation =
+        PragmaGetStateVector::new("state_vec".to_string(), None).into();
+    call_operation(
+        &extract_state_vector_operation,
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    )
+    .unwrap();
+    assert!(complex_registers.contains_key("state_vec"));
+    assert_eq!(complex_registers.get("state_vec").unwrap().len(), 2);
+    assert!(
+        (complex_registers.get("state_vec").unwrap()[0] - zero_state_prob).norm_sqr() < TOLERANCE
+    );
+    assert!(
+        (complex_registers.get("state_vec").unwrap()[1] - 1.0 + zero_state_prob).norm_sqr()
+            < TOLERANCE
+    );
+}
+
 #[test]
 fn test_pragma_get_pauli_product_multiple() {
     let mut circuit_internal: Circuit = Circuit::new();
