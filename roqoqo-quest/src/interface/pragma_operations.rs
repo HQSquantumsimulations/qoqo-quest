@@ -317,6 +317,36 @@ pub fn execute_pragma_input_bit(
 //     }
 // }
 
+pub fn execute_pragma_loop(
+    operation: &PragmaLoop,
+    qureg: &mut Qureg,
+    bit_registers: &mut HashMap<String, BitRegister>,
+    float_registers: &mut HashMap<String, Vec<f64>>,
+    complex_registers: &mut HashMap<String, ComplexRegister>,
+    bit_registers_output: &mut HashMap<String, BitOutputRegister>,
+    device: &mut Option<Box<dyn Device>>,
+) -> Result<(), RoqoqoBackendError> {
+    let repetitions: f64 = *operation.repetitions().float()?;
+    let floor_repetitions: i32 = repetitions.floor() as i32;
+    let floor_repetitions: usize = if floor_repetitions > 0 {
+        floor_repetitions as usize
+    } else {
+        0
+    };
+    for _ in 0..floor_repetitions {
+        crate::interface::call_circuit_with_device(
+            &operation.circuit(),
+            qureg,
+            bit_registers,
+            float_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+        )?;
+    }
+    Ok(())
+}
+
 pub fn execute_pragma_get_state_vector(
     operation: &PragmaGetStateVector,
     qureg: &mut Qureg,
