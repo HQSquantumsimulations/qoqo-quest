@@ -46,7 +46,7 @@ jobs:
           toolchain: stable
           target: ${{ matrix.combinations.rust }}
           default: true
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: linux wheels
@@ -88,7 +88,7 @@ jobs:
           toolchain: stable
           target: ${{ matrix.combinations.rust }}
           default: true
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: linux wheels
@@ -129,7 +129,7 @@ jobs:
   #         toolchain: stable
   #         target: ${{ matrix.combinations.rust }}
   #         default: true
-  #     - uses: actions/setup-python@v4.2.0
+  #     - uses: actions/setup-python@v4.3.0
   #       with:
   #         python-version: ${{ matrix.python.py }}
   #     - name: windows wheels
@@ -167,7 +167,7 @@ jobs:
           toolchain: stable
           target: ${{ matrix.combinations.rust }}
           default: true
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: Install dependencies
@@ -194,7 +194,7 @@ jobs:
       needs: [deploy_cratesio, build_maturin_builds_macos, build_maturin_builds_linux, build_maturin_builds_linux_src]
       runs-on: ubuntu-latest
       steps:
-      - uses: actions/setup-python@v4.2.0
+      - uses: actions/setup-python@v4.3.0
         with:
           python-version: ${{ matrix.python.py }}
       - uses: actions/download-artifact@v3
