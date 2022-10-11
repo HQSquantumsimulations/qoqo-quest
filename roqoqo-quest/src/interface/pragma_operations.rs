@@ -335,7 +335,7 @@ pub fn execute_pragma_loop(
     };
     for _ in 0..floor_repetitions {
         crate::interface::call_circuit_with_device(
-            &operation.circuit(),
+            operation.circuit(),
             qureg,
             bit_registers,
             float_registers,
