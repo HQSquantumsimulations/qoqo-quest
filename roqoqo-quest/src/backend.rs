@@ -167,31 +167,8 @@ impl Backend {
 
         // Automatically switch to density matrix mode if operations are present in the
         // circuit that require density matrix mode
-        let is_density_matrix = match circuit_vec.first() {
-            Some(&x) => match PragmaLoop::try_from(x.clone()) {
-                Ok(pragma) => pragma.circuit().iter().any(|x| {
-                    matches!(
-                        x,
-                        Operation::PragmaDamping(_)
-                            | Operation::PragmaDephasing(_)
-                            | Operation::PragmaDepolarising(_)
-                            | Operation::PragmaGeneralNoise(_)
-                            | Operation::PragmaSetDensityMatrix(_)
-                    )
-                }),
-                Err(_) => circuit_vec.iter().any(|x| {
-                    matches!(
-                        x,
-                        Operation::PragmaDamping(_)
-                            | Operation::PragmaDephasing(_)
-                            | Operation::PragmaDepolarising(_)
-                            | Operation::PragmaGeneralNoise(_)
-                            | Operation::PragmaSetDensityMatrix(_)
-                    )
-                }),
-            },
-            None => false,
-        };
+        let is_density_matrix =
+            circuit_vec.iter().any(find_pragma_op) && circuit_vec.iter().any(find_noise_op);
 
         // Calculatre total global phase of the circuit
         let mut global_phase: CalculatorFloat = CalculatorFloat::ZERO;
@@ -492,6 +469,42 @@ impl Backend {
             float_registers_output,
             complex_registers_output,
         ))
+    }
+}
+
+#[inline]
+fn find_noise_op(op: &&Operation) -> bool {
+    matches!(
+        op,
+        Operation::PragmaDamping(_)
+            | Operation::PragmaDephasing(_)
+            | Operation::PragmaDepolarising(_)
+            | Operation::PragmaGeneralNoise(_)
+            | Operation::PragmaSetDensityMatrix(_)
+    )
+}
+
+#[inline]
+fn find_pragma_op(op: &&Operation) -> bool {
+    match op {
+        Operation::PragmaConditional(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
+        Operation::PragmaLoop(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
+        Operation::PragmaGetPauliProduct(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
+        Operation::PragmaGetOccupationProbability(x) => {
+            if let Some(circ) = x.circuit() {
+                circ.iter().any(|x| find_pragma_op(&x))
+            } else {
+                false
+            }
+        }
+        Operation::PragmaGetDensityMatrix(x) => {
+            if let Some(circ) = x.circuit() {
+                circ.iter().any(|x| find_pragma_op(&x))
+            } else {
+                false
+            }
+        }
+        _ => false,
     }
 }
 

@@ -6,7 +6,7 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## 0.8.0-beta.6
 
-* Potential fix for PragmaLoop issue
+* Fix for PragmaLoop issue
 
 ## 0.8.0-beta.5
 
