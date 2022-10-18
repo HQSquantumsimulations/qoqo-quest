@@ -924,9 +924,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo"
-version = "1.1.0-beta.12"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9b523e746fa06ef0fb5bbf8fdba04ec93cb35e5e5d45440ae6234f8e5f34158"
+checksum = "f81c6d93af7a5e3298688a23888a796145dd48e99a25551c037a9cf0e0f825cc"
 dependencies = [
  "bincode",
  "ndarray",
@@ -948,9 +948,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo-macros"
-version = "1.1.0-beta.12"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c81a1f1e76394e32b74f1224c42a344ceb2edbcd03326f3c64f75edf07a4eed0"
+checksum = "2855d8d13fc9d31fd416064a8cf9ac96cf6f4ad6c70a43f01f6bc4473c510f5c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -959,7 +959,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo-quest"
-version = "0.8.0-beta.6"
+version = "0.8.0"
 dependencies = [
  "bincode",
  "pyo3",
@@ -1001,7 +1001,7 @@ dependencies = [
 
 [[package]]
 name = "quest-sys"
-version = "0.8.0-beta.6"
+version = "0.8.0"
 dependencies = [
  "bindgen",
  "cmake",
@@ -1121,9 +1121,9 @@ checksum = "a3f87b73ce11b1619a3c6332f45341e0047173771e8b8b73f87bfeefb7b56244"
 
 [[package]]
 name = "roqoqo"
-version = "1.1.0-beta.12"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6268668bc0f10ef445df16b34acb2c23a99d2a224bd246f7cbaa8a75fb68d44f"
+checksum = "c5d4164cf5c99ae8e1555f4fd6a07a5d40947008bd697531cca83746449d5366"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1145,9 +1145,9 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-derive"
-version = "1.1.0-beta.12"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c02d8e1a37848594ab223c21e5431c2d527f6f8cb0ef67c9daa3ddf6d9aea6e8"
+checksum = "061f43730ca0bfaf7c96813f1a833a0dfba4e12f9d41a5aa5fb8281c7bc38888"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1156,7 +1156,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-quest"
-version = "0.8.0-beta.6"
+version = "0.8.0"
 dependencies = [
  "async-trait",
  "criterion",

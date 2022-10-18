@@ -4,21 +4,11 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
-## 0.8.0-beta.6
+## 0.8.0
 
-* Fix for PragmaLoop issue
-
-## 0.8.0-beta.5
-
-* Updated to (ro)qoqo 1.1.0-beta.10
+* Updated to (ro)qoqo 1.1.0
 * Added support for PragmaLoop
-
-## 0.8.0-beta.2
-
 * Fixed bug using MeasureQubit with PragmaSetNumberMeasurements for only subset of qubits
-
-## 0.8.0-beta.1
-
 * Support for `InputBit` operation expected in qoqo 1.1.0
 * Support for `async` feature providing an `AsyncEvaluatingBackend` interface in roqoqo
 * Support for `parallelization` feature, evaluating circuits from one `Measurement` in parallel
