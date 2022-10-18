@@ -168,7 +168,7 @@ impl Backend {
         // Automatically switch to density matrix mode if operations are present in the
         // circuit that require density matrix mode
         let is_density_matrix =
-            circuit_vec.iter().any(find_pragma_op) && circuit_vec.iter().any(find_noise_op);
+            circuit_vec.iter().any(find_pragma_op) || circuit_vec.iter().any(find_noise_op);
 
         // Calculatre total global phase of the circuit
         let mut global_phase: CalculatorFloat = CalculatorFloat::ZERO;
