@@ -12631,7 +12631,7 @@ limitations under the License.
 
 
 ====================================================
-proc-macro2 1.0.46
+proc-macro2 1.0.47
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple token-based libraries from the procedural macro use case.
