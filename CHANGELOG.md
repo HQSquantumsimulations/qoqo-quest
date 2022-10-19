@@ -4,7 +4,7 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
-## 0.8.0
+## 0.8.1
 
 * Updated to (ro)qoqo 1.1.0
 * Added support for PragmaLoop

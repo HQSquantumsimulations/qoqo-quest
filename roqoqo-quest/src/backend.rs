@@ -167,10 +167,9 @@ impl Backend {
 
         // Automatically switch to density matrix mode if operations are present in the
         // circuit that require density matrix mode
-        let is_density_matrix =
-            circuit_vec.iter().any(find_pragma_op) || circuit_vec.iter().any(find_noise_op);
+        let is_density_matrix = circuit_vec.iter().any(find_pragma_op);
 
-        // Calculatre total global phase of the circuit
+        // Calculate total global phase of the circuit
         let mut global_phase: CalculatorFloat = CalculatorFloat::ZERO;
         for global_phase_tmp in circuit_vec.iter().filter_map(|x| match x {
             Operation::PragmaGlobalPhase(x) => Some(x.phase()),
@@ -473,18 +472,6 @@ impl Backend {
 }
 
 #[inline]
-fn find_noise_op(op: &&Operation) -> bool {
-    matches!(
-        op,
-        Operation::PragmaDamping(_)
-            | Operation::PragmaDephasing(_)
-            | Operation::PragmaDepolarising(_)
-            | Operation::PragmaGeneralNoise(_)
-            | Operation::PragmaSetDensityMatrix(_)
-    )
-}
-
-#[inline]
 fn find_pragma_op(op: &&Operation) -> bool {
     match op {
         Operation::PragmaConditional(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
@@ -504,6 +491,11 @@ fn find_pragma_op(op: &&Operation) -> bool {
                 false
             }
         }
+        Operation::PragmaDamping(_) => true,
+        Operation::PragmaDephasing(_) => true,
+        Operation::PragmaDepolarising(_) => true,
+        Operation::PragmaGeneralNoise(_) => true,
+        Operation::PragmaSetDensityMatrix(_) => true,
         _ => false,
     }
 }
