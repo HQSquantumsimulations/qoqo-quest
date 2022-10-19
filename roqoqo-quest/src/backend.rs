@@ -167,8 +167,7 @@ impl Backend {
 
         // Automatically switch to density matrix mode if operations are present in the
         // circuit that require density matrix mode
-        let is_density_matrix =
-            circuit_vec.iter().any(find_pragma_op) || circuit_vec.iter().any(find_noise_op);
+        let is_density_matrix = circuit_vec.iter().any(find_pragma_op);
 
         // Calculate total global phase of the circuit
         let mut global_phase: CalculatorFloat = CalculatorFloat::ZERO;
@@ -473,37 +472,30 @@ impl Backend {
 }
 
 #[inline]
-fn find_noise_op(op: &&Operation) -> bool {
-    matches!(
-        op,
-        Operation::PragmaDamping(_)
-            | Operation::PragmaDephasing(_)
-            | Operation::PragmaDepolarising(_)
-            | Operation::PragmaGeneralNoise(_)
-            | Operation::PragmaSetDensityMatrix(_)
-    )
-}
-
-#[inline]
 fn find_pragma_op(op: &&Operation) -> bool {
     match op {
-        Operation::PragmaConditional(x) => x.circuit().iter().any(|x| find_noise_op(&x)),
-        Operation::PragmaLoop(x) => x.circuit().iter().any(|x| find_noise_op(&x)),
-        Operation::PragmaGetPauliProduct(x) => x.circuit().iter().any(|x| find_noise_op(&x)),
+        Operation::PragmaConditional(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
+        Operation::PragmaLoop(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
+        Operation::PragmaGetPauliProduct(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
         Operation::PragmaGetOccupationProbability(x) => {
             if let Some(circ) = x.circuit() {
-                circ.iter().any(|x| find_noise_op(&x))
+                circ.iter().any(|x| find_pragma_op(&x))
             } else {
                 false
             }
         }
         Operation::PragmaGetDensityMatrix(x) => {
             if let Some(circ) = x.circuit() {
-                circ.iter().any(|x| find_noise_op(&x))
+                circ.iter().any(|x| find_pragma_op(&x))
             } else {
                 false
             }
         }
+        Operation::PragmaDamping(_) => true,
+        Operation::PragmaDephasing(_) => true,
+        Operation::PragmaDepolarising(_) => true,
+        Operation::PragmaGeneralNoise(_) => true,
+        Operation::PragmaSetDensityMatrix(_) => true,
         _ => false,
     }
 }
