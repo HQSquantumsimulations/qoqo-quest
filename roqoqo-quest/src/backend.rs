@@ -170,7 +170,7 @@ impl Backend {
         let is_density_matrix =
             circuit_vec.iter().any(find_pragma_op) || circuit_vec.iter().any(find_noise_op);
 
-        // Calculatre total global phase of the circuit
+        // Calculate total global phase of the circuit
         let mut global_phase: CalculatorFloat = CalculatorFloat::ZERO;
         for global_phase_tmp in circuit_vec.iter().filter_map(|x| match x {
             Operation::PragmaGlobalPhase(x) => Some(x.phase()),
@@ -487,19 +487,19 @@ fn find_noise_op(op: &&Operation) -> bool {
 #[inline]
 fn find_pragma_op(op: &&Operation) -> bool {
     match op {
-        Operation::PragmaConditional(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
-        Operation::PragmaLoop(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
-        Operation::PragmaGetPauliProduct(x) => x.circuit().iter().any(|x| find_pragma_op(&x)),
+        Operation::PragmaConditional(x) => x.circuit().iter().any(|x| find_noise_op(&x)),
+        Operation::PragmaLoop(x) => x.circuit().iter().any(|x| find_noise_op(&x)),
+        Operation::PragmaGetPauliProduct(x) => x.circuit().iter().any(|x| find_noise_op(&x)),
         Operation::PragmaGetOccupationProbability(x) => {
             if let Some(circ) = x.circuit() {
-                circ.iter().any(|x| find_pragma_op(&x))
+                circ.iter().any(|x| find_noise_op(&x))
             } else {
                 false
             }
         }
         Operation::PragmaGetDensityMatrix(x) => {
             if let Some(circ) = x.circuit() {
-                circ.iter().any(|x| find_pragma_op(&x))
+                circ.iter().any(|x| find_noise_op(&x))
             } else {
                 false
             }
