@@ -10,3 +10,7 @@ lto = true
 
 [profile.bench]
 lto = true
+
+[patch.crates-io]
+roqoqo = {version="1.2.0-alpha.1", git="https://github.com/HQSquantumsimulations/qoqo.git", branch="PhaseShiftedControlledPhase"}
+qoqo = { version="1.2.0-alpha.1", git = 'https://github.com/HQSquantumsimulations/qoqo', branch="PhaseShiftedControlledPhase"  }
