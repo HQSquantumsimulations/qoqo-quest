@@ -1,6 +1,6 @@
 [project]
 name = "qoqo-quest"
-version = "0.9.0-alpha.1"
+version = "0.9.0-alpha.2"
 dependencies = [
   'numpy',
   'qoqo>=1.2.0a1',
