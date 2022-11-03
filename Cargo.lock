@@ -925,7 +925,8 @@ dependencies = [
 [[package]]
 name = "qoqo"
 version = "1.2.0-alpha.1"
-source = "git+https://github.com/HQSquantumsimulations/qoqo?branch=PhaseShiftedControlledPhase#ea4cb87bc9c7bad04487652f478e8d1cab54439d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "729e861be55ef6aebe9326114742a3e80a5a6398d2f88e04972e7b40575b6384"
 dependencies = [
  "bincode",
  "ndarray",
@@ -948,7 +949,8 @@ dependencies = [
 [[package]]
 name = "qoqo-macros"
 version = "1.2.0-alpha.1"
-source = "git+https://github.com/HQSquantumsimulations/qoqo?branch=PhaseShiftedControlledPhase#ea4cb87bc9c7bad04487652f478e8d1cab54439d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de15b41e69d3e60b8702d9d57c9a3e08e3412ed6ef602236316921043d5fae46"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1120,7 +1122,8 @@ checksum = "a3f87b73ce11b1619a3c6332f45341e0047173771e8b8b73f87bfeefb7b56244"
 [[package]]
 name = "roqoqo"
 version = "1.2.0-alpha.1"
-source = "git+https://github.com/HQSquantumsimulations/qoqo?branch=PhaseShiftedControlledPhase#ea4cb87bc9c7bad04487652f478e8d1cab54439d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1c4319fb1fe951eb4505808c4b6159df82a273df5ddbf1a3ec6f992f4893690a"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1143,7 +1146,8 @@ dependencies = [
 [[package]]
 name = "roqoqo-derive"
 version = "1.2.0-alpha.1"
-source = "git+https://github.com/HQSquantumsimulations/qoqo?branch=PhaseShiftedControlledPhase#ea4cb87bc9c7bad04487652f478e8d1cab54439d"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dfdccdd2e3a66e47dcdcdd0d2c16afbabe3eb26262fa245337481c856155c910"
 dependencies = [
  "proc-macro2",
  "quote",
