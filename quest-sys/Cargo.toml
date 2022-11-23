@@ -26,7 +26,7 @@ openmp-sys ={version = "1.2.0", features=["static"], optional=true}
 
 [build-dependencies]
 cmake = {version ="0.1", features=[]}
-bindgen = {version="0.60", optional=true}
+bindgen = {version="0.63", optional=true}
 
 [features]
 default = []
