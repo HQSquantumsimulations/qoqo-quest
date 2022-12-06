@@ -163,13 +163,6 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip maturin pytest numpy twine        
-      - name: macos wheels
-        if: ${{ matrix.combinations.runs_on == 'macos-12' && matrix.python-version < '3.8'}}
-        run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
-      - name: universal wheels
-        if: ${{ matrix.combinations.runs_on == 'macos-12' && matrix.python-version >= '3.8' }}
-        run: |
           RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
       - name: test install
         run: |
