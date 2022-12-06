@@ -4,7 +4,7 @@ on:
   # push:
   #   branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, "dev0.8.1"]
 
 jobs:
   test_pyproject_install:
@@ -54,13 +54,10 @@ jobs:
           cargo clippy -- -D warnings
 
   unittests_check:
-    name: unittests_check-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
+    name: unittests_check-${{ matrix.python.py }}
+    runs-on: "macOS-latest"
     strategy:
       matrix:
-        combinations: [
-          { runs_on: "macOS-latest", rust: "x86_64-apple-darwin" },
-        ]
         python: [
             {py: '3.7', interpreter: "python3.7"},
             {py: '3.8', interpreter: "python3.8"},
@@ -73,7 +70,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4.2.0
@@ -118,7 +114,7 @@ jobs:
     
   test_maturin_builds_linux:
     name: maturin_check-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
+    runs-on: 'ubuntu-latest'
     strategy:
       matrix:
         combinations: [
