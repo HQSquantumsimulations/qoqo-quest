@@ -21,7 +21,7 @@ use roqoqo::RoqoqoBackendError;
 use std::collections::HashMap;
 
 /// Numerical accuracy for ignoring negative occupation probabilities
-/// 
+///
 /// Negative probabilities with a smaller absolute value will be interpreted as 0.
 /// Negative probabilities with a larger absolute value will cause an error.
 const NEGATIVE_PROBABILITIES_CUTOFF: f64 = -1.0e-15;
@@ -501,15 +501,18 @@ pub fn execute_get_pauli_prod(
 
 #[inline]
 /// Sanitizes negative occupation probabilities
-/// 
+///
 /// Setting negative probablilites with an absolute value less than a threshold to 0
-fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBackendError>{
-    for val in probabilities.iter_mut(){
-        if *val < NEGATIVE_PROBABILITIES_CUTOFF{
-            return Err(RoqoqoBackendError::GenericError { msg: format!("Negative state occupation probabilites encountered {:?}", probabilities) }
-            );
-        }
-        else if *val < 0.0{
+fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBackendError> {
+    for val in probabilities.iter_mut() {
+        if *val < NEGATIVE_PROBABILITIES_CUTOFF {
+            return Err(RoqoqoBackendError::GenericError {
+                msg: format!(
+                    "Negative state occupation probabilites encountered {:?}",
+                    probabilities
+                ),
+            });
+        } else if *val < 0.0 {
             *val = 0.0
         }
     }
@@ -517,7 +520,7 @@ fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBack
 }
 
 #[cfg(test)]
-mod test{
+mod test {
 
     use super::*;
 
@@ -531,7 +534,7 @@ mod test{
 
     #[test]
     fn sanitize_probabilities_set_to_zero() {
-        let mut probabilities = vec![0.3, 0.4, 0.23*NEGATIVE_PROBABILITIES_CUTOFF, 0.2];
+        let mut probabilities = vec![0.3, 0.4, 0.23 * NEGATIVE_PROBABILITIES_CUTOFF, 0.2];
         let res = sanitize_probabilities(&mut probabilities);
         assert!(res.is_ok());
         assert_eq!(probabilities, vec![0.3, 0.4, 0.0, 0.2])
@@ -539,7 +542,7 @@ mod test{
 
     #[test]
     fn sanitize_probabilities_set_error() {
-        let mut probabilities = vec![0.3, 0.4, 1.3*NEGATIVE_PROBABILITIES_CUTOFF, 0.2];
+        let mut probabilities = vec![0.3, 0.4, 1.3 * NEGATIVE_PROBABILITIES_CUTOFF, 0.2];
         let res = sanitize_probabilities(&mut probabilities);
         assert!(res.is_err());
     }
