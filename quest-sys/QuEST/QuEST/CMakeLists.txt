@@ -138,7 +138,7 @@ if (${MULTITHREADED} AND NOT ${GPUACCELERATED})
              old. Turning OpenMP support OFF.")
     else ()
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+      # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
     endif ()
   endif ()
 
@@ -220,49 +220,49 @@ endif()
 # ----- C++ COMPILER FLAGS --------------------------------------------------
 
 # set C++ flags that are common between compilers and build types
-set (CMAKE_CXX_STANDARD 98)
+# set (CMAKE_CXX_STANDARD 98)
 
 # Use -O2 for all but debug mode by default 
-if (NOT("${CMAKE_BUILD_TYPE}" STREQUAL "Debug"))
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} \
-        -O2"
-    )
-endif()
+# if (NOT("${CMAKE_BUILD_TYPE}" STREQUAL "Debug"))
+#     set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} \
+#         -O2"
+#     )
+# endif()
 
 # Set c++ flags for release
-set(CMAKE_CXX_FLAGS_RELEASE
-    "-O2"
-)
+# set(CMAKE_CXX_FLAGS_RELEASE
+#     "-O2"
+# )
 
 # Set c++ flags to use in debug mode
-set(CMAKE_CXX_FLAGS_DEBUG 
-    "-g"
-)
+# set(CMAKE_CXX_FLAGS_DEBUG 
+#     "-g"
+# )
 
-# set C++ compiler flags based on compiler type
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  # using Clang
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -mavx -Wall"
-  )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # using GCC
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -mavx -Wall"
-  )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-  # using Intel
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -xAVX -axCORE-AVX2 -diag-disable -cpu-dispatch -Wall"
-  )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  # using Visual Studio
-  string(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-  string(REGEX REPLACE "-W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -w"
-  )
-endif()
+# # set C++ compiler flags based on compiler type
+# if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+#   # using Clang
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -mavx -Wall"
+#   )
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#   # using GCC
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -mavx -Wall"
+#   )
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+#   # using Intel
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -xAVX -axCORE-AVX2 -diag-disable -cpu-dispatch -Wall"
+#   )
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+#   # using Visual Studio
+#   string(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+#   string(REGEX REPLACE "-W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -w"
+#   )
+# endif()
 
 if (VERBOSE_CMAKE)
     message("-- Compiler flags:")
