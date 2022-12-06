@@ -4,7 +4,7 @@ on:
   # push:
   #   branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, "dev0.8.1"]
 
 jobs:
   test_pyproject_install:
@@ -94,7 +94,7 @@ jobs:
 
   test_maturin_builds_macos:
     name: maturin_check-${{ matrix.python.py }}
-    runs-on: 'macOS-latest'
+    runs-on: 'macos-12'
     strategy:
       matrix:
         python: [
@@ -116,13 +116,13 @@ jobs:
           python-version: ${{ matrix.python.py }}
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip maturin pytest numpy twine        
+          python -m pip install --upgrade pip maturin pytest numpy twine
       - name: macos wheels
-        if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version < '3.8'}}
+        if: ${{ matrix.combinations.runs_on == 'macos-12' && matrix.python-version < '3.8'}}
         run: |
           RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo-quest/Cargo.toml --locked
       - name: universal wheels
-        if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version >= '3.8' }}
+        if: ${{ matrix.combinations.runs_on == 'macos-12' && matrix.python-version >= '3.8' }}
         run: |
           RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo-quest/Cargo.toml --locked
       - name: test install
@@ -166,7 +166,7 @@ jobs:
   #   strategy:
   #     matrix:
   #       combinations: [
-  #         { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
+  #         { runs_on: 'macos-12', rust: "aarch64-apple-darwin" },
   #       ]
   #       python: [
   #           {py: '3.10', interpreter: "python3.10"}
