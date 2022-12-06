@@ -4,6 +4,11 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+
+## 0.8.2
+
+* Fixed error with small negative occupation probabilities when using damping by introducing a numerical accuracy cut-off
+
 ## 0.8.1
 
 * Updated to (ro)qoqo 1.1.0
