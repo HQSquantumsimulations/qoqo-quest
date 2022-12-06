@@ -29,13 +29,10 @@ jobs:
         pytest ./qoqo-quest/python_tests/
 
   test_maturin_builds_linux:
-    name: maturin_check-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
+    name: maturin_check-${{ matrix.python.py }}
+    runs-on: 'ubuntu-latest'
     strategy:
       matrix:
-        combinations: [
-          { runs_on: 'ubuntu-latest',  rust: "x86_64-unknown-linux-gnu" },
-        ]
         python: [
             {py: '3.8', interpreter: "python3.8"},
             {py: '3.9', interpreter: "python3.9"},
@@ -48,7 +45,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4
@@ -85,7 +81,6 @@ jobs:
   #       with:
   #         profile: minimal
   #         toolchain: stable
-  #         target: ${{ matrix.combinations.rust }}
   #         default: true
   #     - uses: actions/setup-python@v4
   #       with:
@@ -98,13 +93,10 @@ jobs:
   #         args: -i python --out wheels -m qoqo-quest/Cargo.toml --locked
 
   test_maturin_builds_macos:
-    name: maturin_check-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
+    name: maturin_check-${{ matrix.python.py }}
+    runs-on: 'macOS-latest'
     strategy:
       matrix:
-        combinations: [
-          { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
-        ]
         python: [
             {py: '3.8', interpreter: "python3.8"},
             {py: '3.9', interpreter: "python3.9"},
@@ -117,7 +109,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4
@@ -155,7 +146,6 @@ jobs:
   #       with:
   #         profile: minimal
   #         toolchain: stable
-  #         target: ${{ matrix.combinations.rust }}
   #         default: true
   #     - uses: actions/setup-python@v4
   #       with:
@@ -187,7 +177,6 @@ jobs:
   #       with:
   #         profile: minimal
   #         toolchain: stable
-  #         target: "aarch64-apple-darwin"
   #         default: true
   #     - uses: actions/setup-python@v4
   #       with:
