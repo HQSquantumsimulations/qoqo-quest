@@ -20,12 +20,14 @@ use roqoqo_quest::{call_operation, Qureg};
 use std::collections::HashMap;
 use test_case::test_case;
 
-fn create_empty_registers() -> (
+type AllRegisters = (
     HashMap<String, BitRegister>,
     HashMap<String, FloatRegister>,
     HashMap<String, ComplexRegister>,
     HashMap<String, BitOutputRegister>,
-) {
+);
+
+fn create_empty_registers() -> AllRegisters {
     let bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
     let bit_registers: HashMap<String, BitRegister> = HashMap::new();
     let float_registers: HashMap<String, FloatRegister> = HashMap::new();
@@ -98,8 +100,8 @@ fn repeated_measurement_with_bitflip() {
     assert!(nested_vec.len() == 10);
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
-        assert_eq!(repetition[0], true);
-        assert_eq!(repetition[1], false);
+        assert!(repetition[0]);
+        assert!(!repetition[1]);
     }
 }
 
@@ -153,9 +155,9 @@ fn measure_with_bitflip() {
     assert!(bit_registers.contains_key("ro"));
     let nested_vec = bit_registers.get("ro").unwrap();
     assert!(nested_vec.len() == 3);
-    assert_eq!(nested_vec[0], false);
-    assert_eq!(nested_vec[1], false);
-    assert_eq!(nested_vec[2], true);
+    assert!(!nested_vec[0]);
+    assert!(!nested_vec[1]);
+    assert!(nested_vec[2]);
 }
 
 #[test_case(operations::Definition::from(operations::DefinitionBit::new("ro".into(), 2, false)), false; "not_output")]
@@ -168,7 +170,7 @@ fn test_definition_bit(pragma: operations::Definition, output: bool) {
     let mut qureg = Qureg::new(1, false);
     // Apply tested operation to output
     call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -195,7 +197,7 @@ fn test_definition_float(pragma: operations::Definition, output: bool) {
     let mut qureg = Qureg::new(1, false);
     // Apply tested operation to output
     call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -222,7 +224,7 @@ fn test_definition_complex(pragma: operations::Definition, output: bool) {
     let mut qureg = Qureg::new(1, false);
     // Apply tested operation to output
     call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -247,7 +249,7 @@ fn test_get_pauli_product() {
     let c0: Complex64 = Complex64::new(0.0, 0.0);
     let c1: Complex64 = Complex64::new(1.0, 0.0);
     let basis_states: Vec<Array1<Complex64>> = vec![array![c1, c0, c0, c0]];
-    for (column, _basis) in basis_states.clone().into_iter().enumerate() {
+    for (column, _basis) in basis_states.into_iter().enumerate() {
         // Create the readout registers
         let (
             mut bit_registers,
@@ -266,7 +268,7 @@ fn test_get_pauli_product() {
         let pragma: operations::Operation =
             operations::PragmaGetPauliProduct::new(qubit_paulis, "ro".into(), circuit).into();
         call_operation(
-            &pragma.clone().into(),
+            &pragma,
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,
@@ -301,7 +303,7 @@ fn test_get_occupation_probability(density: bool) {
     let pragma: operations::Operation =
         operations::PragmaGetOccupationProbability::new("ro".into(), Some(circuit)).into();
     call_operation(
-        &pragma.clone().into(),
+        &pragma,
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -312,16 +314,16 @@ fn test_get_occupation_probability(density: bool) {
     let mut comparison: Vec<f64> = vec![0.0, 0.0, 1.0, 0.0];
     if density {
         comparison = vec![
-            vec![0.0; comparison.clone().len()],
-            vec![0.0; comparison.clone().len()],
+            vec![0.0; comparison.len()],
+            vec![0.0; comparison.len()],
             comparison.clone(),
-            vec![0.0; comparison.clone().len()],
+            vec![0.0; comparison.len()],
         ]
         .into_iter()
         .flatten()
         .collect();
     }
-    for (row, check_value) in comparison.clone().into_iter().enumerate() {
+    for (row, check_value) in comparison.into_iter().enumerate() {
         let value = float_registers.get("ro").unwrap()[row];
         // Check if entries are the same
         if !is_close(value, check_value) {

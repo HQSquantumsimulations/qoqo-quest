@@ -42,9 +42,9 @@ fn test_measurement_with_repeated_measurement() {
     assert!(nested_vec.len() == 10);
     for repetition in nested_vec {
         assert!(repetition.len() == 4);
-        assert_eq!(repetition[0], false);
-        assert_eq!(repetition[1], true);
-        assert_eq!(repetition[2], false);
+        assert!(!repetition[0]);
+        assert!(repetition[1]);
+        assert!(!repetition[2]);
     }
 }
 
@@ -92,9 +92,9 @@ fn test_circuit_with_repeated_measurement() {
     assert!(nested_vec.len() == 10);
     for repetition in nested_vec {
         assert!(repetition.len() == 4);
-        assert_eq!(repetition[0], false);
-        assert_eq!(repetition[1], true);
-        assert_eq!(repetition[2], false);
+        assert!(!repetition[0]);
+        assert!(repetition[1]);
+        assert!(!repetition[2]);
     }
 }
 
@@ -116,8 +116,8 @@ fn test_circuit_with_repeated_measurement_and_previous_measurement() {
     assert!(nested_vec.len() == 10);
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
-        assert_eq!(repetition[0], false);
-        assert_eq!(repetition[1], true);
+        assert!(!repetition[0]);
+        assert!(repetition[1]);
     }
 }
 
@@ -137,8 +137,8 @@ fn test_circuit_with_repeated_measurement_and_input() {
     assert!(nested_vec.len() == 10);
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
-        assert_eq!(repetition[0], false);
-        assert_eq!(repetition[1], true);
+        assert!(!repetition[0]);
+        assert!(repetition[1]);
     }
 }
 
@@ -165,10 +165,10 @@ fn test_circuit_with_set_measurement_number() {
     assert!(nested_vec.len() == 2);
     for repetition in nested_vec {
         assert!(repetition.len() == 4);
-        assert_eq!(repetition[0], false);
-        assert_eq!(repetition[1], true);
-        assert_eq!(repetition[2], true);
-        assert_eq!(repetition[3], true);
+        assert!(!repetition[0]);
+        assert!(repetition[1]);
+        assert!(repetition[2]);
+        assert!(repetition[3]);
     }
 }
 

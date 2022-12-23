@@ -29,12 +29,14 @@ use roqoqo_quest::{call_operation, Qureg};
 use std::collections::HashMap;
 use test_case::test_case;
 
-fn create_empty_registers() -> (
+type AllRegisters = (
     HashMap<String, BitRegister>,
     HashMap<String, FloatRegister>,
     HashMap<String, ComplexRegister>,
     HashMap<String, BitOutputRegister>,
-) {
+);
+
+fn create_empty_registers() -> AllRegisters {
     let bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
     let bit_registers: HashMap<String, BitRegister> = HashMap::new();
     let float_registers: HashMap<String, FloatRegister> = HashMap::new();
@@ -90,7 +92,7 @@ fn test_store_load_state_vector() {
         for (index, value) in basis.clone().iter().enumerate() {
             // Check if entries are the same
             if !is_close(
-                value.clone(),
+                *value,
                 complex_registers
                     .get("state_vec")
                     .expect("No state_vec produced by PragmaGetStateVec")[index],
@@ -163,7 +165,7 @@ fn test_store_state_vec_load_density_matrix_qureg(density: bool) {
         .unwrap();
         for (index, value) in density_matrix.iter().enumerate() {
             if !is_close(
-                value.clone(),
+                *value,
                 complex_registers
                     .get("density_mattrix")
                     .expect("No density_mattrix produced by PragmaGetStateVec")[index],
@@ -228,7 +230,7 @@ fn test_store_load_density_matrix_qureg() {
         .unwrap();
         for (index, value) in density_matrix.iter().enumerate() {
             if !is_close(
-                value.clone(),
+                *value,
                 complex_registers
                     .get("density_mattrix")
                     .expect("No density_mattrix produced by PragmaGetStateVec")[index],
@@ -345,7 +347,7 @@ fn test_general_noise(operation: PragmaNoiseOperation) {
         .unwrap();
         for (index, (check_value, calculated_value)) in test_density_matrix
             .into_iter()
-            .zip(complex_registers.get("density_matrix").unwrap().into_iter())
+            .zip(complex_registers.get("density_matrix").unwrap().iter())
             .enumerate()
         {
             // Check if entries are the same
@@ -536,7 +538,7 @@ fn test_statevec_multiplication_quest() {
                 .enumerate()
             {
                 // Check if entries are the same
-                if !((value_test.re - value_comp).abs() < 1e-10) {
+                if (value_test.re - value_comp).abs() > 1e-10 {
                     // Check if reconstructed entry and enty of unitary is the same with global phase
                     panic!("Reconstructed matrix entry does not match targe matrix, index: {}, test_number: {}, value_from_multiplication: {} value_from_quest: {} ",
                            index, test_number, value_test.re, value_comp)
@@ -560,7 +562,7 @@ fn test_skipped_operations(pragma: operations::Operation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
     let basis_states: Vec<Array1<Complex64>> = vec![array![c1, c0], array![c0, c1]];
-    for (column, basis) in basis_states.clone().into_iter().enumerate() {
+    for (column, basis) in basis_states.into_iter().enumerate() {
         // Create the readout registers
         let (
             mut bit_registers,
@@ -585,7 +587,7 @@ fn test_skipped_operations(pragma: operations::Operation) {
         .unwrap();
         // Apply tested operation to output
         call_operation(
-            &pragma.clone().into(),
+            &pragma.clone(),
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,
@@ -639,7 +641,7 @@ fn test_pragma_get_pauli_product(pauli: usize, circ: Vec<Operation>, exp_val: f6
         create_empty_registers();
     // Apply tested operation to output
     let _error = call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -666,7 +668,7 @@ fn test_pragma_loop(repetitions: CalculatorFloat, zero_state_prob: f64) {
     complex_registers.insert("state_vec".to_string(), vec![Complex64::new(0.0, 0.0); 2]);
     // Apply tested operation to output
     call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -713,7 +715,7 @@ fn test_pragma_get_pauli_product_multiple() {
         create_empty_registers();
     // Apply tested operation to output
     let _error = call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -756,7 +758,7 @@ fn test_active_reset() {
         // Apply tested operation to output
         let pragma: operations::Operation = operations::PragmaActiveReset::new(1).into();
         call_operation(
-            &pragma.clone().into(),
+            &pragma,
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,
@@ -795,7 +797,7 @@ fn test_conditional() {
     let basis_states: Vec<Array1<Complex64>> = vec![array![c1, c0, c0, c0], array![c0, c0, c1, c0]];
     let comparison_states: Vec<Array1<Complex64>> =
         vec![array![c0, c1, c0, c0], array![c0, c0, c0, c1]];
-    for (column, basis) in basis_states.clone().into_iter().enumerate() {
+    for (column, basis) in basis_states.into_iter().enumerate() {
         // Create the readout registers
         let (
             mut bit_registers,
@@ -824,7 +826,7 @@ fn test_conditional() {
         let pragma: operations::Operation =
             operations::PragmaConditional::new("conditional".into(), 1, circuit).into();
         call_operation(
-            &pragma.clone().into(),
+            &pragma,
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,
@@ -865,7 +867,7 @@ fn test_sleep_pragma() {
         create_empty_registers();
     // Apply tested operation to output
     let error = call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -891,7 +893,7 @@ fn test_set_density_matrix_error_1() {
         create_empty_registers();
     // Apply tested operation to output
     let error = call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -919,7 +921,7 @@ fn test_set_density_matrix_error_2() {
         create_empty_registers();
     // Apply tested operation to output
     let error = call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -944,7 +946,7 @@ fn test_set_state_vector_error() {
         create_empty_registers();
     // Apply tested operation to output
     let error = call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -969,7 +971,7 @@ fn test_get_state_vector_error() {
         create_empty_registers();
     // Apply tested operation to output
     let error = call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -1013,7 +1015,7 @@ fn test_input_bit() {
     assert!(res.is_err());
     bit_registers.insert("ro".to_string(), vec![false; 2]);
     let res = call_operation(
-        &op.clone().into(),
+        &op.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
