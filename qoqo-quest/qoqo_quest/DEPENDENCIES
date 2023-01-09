@@ -17817,7 +17817,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-regex 1.7.0
+regex 1.7.1
 https://github.com/rust-lang/regex
 by The Rust Project Developers
 An implementation of regular expressions for Rust. This implementation uses
