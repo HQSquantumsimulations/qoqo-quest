@@ -19,7 +19,7 @@ jobs:
         profile: minimal
         toolchain: stable
         default: true
-    - uses: Swatinem/rust-cache@v2.0.0
+    - uses: Swatinem/rust-cache@v2.2.0
     - name: Install dependencies
       run: |
         pip install maturin pytest numpy
@@ -46,7 +46,7 @@ jobs:
           profile: minimal
           toolchain: stable
           default: true
-      - uses: Swatinem/rust-cache@v2.0.0
+      - uses: Swatinem/rust-cache@v2.2.0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.py }}
@@ -109,7 +109,7 @@ jobs:
           profile: minimal
           toolchain: stable
           default: true
-      - uses: Swatinem/rust-cache@v2.0.0
+      - uses: Swatinem/rust-cache@v2.2.0
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.py }}
