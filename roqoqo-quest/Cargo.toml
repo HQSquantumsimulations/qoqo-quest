@@ -34,7 +34,7 @@ rayon = {version="1.5", optional=true}
 
 [dev-dependencies]
 test-case="2.0"
-criterion = {version="0.3"}
+criterion = {version="0.4"}
 
 [features]
 default = []
