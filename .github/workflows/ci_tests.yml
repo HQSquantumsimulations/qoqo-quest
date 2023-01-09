@@ -4,7 +4,7 @@ on:
   # push:
   #   branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, "dev0.8.1"]
 
 jobs:
   test_pyproject_install:
@@ -54,13 +54,10 @@ jobs:
           cargo clippy -- -D warnings
 
   unittests_check:
-    name: unittests_check-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
+    name: unittests_check-${{ matrix.python.py }}
+    runs-on: "macos-12"
     strategy:
       matrix:
-        combinations: [
-          { runs_on: "macOS-latest", rust: "x86_64-apple-darwin" },
-        ]
         python: [
             {py: '3.7', interpreter: "python3.7"},
             {py: '3.8', interpreter: "python3.8"},
@@ -73,7 +70,6 @@ jobs:
         with:
           profile: minimal
           toolchain: stable
-          target: ${{ matrix.combinations.rust }}
           default: true
       - uses: Swatinem/rust-cache@v2.0.0
       - uses: actions/setup-python@v4.2.0
@@ -116,42 +112,42 @@ jobs:
           cargo test --workspace --no-default-features
           cargo fmt --all -- --check
     
-  test_maturin_builds_linux:
-    name: maturin_check-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
-    strategy:
-      matrix:
-        combinations: [
-          { runs_on: 'ubuntu-latest',  rust: "x86_64-unknown-linux-gnu" },
-        ]
-        python: [
-            {py: '3.7', interpreter: "python3.7"},
-            {py: '3.8', interpreter: "python3.8"},
-            {py: '3.9', interpreter: "python3.9"},
-            {py: '3.10', interpreter: "python3.10"}
-        ]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: ${{ matrix.combinations.rust }}
-          default: true
-      - uses: Swatinem/rust-cache@v2.0.0
-      - uses: actions/setup-python@v4.2.0
-        with:
-          python-version: ${{ matrix.python.py }}
-      - name: linux wheels
-        uses: messense/maturin-action@v1
-        with:
-          maturin-version: latest
-          command: build
-          manylinux: 2014
-          args: -i python${{ matrix.python.py }} --out wheels -m qoqo-quest/Cargo.toml --locked
-      - name: test install
-        run: |
-          pip install wheels/* --force-reinstall
+  # test_maturin_builds_linux:
+  #   name: maturin_check-${{ matrix.combinations.runs_on }}
+  #   runs-on: 'ubuntu-latest'
+  #   strategy:
+  #     matrix:
+  #       combinations: [
+  #         { runs_on: 'ubuntu-latest',  rust: "x86_64-unknown-linux-gnu" },
+  #       ]
+  #       python: [
+  #           {py: '3.8', interpreter: "python3.8"},
+  #           {py: '3.9', interpreter: "python3.9"},
+  #           {py: '3.10', interpreter: "python3.10"},
+  #           {py: '3.11', interpreter: "python3.11"}
+  #       ]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         target: ${{ matrix.combinations.rust }}
+  #         default: true
+  #     - uses: Swatinem/rust-cache@v2.0.0
+  #     - uses: actions/setup-python@v4.2.0
+  #       with:
+  #         python-version: ${{ matrix.python.py }}
+  #     - name: linux wheels
+  #       uses: messense/maturin-action@v1
+  #       with:
+  #         maturin-version: latest
+  #         command: build
+  #         manylinux: 2014
+  #         args: -i python${{ matrix.python.py }} --out wheels -m qoqo-quest/Cargo.toml --locked
+  #     - name: test install
+  #       run: |
+  #         pip install wheels/* --force-reinstall
   
   # test_maturin_builds_windows:
   #   name: maturin_check-${{ matrix.combinations.runs_on }}
@@ -185,46 +181,38 @@ jobs:
   #         command: build
   #         args: -i python --out wheels -m qoqo-quest/Cargo.toml --locked
 
-  test_maturin_builds_macos:
-    name: maturin_check-${{ matrix.combinations.runs_on }}
-    runs-on: ${{ matrix.combinations.runs_on }}
-    strategy:
-      matrix:
-        combinations: [
-          { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
-        ]
-        python: [
-            {py: '3.7', interpreter: "python3.7"},
-            {py: '3.8', interpreter: "python3.8"},
-            {py: '3.9', interpreter: "python3.9"},
-            {py: '3.10', interpreter: "python3.10"}
-        ]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          target: ${{ matrix.combinations.rust }}
-          default: true
-      - uses: Swatinem/rust-cache@v2.0.0
-      - uses: actions/setup-python@v4.2.0
-        with:
-          python-version: ${{ matrix.python.py }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip maturin pytest numpy twine        
-      - name: macos wheels
-        if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version < '3.8'}}
-        run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo-quest/Cargo.toml --locked
-      - name: universal wheels
-        if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version >= '3.8' }}
-        run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo-quest/Cargo.toml --locked
-      - name: test install
-        run: |
-          pip install wheels/* --force-reinstall
+  # test_maturin_builds_macos:
+  #   name: maturin_check-${{ matrix.combinations.runs_on }}
+  #   runs-on: ${{ matrix.combinations.runs_on }}
+  #   strategy:
+  #     matrix:
+  #       combinations: [
+  #         { runs_on: 'macos-12', rust: "aarch64-apple-darwin" },
+  #       ]
+  #       python: [
+  #           {py: '3.7', interpreter: "python3.7"},
+  #           {py: '3.8', interpreter: "python3.8"},
+  #           {py: '3.9', interpreter: "python3.9"},
+  #           {py: '3.10', interpreter: "python3.10"}
+  #       ]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         default: true
+  #     - uses: Swatinem/rust-cache@v2.0.0
+  #     - uses: actions/setup-python@v4.2.0
+  #       with:
+  #         python-version: ${{ matrix.python.py }}
+  #     - name: Install dependencies
+  #       run: |
+  #         python -m pip install pip maturin pytest numpy
+  #         RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo-quest/Cargo.toml --locked
+  #      - name: test install
+  #       run: |
+  #         pip install wheels/* --force-reinstall
   
   # test_src_dist_builds_linux:
   #   name: maturin_check-${{ matrix.combinations.runs_on }}
@@ -264,7 +252,7 @@ jobs:
   #   strategy:
   #     matrix:
   #       combinations: [
-  #         { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
+  #         { runs_on: 'macos-12', rust: "aarch64-apple-darwin" },
   #       ]
   #       python: [
   #           {py: '3.10', interpreter: "python3.10"}

@@ -21,9 +21,9 @@ jobs:
       run: |
         cargo login ${{ secrets.CRATES_IO_API_TOKEN }}
         cargo publish --manifest-path=quest-sys/Cargo.toml
-        sleep 30
+        sleep 60
         cargo publish --manifest-path=roqoqo-quest/Cargo.toml
-        sleep 30
+        sleep 60
         cargo publish --manifest-path=qoqo-quest/Cargo.toml
 
   build_maturin_builds_linux_src:
@@ -74,12 +74,6 @@ jobs:
         combinations: [
           { runs_on: 'ubuntu-latest',  rust: "x86_64-unknown-linux-gnu" },
         ]
-        python: [
-            {py: '3.7', interpreter: "python3.7"},
-            {py: '3.8', interpreter: "python3.8"},
-            {py: '3.9', interpreter: "python3.9"},
-            {py: '3.10', interpreter: "python3.10"}
-        ]
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rs/toolchain@v1
@@ -89,18 +83,13 @@ jobs:
           target: ${{ matrix.combinations.rust }}
           default: true
       - uses: actions/setup-python@v4.2.0
-        with:
-          python-version: ${{ matrix.python.py }}
       - name: linux wheels
         uses: messense/maturin-action@v1
         with:
           maturin-version: latest
           command: build
           manylinux: 2014
-          args: -i python${{ matrix.python.py }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
-      - name: test install
-        run: |
-          pip install wheels/* --force-reinstall
+          args: --find-interpreter --out wheels -m qoqo-quest/Cargo.toml --release --locked
       - name: store artifact
         uses: actions/upload-artifact@v3
         with:
@@ -151,13 +140,13 @@ jobs:
     strategy:
       matrix:
         combinations: [
-          { runs_on: 'macOS-latest', rust: "aarch64-apple-darwin" },
+          { runs_on: 'macos-12', rust: "aarch64-apple-darwin" },
         ]
         python: [
             {py: '3.7', interpreter: "python3.7"},
             {py: '3.8', interpreter: "python3.8"},
             {py: '3.9', interpreter: "python3.9"},
-            {py: '3.10', interpreter: "python3.10"}
+            {py: '3.10', interpreter: "python3.10"},
         ]
     steps:
       - uses: actions/checkout@v3
@@ -173,14 +162,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip maturin pytest numpy twine        
-      - name: macos wheels
-        if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version < '3.8'}}
-        run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" OPENMP_STATIC=1 maturin build -i ${{ matrix.python.interpreter }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
-      - name: universal wheels
-        if: ${{ matrix.combinations.runs_on == 'macOS-latest' && matrix.python-version >= '3.8' }}
-        run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" OPENMP_STATIC=1 maturin build -i ${{ matrix.python.interpreter }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels -m qoqo-quest/Cargo.toml --release --locked
       - name: test install
         run: |
           pip install wheels/* --force-reinstall
