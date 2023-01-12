@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v4.5.0
       with:
         python-version: 3.9
     - uses: actions-rs/toolchain@v1
@@ -47,7 +47,7 @@ jobs:
           toolchain: stable
           default: true
       - uses: Swatinem/rust-cache@v2.0.0
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4.5.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: linux wheels
@@ -82,7 +82,7 @@ jobs:
   #         profile: minimal
   #         toolchain: stable
   #         default: true
-  #     - uses: actions/setup-python@v4
+  #     - uses: actions/setup-python@v4.5.0
   #       with:
   #         python-version: ${{ matrix.python.py }}
   #     - name: windows wheels
@@ -110,7 +110,7 @@ jobs:
           toolchain: stable
           default: true
       - uses: Swatinem/rust-cache@v2.0.0
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4.5.0
         with:
           python-version: ${{ matrix.python.py }}
       - name: Install dependencies
@@ -139,7 +139,7 @@ jobs:
   #         profile: minimal
   #         toolchain: stable
   #         default: true
-  #     - uses: actions/setup-python@v4
+  #     - uses: actions/setup-python@v4.5.0
   #       with:
   #         python-version: ${{ matrix.python.py }}
   #     - name: linux wheels
@@ -170,7 +170,7 @@ jobs:
   #         profile: minimal
   #         toolchain: stable
   #         default: true
-  #     - uses: actions/setup-python@v4
+  #     - uses: actions/setup-python@v4.5.0
   #       with:
   #         python-version: ${{ matrix.python.py }}
   #     - name: Install dependencies
