@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.9.1
+
+* Update to pyo3 0.18 and enabling cross-compilation with zig
+
 ## 0.9.0
 
 * Updated to qoqo 1.2.0

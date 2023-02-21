@@ -13,3 +13,4 @@ target/*
 .vscode/*
 *.profraw
 *.lcov
+*zig-cache*
