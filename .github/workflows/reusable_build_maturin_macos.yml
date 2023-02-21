@@ -66,11 +66,11 @@ jobs:
       - name: macos wheels
         if: ${{ inputs.universal2 == false || matrix.python.py < '3.8'}}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m qoqo/Cargo.toml --release --locked
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --out wheels  -m ${{inputs.py_interface_folder}}/Cargo.toml --release --locked
       - name: universal wheels
         if: ${{ inputs.universal2 && matrix.python.py >= '3.8' }}
         run: |
-          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --universal2 --out wheels  -m qoqo/Cargo.toml --release --locked
+          RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" maturin build -i ${{ matrix.python.interpreter }} --universal2 --out wheels  -m ${{inputs.py_interface_folder}}/Cargo.toml --release --locked
       - name: store artifact
         uses: actions/upload-artifact@v3
         with:
