@@ -24,9 +24,32 @@ qoqo-quest allows to simulate the execution of qoqo quantum circuits with the he
 Based on QuEST qoqo supports the simulation of error-free and noisy quantum computers.
 qoqo-quest is designed to be able to simulate all operations that are part of qoqo.
 For usage examples see the examples section of [qoqo](https://github.com/HQSquantumsimulations/qoqo/)
-At the moment due to build problems in manylinux containers only python packages for macOS are created automatically and added to PyPi.
 
-A source distribution now exists but requires a Rust install with a rust version > 1.47 and a maturin version { >= 0.12, <0.13 } in order to be built.
+### Installation
+
+For linux and macos on x86_64 hardware pre-built Python packages are available on PyPi and can be installed with
+
+```shell
+pip install qoqo-quest
+```
+
+For other platforms please use the source distribution that requires a Rust install with a rust version > 1.47 and a maturin version in order to be built.
+
+After installing Rust (for example via [rustup](ghcr.io/rust-cross/manylinux2014-cross:aarch64))
+
+run the following for non-macos platforms
+
+```shell
+pip install maturin
+pip install qoqo-quest
+```
+
+and on macos
+
+```shell
+pip install maturin
+RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" pip install qoqo-quest
+```
 
 ## roqoqo-quest
 
@@ -48,6 +71,8 @@ QuEST supports distributed computing and the use of GPU computing. The support c
 ## General Notes
 
 This software is still in the beta stage. Functions and documentation are not yet complete and breaking changes can occur.
+
+This project is partly supported by [PlanQK](https://planqk.de).
 
 ## Contributing
 
