@@ -9,7 +9,6 @@ use std::path::PathBuf;
 use std::process::Command;
 
 fn main() {
-    //required to later link correctly on macos
 
     #[cfg(any(feature = "zig", feature = "rebuild"))]
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").unwrap());
@@ -132,28 +131,26 @@ fn build_with_zig_macos_universal_2(out_dir: PathBuf) -> PathBuf {
         }
     };
 
-    // Danger copied from zigbuild crate
     let x86_files = fs::read_dir(quest_library_path_x86.join("lib")).unwrap();
     let x86_file = x86_files.into_iter().next().unwrap().unwrap().path();
     let aarch_files = fs::read_dir(quest_library_path_aarch.join("lib")).unwrap();
     let aarch_file = aarch_files.into_iter().next().unwrap().unwrap().path();
-    // let mut combination_writer = fat_macho::FatWriter::new();
-    // if let Err(err) =  combination_writer.add(fs::read(&x86_file).unwrap()) {
-    //     if !matches!(err, fat_macho::Error::InvalidMachO(_)){
-    //         panic!("{err}")
-    //     }
-    // }
-    // if let Err(err) =  combination_writer.add(fs::read(&aarch_file).unwrap()) {
-    //     if !matches!(err, fat_macho::Error::InvalidMachO(_)){
-    //         panic!("{err}")
-    //     }
-    // }
-    // let quest_library_path = out_dir.join("universal2-apple-darwin").join("lib");
+    let mut combination_writer = fat_macho::FatWriter::new();
+    if let Err(err) =  combination_writer.add(fs::read(&x86_file).unwrap()) {
+        if !matches!(err, fat_macho::Error::InvalidMachO(_)){
+            panic!("{err}")
+        }
+    }
+    if let Err(err) =  combination_writer.add(fs::read(&aarch_file).unwrap()) {
+        if !matches!(err, fat_macho::Error::InvalidMachO(_)){
+            panic!("{err}")
+        }
+    }
+    let quest_library_path = out_dir.join("universal2-apple-darwin").join("lib");
 
-    // fs::create_dir_all(quest_library_path.clone()).unwrap();
-    // combination_writer.write_to_file(quest_library_path.join("libQuEST.a")).unwrap();
-    // quest_library_path
-    quest_library_path_aarch.clone().join("lib")
+    fs::create_dir_all(quest_library_path.clone()).unwrap();
+    combination_writer.write_to_file(quest_library_path.join("libQuEST.a")).unwrap();
+    quest_library_path
 }
 
 #[cfg(all(feature = "zig", target_os = "linux"))]
