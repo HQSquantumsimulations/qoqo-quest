@@ -21,7 +21,7 @@ jobs:
         run: |
           $ErrorActionPreference = 'SilentlyContinue'
           cd quest-sys
-          cargo build
+          cargo build --release
           cd ..
           Get-ChildItem target –Recurse
 

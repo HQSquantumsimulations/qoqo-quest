@@ -11,7 +11,7 @@ use std::process::Command;
 fn main() {
 
     #[cfg(any(feature = "zig", feature = "rebuild"))]
-    let out_dir_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let out_dir_path = PathBuf::from(env::var("OUT_DIR").expect("Cannot find OUT_DIR"));
 
     #[cfg(not(feature = "zig"))]
     let quest_library_path = standard_cmake_build();
@@ -148,8 +148,8 @@ fn build_with_zig_macos_universal_2(out_dir: PathBuf) -> PathBuf {
     }
     let quest_library_path = out_dir.join("universal2-apple-darwin").join("lib");
 
-    fs::create_dir_all(quest_library_path.clone()).unwrap();
-    combination_writer.write_to_file(quest_library_path.join("libQuEST.a")).unwrap();
+    fs::create_dir_all(quest_library_path.clone()).expect("Cannot create directory for universal2 library");
+    combination_writer.write_to_file(quest_library_path.join("libQuEST.a")).expect("Cannot write universal2 library");
     quest_library_path
 }
 
@@ -218,5 +218,9 @@ fn standard_cmake_build() -> PathBuf {
     #[cfg(not( target_os = "windows"))]
     return quest_library_path;
     #[cfg( target_os = "windows")]
-    return quest_library_path.join("Debug");
+    match env::var("PROFILE").expect("Cannot find PROFILE env variable").as_str(){
+        "debug" => {return quest_library_path.join("Debug");},
+        "release" => {return quest_library_path.join("Release");}
+    }
+    
 }

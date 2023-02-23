@@ -21,12 +21,13 @@ pub fn build(b: *std.build.Builder) void {
         "src/CPU/QuEST_cpu.c",
         "src/CPU/QuEST_cpu_local.c",
     }, &.{
-        "-std=c11",
+        "-std=c99",
+        "-O2",
         "-Wall",
-        "-W",
-        "-Wstrict-prototypes",
-        "-Wwrite-strings",
-        "-Wno-missing-field-initializers",
+        // "-W",
+        // "-Wstrict-prototypes",
+        // "-Wwrite-strings",
+        // "-Wno-missing-field-initializers",
     });
     QuEST.install();
 }
