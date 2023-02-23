@@ -221,6 +221,7 @@ fn standard_cmake_build() -> PathBuf {
     match env::var("PROFILE").expect("Cannot find PROFILE env variable").as_str(){
         "debug" => {return quest_library_path.join("Debug");},
         "release" => {return quest_library_path.join("Release");}
+        _ => {panic!("Profile is not debug or release. Correct windows library location not known.")}
     }
     
 }
