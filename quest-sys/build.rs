@@ -1,6 +1,6 @@
 #[cfg(not(feature = "zig"))]
 use cmake::Config;
-#[cfg(any(feature = "zig", feature = "rebuild"))]
+// #[cfg(any(feature = "zig", feature = "rebuild"))]
 use std::env;
 #[cfg(feature = "zig")]
 use std::fs;
@@ -205,14 +205,16 @@ fn standard_cmake_build() -> PathBuf {
         .join("build");
 
     #[cfg(not(feature = "openmp"))]
-    let quest_library_path = Config::new(partial_quest_path)
+    let quest_library_path = 
+        Config::new(partial_quest_path)
         .no_build_target(true)
         .very_verbose(true)
         .always_configure(true)
+        // .define("CMAKE_OSX_ARCHITECTURES","x86_64;arm64")
         // deactivates multi-threading
         .define("MULTITHREADED", "0")
         .build()
         .join("build");
-
+    
     quest_library_path
 }
