@@ -58,6 +58,8 @@ if (${DISTRIBUTED} AND ${GPUACCELERATED})
         distributed GPU acceleration not supported. Aborting")
 endif()
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 if ( NOT(${PRECISION} EQUAL 1) AND
      NOT(${PRECISION} EQUAL 2) AND 
      NOT(${PRECISION} EQUAL 4) )

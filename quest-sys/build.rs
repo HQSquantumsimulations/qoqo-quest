@@ -215,6 +215,8 @@ fn standard_cmake_build() -> PathBuf {
         .define("MULTITHREADED", "0")
         .build()
         .join("build");
-    
-    quest_library_path
+    #[cfg(not( target_os = "windows"))]
+    return quest_library_path;
+    #[cfg( target_os = "windows")]
+    return quest_library_path.join("Debug");
 }
