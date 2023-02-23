@@ -22,10 +22,9 @@ jobs:
           $ErrorActionPreference = 'SilentlyContinue'
           cd quest-sys
           cargo build
-      - name: ls out-files
-        shell: pwsh
-        run: |
-          Get-ChildItem –Recurse
+          cd ..
+          Get-ChildItem target –Recurse
+
 
   # build_maturin_builds_windows:
   #   name: maturin_build-windows
