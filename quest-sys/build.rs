@@ -1,6 +1,6 @@
 #[cfg(not(feature = "zig"))]
 use cmake::Config;
-#[cfg(any(feature = "zig", feature = "rebuild"))]
+// #[cfg(any(feature = "zig", feature = "rebuild"))]
 use std::env;
 #[cfg(feature = "zig")]
 use std::fs;
