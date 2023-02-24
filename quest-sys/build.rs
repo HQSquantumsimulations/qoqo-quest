@@ -2,7 +2,6 @@ use cc;
 // use cmake::Config;
 use std::fs;
 use std::path::PathBuf;
-use std::process::Command;
 use std::{env, path::Path};
 
 fn main() {

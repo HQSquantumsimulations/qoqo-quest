@@ -53,17 +53,16 @@ jobs:
     with: 
       py_interface_folder: "qoqo-quest"
       # Universal2 builds do not work with LTO at the moment and would cause inacceptable slowdown
-      universal2: false
+      universal2: true
       deploy: true
     secrets: inherit
 
-# Windows builds do not work at the moment
 # Build windows wheels and upload them to PyPi
-  # build_maturin_builds_windows:
-  #   name: maturin_build-windows
-  #   needs: deploy_cratesio
-  #   uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_build_maturin_windows.yml@main
-  #   with: 
-  #     py_interface_folder: "qoqo-quest"
-  #     deploy: true
-  #   secrets: inherit
+  build_maturin_builds_windows:
+    name: maturin_build-windows
+    needs: deploy_cratesio
+    uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_build_maturin_windows.yml@main
+    with: 
+      py_interface_folder: "qoqo-quest"
+      deploy: true
+    secrets: inherit
