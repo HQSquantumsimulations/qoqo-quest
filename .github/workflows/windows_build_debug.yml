@@ -26,23 +26,23 @@ jobs:
           Get-ChildItem target –Recurse
 
 
-  # build_maturin_builds_windows:
-  #   name: maturin_build-windows
-  #   runs-on: 'windows-latest'
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: Swatinem/rust-cache@v2
-  #     - uses: actions-rs/toolchain@v1
-  #       with:
-  #         profile: minimal
-  #         toolchain: stable
-  #         default: true
-  #     - name: windows wheels
-  #       uses: PyO3/maturin-action@v1
-  #       with:
-  #         maturin-version: latest
-  #         command: build
-  #         args: --find-interpreter --out wheels -m qoqo-quest/Cargo.toml --release --locked
+  build_maturin_builds_windows:
+    name: maturin_build-windows
+    runs-on: 'windows-latest'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          default: true
+      - name: windows wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          maturin-version: latest
+          command: build
+          args: --find-interpreter --out wheels -m qoqo-quest/Cargo.toml --release --locked
 
 
  

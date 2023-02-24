@@ -25,14 +25,11 @@ doctest = false
 openmp-sys ={version = "1.2.0", features=["static"], optional=true}
 
 [build-dependencies]
-cmake = {version ="0.1", features=[]}
+# cmake = {version ="0.1", features=[]}
 bindgen = {version="0.64", optional=true}
-fat-macho = {version="0.4", optional = true}
-pyo3-build-config = "0.18"
+cc = {version="1.0"}
 
 [features]
 default = []
-zig = ['fat-macho']
-
 openmp = ["openmp-sys"]
 rebuild = ["bindgen"]

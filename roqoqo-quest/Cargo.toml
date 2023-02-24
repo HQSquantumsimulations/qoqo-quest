@@ -38,7 +38,6 @@ criterion = {version="0.4"}
 
 [features]
 default = []
-zig = ["quest-sys/zig"]
 openmp = ["quest-sys/openmp"]
 async = ["async-trait", "roqoqo/async", "futures"]
 parallelization = ["rayon"]

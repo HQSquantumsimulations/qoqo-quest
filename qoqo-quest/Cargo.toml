@@ -43,6 +43,5 @@ pyo3-build-config = "0.18"
 
 [features]
 extension-module = ["pyo3/extension-module"]
-zig = ["roqoqo-quest/zig"]
 default = ["extension-module"]
 openmp = ["roqoqo-quest/openmp"]

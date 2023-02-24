@@ -1,25 +1,15 @@
-#[cfg(not(feature = "zig"))]
-use cmake::Config;
-// #[cfg(any(feature = "zig", feature = "rebuild"))]
-use std::env;
-#[cfg(feature = "zig")]
+use cc;
+// use cmake::Config;
 use std::fs;
 use std::path::PathBuf;
-#[cfg(any(feature = "zig"))]
 use std::process::Command;
+use std::{env, path::Path};
 
 fn main() {
-
-    #[cfg(any(feature = "zig", feature = "rebuild"))]
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").expect("Cannot find OUT_DIR"));
 
-    #[cfg(not(feature = "zig"))]
-    let quest_library_path = standard_cmake_build();
-    #[cfg(all(feature = "zig", target_os = "macos"))]
-    let quest_library_path = build_with_zig_macos_universal_2(out_dir_path.clone());
-    #[cfg(all(feature = "zig", target_os = "linux"))]
-    let quest_library_path = build_with_zig_linux(out_dir_path.clone());
-
+    let quest_library_path = build_with_cc(out_dir_path.clone());
+    
     println!(
         "cargo:rustc-link-search=native={}",
         quest_library_path.display()
@@ -75,153 +65,72 @@ fn main() {
         .expect("Couldn't write bindings!");
 }
 
-#[cfg(all(feature = "zig", target_os = "macos"))]
-fn build_with_zig_macos_universal_2(out_dir: PathBuf) -> PathBuf {
-    let zigtarget_aarch = Some("aarch64-macos-none");
-    let zigtarget_x86 = Some("x86_64-macos-none");
 
-    let build_zig_path = PathBuf::from("QuEST").join("QuEST").join("build.zig");
 
-    let mut zig_run_aarch = Command::new("zig");
-    zig_run_aarch.arg("build");
-    zig_run_aarch.arg("--build-file");
-    zig_run_aarch.arg(build_zig_path.to_str().unwrap().to_string());
-    if let Some(ztarget) = zigtarget_aarch {
-        zig_run_aarch.arg(format!("-Dtarget={}", ztarget));
-    }
+fn build_with_cc(out_dir: PathBuf) -> PathBuf {
+    let base_path = Path::new("QuEST").join("QuEST");
+    let src_path = base_path.clone().join("src");
+    let include_path = base_path.clone().join("include");
+    let files = [
+        src_path.clone().join("QuEST.c"),
+        src_path.clone().join("QuEST_common.c"),
+        src_path.clone().join("QuEST_qasm.c"),
+        src_path.clone().join("QuEST_validation.c"),
+        src_path.clone().join("mt19937ar.c"),
+        src_path.clone().join("CPU").join("QuEST_cpu.c"),
+        src_path.clone().join("CPU").join("QuEST_cpu_local.c"),
+    ];
+    let out_path = out_dir.clone().join("build");
+    fs::create_dir_all(out_path.clone()).expect("Cannot create directory for x86_64 library");
 
-    let mut zig_run_x86 = Command::new("zig");
-    zig_run_x86.arg("build");
-    zig_run_x86.arg("--build-file");
-    zig_run_x86.arg(build_zig_path.to_str().unwrap().to_string());
-
-    if let Some(ztarget) = zigtarget_x86 {
-        zig_run_x86.arg(format!("-Dtarget={}", ztarget));
-    }
-
-    let quest_library_path = out_dir.clone();
-    let quest_library_path_aarch = quest_library_path.join("aarch64");
-    let quest_library_path_x86 = quest_library_path.join("x86_64");
-
-    zig_run_aarch.arg("-p");
-    zig_run_aarch.arg(format!("{}", quest_library_path_aarch.display()));
-
-    zig_run_x86.arg("-p");
-    zig_run_x86.arg(format!("{}", quest_library_path_x86.display()));
-
-    match zig_run_aarch.status() {
-        Ok(status) => {
-            if !status.success() {
-                panic!("Could not build QuEST library for macos x86_64 with zig");
-            }
-        }
-        Err(err) => {
-            panic!("Could not build QuEST library for macos x86_64 with zig: {err}");
-        }
-    };
-
-    match zig_run_x86.status() {
-        Ok(status) => {
-            if !status.success() {
-                panic!("Could not build QuEST library for macos x86_64 with zig");
-            }
-        }
-        Err(err) => {
-            panic!("Could not build QuEST library for macos x86_64 with zig: {err}");
-        }
-    };
-
-    let x86_files = fs::read_dir(quest_library_path_x86.join("lib")).unwrap();
-    let x86_file = x86_files.into_iter().next().unwrap().unwrap().path();
-    let aarch_files = fs::read_dir(quest_library_path_aarch.join("lib")).unwrap();
-    let aarch_file = aarch_files.into_iter().next().unwrap().unwrap().path();
-    let mut combination_writer = fat_macho::FatWriter::new();
-    if let Err(err) =  combination_writer.add(fs::read(&x86_file).unwrap()) {
-        if !matches!(err, fat_macho::Error::InvalidMachO(_)){
-            panic!("{err}")
-        }
-    }
-    if let Err(err) =  combination_writer.add(fs::read(&aarch_file).unwrap()) {
-        if !matches!(err, fat_macho::Error::InvalidMachO(_)){
-            panic!("{err}")
-        }
-    }
-    let quest_library_path = out_dir.join("universal2-apple-darwin").join("lib");
-
-    fs::create_dir_all(quest_library_path.clone()).expect("Cannot create directory for universal2 library");
-    combination_writer.write_to_file(quest_library_path.join("libQuEST.a")).expect("Cannot write universal2 library");
-    quest_library_path
-}
-
-#[cfg(all(feature = "zig", target_os = "linux"))]
-fn build_with_zig_linux(out_dir: PathBuf) -> PathBuf {
-    let zigtarget: Option<&str> = None;
-    #[cfg(all(target_os = "linux", target_arch = "aarch64"))]
-    let zigtarget_aarch = Some("aarch64-linux-gnu");
-    #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
-    let zigtarget = Some("x86_64-linux-gnu");
-    let build_zig_path = PathBuf::from("QuEST").join("QuEST").join("build.zig");
-
-    let mut zig_run = Command::new("zig");
-    zig_run.arg("build");
-    zig_run.arg("--build-file");
-    zig_run.arg(build_zig_path.to_str().unwrap().to_string());
-    if let Some(ztarget) = zigtarget {
-        zig_run.arg(format!("-Dtarget={}", ztarget));
-    }
-    zig_run.arg("-flto");
-
-    let quest_library_path = out_dir.clone();
-
-    zig_run.arg("-p");
-    zig_run.arg(format!("{}", quest_library_path.display()));
-
-    match zig_run.status() {
-        Ok(status) => {
-            if !status.success() {
-                panic!("Could not build QuEST library for linux with zig");
-            }
-        }
-        Err(err) => {
-            panic!("Could not build QuEST library for linux with zig: {err}");
-        }
-    };
-    quest_library_path.join("lib")
-}
-
-#[cfg(not(feature = "zig"))]
-fn standard_cmake_build() -> PathBuf {
-    // use CMake to build quest and return path where the static library is placed
-    let partial_quest_path = PathBuf::from("QuEST").join("QuEST");
-    #[cfg(feature = "openmp")]
-    let quest_library_path = Config::new(partial_quest_path)
-        .no_build_target(true)
-        .very_verbose(true)
-        .always_configure(true)
-        // activated openmp mulit-threading
-        .define("MULTITHREADED", "1")
-        // .define("CMAKE_C_COMPILER", "clang")
-        .build()
-        .join("build");
-
-    #[cfg(not(feature = "openmp"))]
-    let quest_library_path = 
-        Config::new(partial_quest_path)
-        .no_build_target(true)
-        .very_verbose(true)
-        .always_configure(true)
-        // .define("CMAKE_OSX_ARCHITECTURES","x86_64;arm64")
-        // deactivates multi-threading
+    cc::Build::new()
+        .include(src_path.clone())
+        .include(include_path.clone())
+        .files(files.clone())
         .define("MULTITHREADED", "0")
-        .build()
-        .join("build");
-    #[cfg(not( target_os = "windows"))]
-    return quest_library_path;
-    #[cfg( target_os = "windows")]
-    match env::var("PROFILE").expect("Cannot find PROFILE env variable").as_str(){
-        "debug" => {return quest_library_path.join("Debug");},
-        "release" => {return quest_library_path.join("Release");}
-        _ => {panic!("Profile is not debug or release. Correct windows library location not known.")}
-    }
-    
+        .opt_level(2)
+        .debug(false)
+        .warnings(false)
+        .static_flag(true)
+        .out_dir(out_path.clone())
+        .flag("-std=c99")
+        .flag("-mavx")
+        .compile("QuEST");
+    out_path
 }
+
+// fn standard_cmake_build() -> PathBuf {
+//     // use CMake to build quest and return path where the static library is placed
+//     let partial_quest_path = PathBuf::from("QuEST").join("QuEST");
+//     #[cfg(feature = "openmp")]
+//     let quest_library_path = Config::new(partial_quest_path)
+//         .no_build_target(true)
+//         .very_verbose(true)
+//         .always_configure(true)
+//         // activated openmp mulit-threading
+//         .define("MULTITHREADED", "1")
+//         // .define("CMAKE_C_COMPILER", "clang")
+//         .build()
+//         .join("build");
+
+//     #[cfg(not(feature = "openmp"))]
+//     let quest_library_path = 
+//         Config::new(partial_quest_path)
+//         .no_build_target(true)
+//         .very_verbose(true)
+//         .always_configure(true)
+//         // .define("CMAKE_OSX_ARCHITECTURES","x86_64;arm64")
+//         // deactivates multi-threading
+//         .define("MULTITHREADED", "0")
+//         .build()
+//         .join("build");
+//     #[cfg(not( target_os = "windows"))]
+//     return quest_library_path;
+//     #[cfg( target_os = "windows")]
+//     match env::var("PROFILE").expect("Cannot find PROFILE env variable").as_str(){
+//         "debug" => {return quest_library_path.join("Debug");},
+//         "release" => {return quest_library_path.join("Release");}
+//         _ => {panic!("Profile is not debug or release. Correct windows library location not known.")}
+//     }
+    
+// }
