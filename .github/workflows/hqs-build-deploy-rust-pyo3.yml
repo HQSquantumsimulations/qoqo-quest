@@ -42,7 +42,7 @@ jobs:
       py_interface_folder: "qoqo-quest"
       deploy: true
       # Whether to build for aarch64. Can fail if there are C/C++ dependencies
-      build_for_arm: false
+      build_for_arm: true
     secrets: inherit
 
 # Build macos wheels and upload them to PyPi
