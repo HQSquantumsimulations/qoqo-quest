@@ -29,7 +29,7 @@ fn test_creating_backend() {
         let _backend = backend_type
             .call1((2,))
             .unwrap()
-            .cast_as::<PyCell<BackendWrapper>>()
+            .downcast::<PyCell<BackendWrapper>>()
             .unwrap();
     });
 
@@ -38,7 +38,7 @@ fn test_creating_backend() {
         let _backend = backend_type
             .call1((2,))
             .unwrap()
-            .cast_as::<PyCell<BackendWrapper>>()
+            .downcast::<PyCell<BackendWrapper>>()
             .unwrap();
     })
 }
@@ -60,7 +60,7 @@ fn test_running_circuit() {
         let backend = backend_type
             .call1((2,))
             .unwrap()
-            .cast_as::<PyCell<BackendWrapper>>()
+            .downcast::<PyCell<BackendWrapper>>()
             .unwrap();
         let _ = backend
             .call_method1("run_circuit", (circuit_wrapper,))
@@ -90,7 +90,7 @@ fn test_running_measurement() {
         let backend = backend_type
             .call1((2,))
             .unwrap()
-            .cast_as::<PyCell<BackendWrapper>>()
+            .downcast::<PyCell<BackendWrapper>>()
             .unwrap();
         let _ = backend
             .call_method1("run_measurement_registers", (crm_wrapper,))
