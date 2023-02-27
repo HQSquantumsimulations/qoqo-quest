@@ -1,6 +1,6 @@
 [package]
 name = "qoqo-quest"
-version = "0.9.0"
+version = "0.9.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
@@ -43,6 +43,5 @@ pyo3-build-config = "0.18"
 
 [features]
 extension-module = ["pyo3/extension-module"]
-zig = ["roqoqo-quest/zig"]
 default = ["extension-module"]
 openmp = ["roqoqo-quest/openmp"]
