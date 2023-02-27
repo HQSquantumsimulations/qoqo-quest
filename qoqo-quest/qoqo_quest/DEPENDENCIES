@@ -14679,7 +14679,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.9.0
+qoqo-quest 0.9.1
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -24841,7 +24841,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wide 0.7.7
+wide 0.7.8
 https://github.com/Lokathor/wide
 by Lokathor <zefria@gmail.com>
 A crate to help you go wide.

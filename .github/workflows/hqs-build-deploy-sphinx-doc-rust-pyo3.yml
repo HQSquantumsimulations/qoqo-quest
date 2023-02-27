@@ -10,6 +10,6 @@ jobs:
   publish_documentation:
     uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_publish_documentation_rust_sphinx.yml@main
     with: 
-      py_interface_folder: "qoqo-quest.TOML"
+      py_interface_folder: "qoqo-quest"
       py_docs_folder: "qoqo-quest/docs"
     secrets: inherit
