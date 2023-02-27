@@ -93,6 +93,7 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
         .static_flag(true)
         .out_dir(out_path.clone())
         .flag("-std=c99")
+        #[cfg(target_arch="x86_64")]
         .flag("-mavx")
         .compile("QuEST");
     out_path
