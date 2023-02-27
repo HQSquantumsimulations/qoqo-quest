@@ -82,9 +82,9 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
 
     #[cfg(target_arch = "x86_64")]
     cc::Build::new()
-        .include(src_path.clone())
-        .include(include_path.clone())
-        .files(files.clone())
+        .include(src_path)
+        .include(include_path)
+        .files(files)
         .define("MULTITHREADED", "0")
         .opt_level(2)
         .debug(false)
