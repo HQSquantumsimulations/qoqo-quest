@@ -1,0 +1,6 @@
+numpy
+sphinx >= 2.1
+pygments
+recommonmark
+myst_parser
+sphinx_rtd_theme
