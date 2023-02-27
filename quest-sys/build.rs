@@ -82,6 +82,7 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
     let out_path = out_dir.clone().join("build");
     fs::create_dir_all(out_path.clone()).expect("Cannot create directory for x86_64 library");
 
+    #[cfg(target_arch="x86_64")]
     cc::Build::new()
         .include(src_path.clone())
         .include(include_path.clone())
@@ -93,8 +94,20 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
         .static_flag(true)
         .out_dir(out_path.clone())
         .flag("-std=c99")
-        #[cfg(target_arch="x86_64")]
         .flag("-mavx")
+        .compile("QuEST");
+    #[cfg(not(target_arch="x86_64"))]
+    cc::Build::new()
+        .include(src_path.clone())
+        .include(include_path.clone())
+        .files(files.clone())
+        .define("MULTITHREADED", "0")
+        .opt_level(2)
+        .debug(false)
+        .warnings(false)
+        .static_flag(true)
+        .out_dir(out_path.clone())
+        .flag("-std=c99")
         .compile("QuEST");
     out_path
 }
