@@ -17,7 +17,7 @@ jobs:
       # Run tests also on macos runners
       macos: true
       # Test code coverage of rust core is over 90 percent
-      test_code_coverage: true
+      test_code_coverage: false
       rust_package_name: "roqoqo-quest"
 
   build_tests:

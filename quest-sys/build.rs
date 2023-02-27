@@ -1,4 +1,4 @@
-use cc;
+
 // use cmake::Config;
 use std::fs;
 use std::path::PathBuf;
@@ -7,7 +7,7 @@ use std::{env, path::Path};
 fn main() {
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").expect("Cannot find OUT_DIR"));
 
-    let quest_library_path = build_with_cc(out_dir_path.clone());
+    let quest_library_path = build_with_cc(out_dir_path);
 
     println!(
         "cargo:rustc-link-search=native={}",
@@ -66,18 +66,18 @@ fn main() {
 
 fn build_with_cc(out_dir: PathBuf) -> PathBuf {
     let base_path = Path::new("QuEST").join("QuEST");
-    let src_path = base_path.clone().join("src");
-    let include_path = base_path.clone().join("include");
+    let src_path = base_path.join("src");
+    let include_path = base_path.join("include");
     let files = [
-        src_path.clone().join("QuEST.c"),
-        src_path.clone().join("QuEST_common.c"),
-        src_path.clone().join("QuEST_qasm.c"),
-        src_path.clone().join("QuEST_validation.c"),
-        src_path.clone().join("mt19937ar.c"),
-        src_path.clone().join("CPU").join("QuEST_cpu.c"),
-        src_path.clone().join("CPU").join("QuEST_cpu_local.c"),
+        src_path.join("QuEST.c"),
+        src_path.join("QuEST_common.c"),
+        src_path.join("QuEST_qasm.c"),
+        src_path.join("QuEST_validation.c"),
+        src_path.join("mt19937ar.c"),
+        src_path.join("CPU").join("QuEST_cpu.c"),
+        src_path.join("CPU").join("QuEST_cpu_local.c"),
     ];
-    let out_path = out_dir.clone().join("build");
+    let out_path = out_dir.join("build");
     fs::create_dir_all(out_path.clone()).expect("Cannot create directory for x86_64 library");
 
     #[cfg(target_arch = "x86_64")]
@@ -96,9 +96,9 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
         .compile("QuEST");
     #[cfg(not(target_arch = "x86_64"))]
     cc::Build::new()
-        .include(src_path.clone())
-        .include(include_path.clone())
-        .files(files.clone())
+        .include(src_path)
+        .include(include_path)
+        .files(files)
         .define("MULTITHREADED", "0")
         .opt_level(2)
         .debug(false)
