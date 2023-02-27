@@ -3,7 +3,7 @@ name: HQS CI tests for rust pyo3 repos
 on:
   workflow_dispatch:
   pull_request:
-    branches: [$default-branch]
+    branches: ["main"]
 
 jobs:
   linting:
