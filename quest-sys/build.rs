@@ -8,7 +8,7 @@ fn main() {
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").expect("Cannot find OUT_DIR"));
 
     let quest_library_path = build_with_cc(out_dir_path.clone());
-    
+
     println!(
         "cargo:rustc-link-search=native={}",
         quest_library_path.display()
@@ -64,8 +64,6 @@ fn main() {
         .expect("Couldn't write bindings!");
 }
 
-
-
 fn build_with_cc(out_dir: PathBuf) -> PathBuf {
     let base_path = Path::new("QuEST").join("QuEST");
     let src_path = base_path.clone().join("src");
@@ -82,7 +80,7 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
     let out_path = out_dir.clone().join("build");
     fs::create_dir_all(out_path.clone()).expect("Cannot create directory for x86_64 library");
 
-    #[cfg(target_arch="x86_64")]
+    #[cfg(target_arch = "x86_64")]
     cc::Build::new()
         .include(src_path.clone())
         .include(include_path.clone())
@@ -96,7 +94,7 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
         .flag("-std=c99")
         .flag("-mavx")
         .compile("QuEST");
-    #[cfg(not(target_arch="x86_64"))]
+    #[cfg(not(target_arch = "x86_64"))]
     cc::Build::new()
         .include(src_path.clone())
         .include(include_path.clone())
@@ -127,7 +125,7 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
 //         .join("build");
 
 //     #[cfg(not(feature = "openmp"))]
-//     let quest_library_path = 
+//     let quest_library_path =
 //         Config::new(partial_quest_path)
 //         .no_build_target(true)
 //         .very_verbose(true)
@@ -145,5 +143,5 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
 //         "release" => {return quest_library_path.join("Release");}
 //         _ => {panic!("Profile is not debug or release. Correct windows library location not known.")}
 //     }
-    
+
 // }
