@@ -168,7 +168,7 @@ fn test_definition_bit(pragma: operations::Definition, output: bool) {
     let mut qureg = Qureg::new(1, false);
     // Apply tested operation to output
     call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -195,7 +195,7 @@ fn test_definition_float(pragma: operations::Definition, output: bool) {
     let mut qureg = Qureg::new(1, false);
     // Apply tested operation to output
     call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -222,7 +222,7 @@ fn test_definition_complex(pragma: operations::Definition, output: bool) {
     let mut qureg = Qureg::new(1, false);
     // Apply tested operation to output
     call_operation(
-        &pragma.clone().into(),
+        &pragma.into(),
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -247,7 +247,7 @@ fn test_get_pauli_product() {
     let c0: Complex64 = Complex64::new(0.0, 0.0);
     let c1: Complex64 = Complex64::new(1.0, 0.0);
     let basis_states: Vec<Array1<Complex64>> = vec![array![c1, c0, c0, c0]];
-    for (column, _basis) in basis_states.clone().into_iter().enumerate() {
+    for (column, _basis) in basis_states.into_iter().enumerate() {
         // Create the readout registers
         let (
             mut bit_registers,
@@ -266,7 +266,7 @@ fn test_get_pauli_product() {
         let pragma: operations::Operation =
             operations::PragmaGetPauliProduct::new(qubit_paulis, "ro".into(), circuit).into();
         call_operation(
-            &pragma.clone().into(),
+            &pragma.clone(),
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,
@@ -301,7 +301,7 @@ fn test_get_occupation_probability(density: bool) {
     let pragma: operations::Operation =
         operations::PragmaGetOccupationProbability::new("ro".into(), Some(circuit)).into();
     call_operation(
-        &pragma.clone().into(),
+        &pragma,
         &mut qureg,
         &mut bit_registers,
         &mut float_registers,
@@ -312,16 +312,16 @@ fn test_get_occupation_probability(density: bool) {
     let mut comparison: Vec<f64> = vec![0.0, 0.0, 1.0, 0.0];
     if density {
         comparison = vec![
-            vec![0.0; comparison.clone().len()],
-            vec![0.0; comparison.clone().len()],
+            vec![0.0; comparison.len()],
+            vec![0.0; comparison.len()],
             comparison.clone(),
-            vec![0.0; comparison.clone().len()],
+            vec![0.0; comparison.len()],
         ]
         .into_iter()
         .flatten()
         .collect();
     }
-    for (row, check_value) in comparison.clone().into_iter().enumerate() {
+    for (row, check_value) in comparison.into_iter().enumerate() {
         let value = float_registers.get("ro").unwrap()[row];
         // Check if entries are the same
         if !is_close(value, check_value) {

@@ -24,7 +24,7 @@ use roqoqo::Circuit;
 #[test]
 fn test_creating_backend() {
     pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| -> () {
+    Python::with_gil(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let _backend = backend_type
             .call1((2,))
@@ -33,7 +33,7 @@ fn test_creating_backend() {
             .unwrap();
     });
 
-    Python::with_gil(|py| -> () {
+    Python::with_gil(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let _backend = backend_type
             .call1((2,))
@@ -55,7 +55,7 @@ fn test_running_circuit() {
     circuit += operations::PragmaRepeatedMeasurement::new("readout".to_string(), 100, None);
     let circuit_wrapper = CircuitWrapper { internal: circuit };
 
-    Python::with_gil(|py| -> () {
+    Python::with_gil(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type
             .call1((2,))
@@ -85,7 +85,7 @@ fn test_running_measurement() {
     let crm_wrapper = ClassicalRegisterWrapper {
         internal: cr_measurement,
     };
-    Python::with_gil(|py| -> () {
+    Python::with_gil(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type
             .call1((2,))
