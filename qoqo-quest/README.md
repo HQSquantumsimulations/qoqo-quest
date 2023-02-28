@@ -12,10 +12,8 @@ This repository contains three components:
 
 ## qoqo-quest
 
-[![Documentation Status](https://readthedocs.org/projects/qoqo-quest/badge/?version=latest)](https://qoqo-quest.readthedocs.io/en/latest/?badge=latest)
-[![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/ci_tests/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions)
+[![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/hqs-ci-test-rust-pyo3/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions)
 [![PyPI](https://img.shields.io/pypi/v/qoqo-quest)](https://pypi.org/project/qoqo-quest/)
-![PyPI - License](https://img.shields.io/pypi/l/qoqo-quest)
 [![PyPI - Format](https://img.shields.io/pypi/format/qoqo-quest)](https://pypi.org/project/qoqo-quest/)
 
 [QuEST](https://github.com/QuEST-Kit/QuEST) based simulator backend for the qoqo quantum toolkit by [HQS Quantum Simulations](https://quantumsimulations.de).
@@ -27,7 +25,7 @@ For usage examples see the examples section of [qoqo](https://github.com/HQSquan
 
 ### Installation
 
-For linux and macos on x86_64 hardware pre-built Python packages are available on PyPi and can be installed with
+For linux and macos and windows on x86_64 hardware and macos on arm64 pre-built Python packages are available on PyPi and can be installed with
 
 ```shell
 pip install qoqo-quest
@@ -37,18 +35,11 @@ For other platforms please use the source distribution that requires a Rust inst
 
 After installing Rust (for example via [rustup](ghcr.io/rust-cross/manylinux2014-cross:aarch64))
 
-run the following for non-macos platforms
+run the following
 
 ```shell
 pip install maturin
 pip install qoqo-quest
-```
-
-and on macos
-
-```shell
-pip install maturin
-RUSTFLAGS="-C link-arg=-undefined -C link-arg=dynamic_lookup" pip install qoqo-quest
 ```
 
 ## roqoqo-quest

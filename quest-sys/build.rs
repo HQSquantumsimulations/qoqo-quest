@@ -5,7 +5,8 @@ use std::{env, path::Path};
 
 fn main() {
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").expect("Cannot find OUT_DIR"));
-
+    #[cfg(feature="rebuild")]
+    let out_dir_path_rebuild = out_dir_path.clone();
     let quest_library_path = build_with_cc(out_dir_path);
 
     println!(
@@ -59,7 +60,7 @@ fn main() {
 
     #[cfg(feature = "rebuild")]
     bindings
-        .write_to_file(out_dir_path.join("bindings.rs"))
+        .write_to_file(out_dir_path_rebuild.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 }
 
