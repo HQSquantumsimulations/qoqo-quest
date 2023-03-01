@@ -1,3 +1,11 @@
 target/*
 */docs/_build*
 */docs/generated*
+*.DS_Store
+*.ipynb_checkpoints*
+*.json
+*.yaml
+.vscode/*
+*.profraw
+*.lcov
+*zig-cache*

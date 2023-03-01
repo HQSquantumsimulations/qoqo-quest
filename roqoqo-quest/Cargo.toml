@@ -1,6 +1,6 @@
 [package]
 name = "roqoqo-quest"
-version = "0.9.0-alpha.2"
+version = "0.9.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
@@ -20,8 +20,8 @@ doctest = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-quest-sys = {version="0.9.0-alpha.2", path="../quest-sys", default-features=false}
-roqoqo = {version ="1.2.0-alpha.1", features=["serialize"]}
+quest-sys = {version="0.9.1", path="../quest-sys", default-features=false}
+roqoqo = {version ="1.2", features=["serialize"]}
 
 qoqo_calculator = { version="1.1"}
 num-complex = {version="0.4"}
@@ -33,8 +33,8 @@ futures ={version = "0.3", optional=true}
 rayon = {version="1.5", optional=true}
 
 [dev-dependencies]
-test-case="2.0"
-criterion = {version="0.3"}
+test-case="3.0"
+criterion = {version="0.4"}
 
 [features]
 default = []

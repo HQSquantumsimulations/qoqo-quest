@@ -1,34 +1,13 @@
-use cmake::Config;
-#[cfg(feature = "rebuild")]
-use std::env;
-#[cfg(feature = "rebuild")]
+// use cmake::Config;
+use std::fs;
 use std::path::PathBuf;
+use std::{env, path::Path};
 
 fn main() {
-    #[cfg(feature = "rebuild")]
-    let out_dir_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    let out_dir_path = PathBuf::from(env::var("OUT_DIR").expect("Cannot find OUT_DIR"));
 
-    // use CMake to build quest and return path where the static library is placed
-    #[cfg(feature = "openmp")]
-    let quest_library_path = Config::new("QuEST/QuEST")
-        .no_build_target(true)
-        .very_verbose(true)
-        .always_configure(true)
-        // activated openmp mulit-threading
-        .define("MULTITHREADED", "1")
-        // .define("CMAKE_C_COMPILER", "clang")
-        .build()
-        .join("build/");
+    let quest_library_path = build_with_cc(out_dir_path);
 
-    #[cfg(not(feature = "openmp"))]
-    let quest_library_path = Config::new("QuEST/QuEST")
-        .no_build_target(true)
-        .very_verbose(true)
-        .always_configure(true)
-        // deactivates multi-threading
-        .define("MULTITHREADED", "0")
-        .build()
-        .join("build/");
     println!(
         "cargo:rustc-link-search=native={}",
         quest_library_path.display()
@@ -83,3 +62,85 @@ fn main() {
         .write_to_file(out_dir_path.join("bindings.rs"))
         .expect("Couldn't write bindings!");
 }
+
+fn build_with_cc(out_dir: PathBuf) -> PathBuf {
+    let base_path = Path::new("QuEST").join("QuEST");
+    let src_path = base_path.join("src");
+    let include_path = base_path.join("include");
+    let files = [
+        src_path.join("QuEST.c"),
+        src_path.join("QuEST_common.c"),
+        src_path.join("QuEST_qasm.c"),
+        src_path.join("QuEST_validation.c"),
+        src_path.join("mt19937ar.c"),
+        src_path.join("CPU").join("QuEST_cpu.c"),
+        src_path.join("CPU").join("QuEST_cpu_local.c"),
+    ];
+    let out_path = out_dir.join("build");
+    fs::create_dir_all(out_path.clone()).expect("Cannot create directory for x86_64 library");
+
+    #[cfg(target_arch = "x86_64")]
+    cc::Build::new()
+        .include(src_path)
+        .include(include_path)
+        .files(files)
+        .define("MULTITHREADED", "0")
+        .opt_level(2)
+        .debug(false)
+        .warnings(false)
+        .static_flag(true)
+        .out_dir(out_path.clone())
+        .flag("-std=c99")
+        .flag("-mavx")
+        .compile("QuEST");
+    #[cfg(not(target_arch = "x86_64"))]
+    cc::Build::new()
+        .include(src_path)
+        .include(include_path)
+        .files(files)
+        .define("MULTITHREADED", "0")
+        .opt_level(2)
+        .debug(false)
+        .warnings(false)
+        .static_flag(true)
+        .out_dir(out_path.clone())
+        .flag("-std=c99")
+        .compile("QuEST");
+    out_path
+}
+
+// fn standard_cmake_build() -> PathBuf {
+//     // use CMake to build quest and return path where the static library is placed
+//     let partial_quest_path = PathBuf::from("QuEST").join("QuEST");
+//     #[cfg(feature = "openmp")]
+//     let quest_library_path = Config::new(partial_quest_path)
+//         .no_build_target(true)
+//         .very_verbose(true)
+//         .always_configure(true)
+//         // activated openmp mulit-threading
+//         .define("MULTITHREADED", "1")
+//         // .define("CMAKE_C_COMPILER", "clang")
+//         .build()
+//         .join("build");
+
+//     #[cfg(not(feature = "openmp"))]
+//     let quest_library_path =
+//         Config::new(partial_quest_path)
+//         .no_build_target(true)
+//         .very_verbose(true)
+//         .always_configure(true)
+//         // .define("CMAKE_OSX_ARCHITECTURES","x86_64;arm64")
+//         // deactivates multi-threading
+//         .define("MULTITHREADED", "0")
+//         .build()
+//         .join("build");
+//     #[cfg(not( target_os = "windows"))]
+//     return quest_library_path;
+//     #[cfg( target_os = "windows")]
+//     match env::var("PROFILE").expect("Cannot find PROFILE env variable").as_str(){
+//         "debug" => {return quest_library_path.join("Debug");},
+//         "release" => {return quest_library_path.join("Release");}
+//         _ => {panic!("Profile is not debug or release. Correct windows library location not known.")}
+//     }
+
+// }

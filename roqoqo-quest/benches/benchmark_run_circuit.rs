@@ -7,7 +7,8 @@ use roqoqo_quest::Backend;
 
 fn bench_run_long_circuit(c: &mut Criterion) {
     let mut subgroup = c.benchmark_group("run_simple_circuit");
-    for number in [16].iter() {
+    {
+        let number = &16;
         subgroup.throughput(Throughput::Bytes(*number as u64));
         subgroup.bench_with_input(
             BenchmarkId::from_parameter(number),

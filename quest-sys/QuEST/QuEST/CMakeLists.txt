@@ -20,7 +20,7 @@
 #   cmake -DDISTRIBUTED=1 ..
 
 cmake_minimum_required(VERSION 3.7)
-project(QuEST_Library)
+project(QuEST_Library C)
 
 option(MULTITHREADED "Switches on OpenMP Threading if an OpenMP implementation can be found. Set to 0 to disable." 1)
 
@@ -57,6 +57,8 @@ if (${DISTRIBUTED} AND ${GPUACCELERATED})
         GPUACCELERATED=${GPUACCELERATED} set but \
         distributed GPU acceleration not supported. Aborting")
 endif()
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 if ( NOT(${PRECISION} EQUAL 1) AND
      NOT(${PRECISION} EQUAL 2) AND 
@@ -95,6 +97,7 @@ if ( ${GPUACCELERATED} AND
         compatible with GNU compilers. If compilation fails, try an \
         alternative compiler, like Clang 3.7")
 endif()
+
 
 
 # -----------------------------------------------------------------------------
@@ -138,7 +141,7 @@ if (${MULTITHREADED} AND NOT ${GPUACCELERATED})
              old. Turning OpenMP support OFF.")
     else ()
       set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+      # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
     endif ()
   endif ()
 
@@ -180,11 +183,11 @@ endif()
 
 # Set c flags to use in debug mode
 
-if (NOT("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"))
-  set(CMAKE_C_FLAGS_DEBUG 
-      "-g"
-  )
-endif()
+# if (NOT("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"))
+#   set(CMAKE_C_FLAGS_DEBUG 
+#       "-g"
+#   )
+# endif()
 
 # Set c flags for release
 set(CMAKE_C_FLAGS_RELEASE 
@@ -220,66 +223,66 @@ endif()
 # ----- C++ COMPILER FLAGS --------------------------------------------------
 
 # set C++ flags that are common between compilers and build types
-set (CMAKE_CXX_STANDARD 98)
+# set (CMAKE_CXX_STANDARD 98)
 
 # Use -O2 for all but debug mode by default 
-if (NOT("${CMAKE_BUILD_TYPE}" STREQUAL "Debug"))
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} \
-        -O2"
-    )
-endif()
+# if (NOT("${CMAKE_BUILD_TYPE}" STREQUAL "Debug"))
+#     set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} \
+#         -O2"
+#     )
+# endif()
 
 # Set c++ flags for release
-set(CMAKE_CXX_FLAGS_RELEASE
-    "-O2"
-)
+# set(CMAKE_CXX_FLAGS_RELEASE
+#     "-O2"
+# )
 
-# Set c++ flags to use in debug mode
-set(CMAKE_CXX_FLAGS_DEBUG 
-    "-g"
-)
+# # Set c++ flags to use in debug mode
+# set(CMAKE_CXX_FLAGS_DEBUG 
+#     "-g"
+# )
 
-# set C++ compiler flags based on compiler type
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  # using Clang
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -mavx -Wall"
-  )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # using GCC
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -mavx -Wall"
-  )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-  # using Intel
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -xAVX -axCORE-AVX2 -diag-disable -cpu-dispatch -Wall"
-  )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-  # using Visual Studio
-  string(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-  string(REGEX REPLACE "-W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
-    -w"
-  )
-endif()
+# # set C++ compiler flags based on compiler type
+# if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+#   # using Clang
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -mavx -Wall"
+#   )
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#   # using GCC
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -mavx -Wall"
+#   )
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+#   # using Intel
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -xAVX -axCORE-AVX2 -diag-disable -cpu-dispatch -Wall"
+#   )
+# elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+#   # using Visual Studio
+#   string(REGEX REPLACE "/W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+#   string(REGEX REPLACE "-W3" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+#     -w"
+#   )
+# endif()
 
 if (VERBOSE_CMAKE)
     message("-- Compiler flags:")
     message("   C Compiler ID: ${CMAKE_C_COMPILER_ID}")
-    message("   C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
+    # message("   C++ Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
     message("   C compilation flags: ${CMAKE_C_FLAGS}")
     message("   CUDA compilation flags: ${CUDA_NVCC_FLAGS}")
-    message("   C++ compilation flags: ${CMAKE_CXX_FLAGS}")
+    # message("   C++ compilation flags: ${CMAKE_CXX_FLAGS}")
 
     message("-- Build type: ${CMAKE_BUILD_TYPE}")
     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         message("   C debug flags: ${CMAKE_C_FLAGS_DEBUG}")
-        message("   C++ debug flags: ${CMAKE_CXX_FLAGS_DEBUG}")
+        # message("   C++ debug flags: ${CMAKE_CXX_FLAGS_DEBUG}")
     endif()
     if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
         message("   C release flags: ${CMAKE_CXX_FLAGS_RELEASE}")
-        message("   C++ release flags: ${CMAKE_CXX_FLAGS_RELEASE}")
+        # message("   C++ release flags: ${CMAKE_CXX_FLAGS_RELEASE}")
     endif()
 endif()
 
@@ -332,6 +335,14 @@ if (MULTITHREADED AND OPENMP_FOUND)
   target_link_libraries(QuEST PUBLIC OpenMP::OpenMP_C)
 endif ()
 
+# ----- Fix for building on macos --------------------------------------------
+if ("${CMAKE_SYSTEM_NAME}" STREQUAL "DARWIN") # DARWIN means Mac OS X
+  # set(CMAKE_CXX_COMPILER "clang++")
+  set(CMAKE_C_COMPILER "clang")
+  # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++")
+
+endif()
+
 # ----- MPI -------------------------------------------------------------------
 
 target_link_libraries(QuEST PUBLIC ${MPI_C_LIBRARIES})
@@ -342,29 +353,29 @@ target_link_libraries(QuEST ${CUDA_LIBRARIES})
 
 
 # ----- Coverage testing with GCC or Clang ------------------------------------
-option(QUEST_ENABLE_COVERAGE "Enable coverage reporting for GCC or Clang" FALSE)
-if (QUEST_ENABLE_COVERAGE)
-  if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    message(STATUS "Configuring with coverage")
-    target_compile_options(QuEST PUBLIC --coverage -O0)
-    target_link_libraries(QuEST PUBLIC --coverage)
-  else()
-    message(FATAL_ERROR "GCC or Clang required with QUEST_ENABLE_COVERAGE: found ${CMAKE_CXX_COMPILER_ID}")
-  endif()
-endif()
+# option(QUEST_ENABLE_COVERAGE "Enable coverage reporting for GCC or Clang" FALSE)
+# if (QUEST_ENABLE_COVERAGE)
+#   if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+#     message(STATUS "Configuring with coverage")
+#     target_compile_options(QuEST PUBLIC --coverage -O0)
+#     target_link_libraries(QuEST PUBLIC --coverage)
+#   else()
+#     message(FATAL_ERROR "GCC or Clang required with QUEST_ENABLE_COVERAGE: found ${CMAKE_CXX_COMPILER_ID}")
+#   endif()
+# endif()
 
 # ----- Memory testing with LLVM Clang ----------------------------------------
-option(QUEST_MEMCHECK "Use LLVM AddressSanitizer to detecting memory errors" OFF)
-if (QUEST_MEMCHECK)
-  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    message(STATUS "Configuring with LLVM AddressSanitizer")
-    set(QUEST_MEMCHECK_FLAGS -fno-optimize-sibling-calls
-        -fsanitize=address
-        -fsanitize-address-use-after-scope
-        )
-    target_compile_options(QuEST PUBLIC -O1 -g -fno-omit-frame-pointer ${QUEST_MEMCHECK_FLAGS})
-    target_link_libraries(QuEST PUBLIC -g ${QUEST_MEMCHECK_FLAGS})
-  else()
-    message(FATAL_ERROR "clang compiler required with QUEST_MEMCHECK: found ${CMAKE_CXX_COMPILER_ID}")
-  endif()
-endif()
+# option(QUEST_MEMCHECK "Use LLVM AddressSanitizer to detecting memory errors" OFF)
+# if (QUEST_MEMCHECK)
+#   if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#     message(STATUS "Configuring with LLVM AddressSanitizer")
+#     set(QUEST_MEMCHECK_FLAGS -fno-optimize-sibling-calls
+#         -fsanitize=address
+#         -fsanitize-address-use-after-scope
+#         )
+#     target_compile_options(QuEST PUBLIC -O1 -g -fno-omit-frame-pointer ${QUEST_MEMCHECK_FLAGS})
+#     target_link_libraries(QuEST PUBLIC -g ${QUEST_MEMCHECK_FLAGS})
+#   else()
+#     message(FATAL_ERROR "clang compiler required with QUEST_MEMCHECK: found ${CMAKE_CXX_COMPILER_ID}")
+#   endif()
+# endif()
