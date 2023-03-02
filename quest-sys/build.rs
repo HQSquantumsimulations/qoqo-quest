@@ -5,7 +5,7 @@ use std::{env, path::Path};
 
 fn main() {
     let out_dir_path = PathBuf::from(env::var("OUT_DIR").expect("Cannot find OUT_DIR"));
-    #[cfg(feature="rebuild")]
+    #[cfg(feature = "rebuild")]
     let out_dir_path_rebuild = out_dir_path.clone();
     let quest_library_path = build_with_cc(out_dir_path);
 

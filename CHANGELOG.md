@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.9.2
+
+* Fixed build.rs for quest-sys to support building on Linux, macos on x86_64 and aarch64 and on Windows.
+
 ## 0.9.1
 
 * Update to pyo3 0.18 and enabling cross-compilation with zig
