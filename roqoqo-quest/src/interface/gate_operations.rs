@@ -45,6 +45,13 @@ pub fn execute_generic_single_qubit_operation(
     Ok(())
 }
 
+pub fn execute_generic_three_qubit_operation(
+    operation: &ThreeQubitGateOperation,
+    qureg: &mut Qureg,
+) -> Result<(), RoqoqoBackendError> {
+    todo!()
+}
+
 pub fn execute_generic_multi_qubit_operation(
     operation: &MultiQubitGateOperation,
     qureg: &mut Qureg,
