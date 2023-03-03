@@ -864,8 +864,6 @@ dependencies = [
 [[package]]
 name = "qoqo"
 version = "1.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8df0c4eda59bd0507baa90059d47145462392fac8a1c6688804148e287b4b905"
 dependencies = [
  "bincode",
  "ndarray",
@@ -888,8 +886,6 @@ dependencies = [
 [[package]]
 name = "qoqo-macros"
 version = "1.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c6d6d59ad6e840b3d1bd9c64fb625bf8ee0c01c123b04d0618658b2d4dd7aee"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1051,8 +1047,6 @@ checksum = "456c603be3e8d448b072f410900c09faf164fbce2d480456f50eea6e25f9c848"
 [[package]]
 name = "roqoqo"
 version = "1.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1bcae3cfae64f4b5170330b023e1e524ade56b203cadb12dfa42c8f1b50d0fe5"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1075,8 +1069,6 @@ dependencies = [
 [[package]]
 name = "roqoqo-derive"
 version = "1.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4ff959d4f67fc1f1a1663284ef009f5af25b8ce49d1ba290e3c8f88d8f68d54"
 dependencies = [
  "proc-macro2",
  "quote",
