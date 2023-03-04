@@ -26,15 +26,18 @@ use roqoqo::{
     Circuit,
 };
 use roqoqo_quest::{call_operation, Qureg};
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use test_case::test_case;
 
-fn create_empty_registers() -> (
+type EmptyRegisters = (
     HashMap<String, BitRegister>,
     HashMap<String, FloatRegister>,
     HashMap<String, ComplexRegister>,
     HashMap<String, BitOutputRegister>,
-) {
+);
+
+fn create_empty_registers() -> EmptyRegisters {
     let bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
     let bit_registers: HashMap<String, BitRegister> = HashMap::new();
     let float_registers: HashMap<String, FloatRegister> = HashMap::new();
@@ -536,10 +539,11 @@ fn test_statevec_multiplication_quest() {
                 .enumerate()
             {
                 // Check if entries are the same
-                if !((value_test.re - value_comp).abs() < 1e-10) {
-                    // Check if reconstructed entry and enty of unitary is the same with global phase
+                if let Some(Ordering::Greater) =
+                    (value_test.re - value_comp).abs().partial_cmp(&1e-10)
+                {
                     panic!("Reconstructed matrix entry does not match targe matrix, index: {}, test_number: {}, value_from_multiplication: {} value_from_quest: {} ",
-                           index, test_number, value_test.re, value_comp)
+                       index, test_number, value_test.re, value_comp)
                 }
             }
         }

@@ -23,12 +23,14 @@ use std::collections::HashMap;
 use std::convert::TryInto;
 use test_case::test_case;
 
-fn create_empty_registers() -> (
+type EmptyRegisters = (
     HashMap<String, BitRegister>,
     HashMap<String, FloatRegister>,
     HashMap<String, ComplexRegister>,
     HashMap<String, BitOutputRegister>,
-) {
+);
+
+fn create_empty_registers() -> EmptyRegisters {
     let bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
     let bit_registers: HashMap<String, BitRegister> = HashMap::new();
     let float_registers: HashMap<String, FloatRegister> = HashMap::new();

@@ -20,12 +20,14 @@ use roqoqo_quest::{call_operation, Qureg};
 use std::collections::HashMap;
 use test_case::test_case;
 
-fn create_empty_registers() -> (
+type EmptyRegisters = (
     HashMap<String, BitRegister>,
     HashMap<String, FloatRegister>,
     HashMap<String, ComplexRegister>,
     HashMap<String, BitOutputRegister>,
-) {
+);
+
+fn create_empty_registers() -> EmptyRegisters {
     let bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
     let bit_registers: HashMap<String, BitRegister> = HashMap::new();
     let float_registers: HashMap<String, FloatRegister> = HashMap::new();
@@ -98,8 +100,8 @@ fn repeated_measurement_with_bitflip() {
     assert!(nested_vec.len() == 10);
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
-        assert_eq!(repetition[0], true);
-        assert_eq!(repetition[1], false);
+        assert!(repetition[0]);
+        assert!(!repetition[1]);
     }
 }
 
@@ -153,9 +155,9 @@ fn measure_with_bitflip() {
     assert!(bit_registers.contains_key("ro"));
     let nested_vec = bit_registers.get("ro").unwrap();
     assert!(nested_vec.len() == 3);
-    assert_eq!(nested_vec[0], false);
-    assert_eq!(nested_vec[1], false);
-    assert_eq!(nested_vec[2], true);
+    assert!(!nested_vec[0]);
+    assert!(!nested_vec[1]);
+    assert!(nested_vec[2]);
 }
 
 #[test_case(operations::Definition::from(operations::DefinitionBit::new("ro".into(), 2, false)), false; "not_output")]
