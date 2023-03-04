@@ -10,6 +10,8 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::borrow::BorrowMut;
+
 use crate::ComplexMatrixN;
 use crate::Qureg;
 use roqoqo::operations::*;
@@ -49,7 +51,24 @@ pub fn execute_generic_three_qubit_operation(
     operation: &ThreeQubitGateOperation,
     qureg: &mut Qureg,
 ) -> Result<(), RoqoqoBackendError> {
-    todo!()
+    let unitary_matrix = operation.unitary_matrix()?;
+    let mut complex_matrix = ComplexMatrixN::new(3_u32);
+    for ((row, column), value) in unitary_matrix.indexed_iter() {
+        complex_matrix.set(row, column, *value).map_err(|err| {
+            RoqoqoBackendError::GenericError {
+                msg: err.to_string(),
+            }
+        })?;
+    }
+    unsafe {
+        quest_sys::multiQubitUnitary(
+            qureg.quest_qureg,
+            (*operation.target() as i32).borrow_mut(),
+            1,
+            complex_matrix.complex_matrix,
+        )
+    };
+    Ok(())
 }
 
 pub fn execute_generic_multi_qubit_operation(
