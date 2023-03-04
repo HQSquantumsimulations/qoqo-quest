@@ -23,14 +23,14 @@ use std::collections::HashMap;
 use std::convert::TryInto;
 use test_case::test_case;
 
-type EmptyRegisters = (
+type Registers = (
     HashMap<String, BitRegister>,
     HashMap<String, FloatRegister>,
     HashMap<String, ComplexRegister>,
     HashMap<String, BitOutputRegister>,
 );
 
-fn create_empty_registers() -> EmptyRegisters {
+fn create_empty_registers() -> Registers {
     let bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
     let bit_registers: HashMap<String, BitRegister> = HashMap::new();
     let float_registers: HashMap<String, FloatRegister> = HashMap::new();
@@ -151,7 +151,8 @@ fn test_single_qubit_gate(operation: operations::SingleQubitGateOperation) {
 #[test_case(operations::TwoQubitGateOperation::from(operations::Fsim::new(1,0, 0.5.into(), 1.0.into(), 0.5.into())); "Fsim")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::SpinInteraction::new(1,0, 1.0.into(), 2.0.into(), 3.0.into())); "SpinInteraction")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::Bogoliubov::new(1,0, 1.0.into(), 2.0.into())); "Bogoliubov")]
-#[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledZ::new(1,0, 3.0.into())); "PhaseShifterControlledZ")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledZ::new(1,0, 3.0.into())); "PhaseShiftedControlledZ")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledPhase::new(1,0, 3.0.into(), 2.0.into())); "PhaseShiftedControlledPhase")]
 fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
@@ -174,6 +175,78 @@ fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
         complex_registers.insert("state_vec".to_string(), Vec::new());
         // initialize with basis vector to reconstruct unitary gate
         let mut qureg = Qureg::new(2, false);
+        let set_basis_operation: operations::Operation = PragmaSetStateVector::new(basis).into();
+        call_operation(
+            &set_basis_operation,
+            &mut qureg,
+            &mut bit_registers,
+            &mut float_registers,
+            &mut complex_registers,
+            &mut bit_registers_output,
+        )
+        .unwrap();
+        // Apply tested operation to output
+        call_operation(
+            &operation.clone().into(),
+            &mut qureg,
+            &mut bit_registers,
+            &mut float_registers,
+            &mut complex_registers,
+            &mut bit_registers_output,
+        )
+        .unwrap();
+        // Extract state vector
+        let extract_state_vector_operation: operations::Operation =
+            PragmaGetStateVector::new("state_vec".to_string(), None).into();
+        call_operation(
+            &extract_state_vector_operation,
+            &mut qureg,
+            &mut bit_registers,
+            &mut float_registers,
+            &mut complex_registers,
+            &mut bit_registers_output,
+        )
+        .unwrap();
+        for (row, check_value) in unitary_matrix.column(column).into_iter().enumerate() {
+            let value = complex_registers.get("state_vec").unwrap()[row];
+            // Check if entries are the same
+            if !is_close(value, *check_value) {
+                // Check if reconstructed entry and enty of unitary is the same with global phase
+                panic!("Reconstructed matrix entry does not match targe matrix, row: {}, column: {}, reconstructed: {} target: {} ", 
+                    row, column, value, check_value)
+            }
+        }
+    }
+}
+
+#[test_case(operations::ThreeQubitGateOperation::from(operations::ControlledControlledPauliZ::new(0,1,2)); "ControlledControlledPauliZ")]
+#[test_case(operations::ThreeQubitGateOperation::from(operations::ControlledControlledPhaseShift::new(0,1,2, 2.0.into())); "ControlledControlledPhaseShift")]
+fn test_three_qubit_gate(operation: operations::ThreeQubitGateOperation) {
+    let c0: Complex64 = Complex::new(0.0, 0.0);
+    let c1: Complex64 = Complex::new(1.0, 0.0);
+    let basis_states: Vec<Array1<Complex64>> = vec![
+        array![c1, c0, c0, c0, c0, c0, c0, c0],
+        array![c0, c1, c0, c0, c0, c0, c0, c0],
+        array![c0, c0, c1, c0, c0, c0, c0, c0],
+        array![c0, c0, c0, c1, c0, c0, c0, c0],
+        array![c0, c0, c0, c0, c1, c0, c0, c0],
+        array![c0, c0, c0, c0, c0, c1, c0, c0],
+        array![c0, c0, c0, c0, c0, c0, c1, c0],
+        array![c0, c0, c0, c0, c0, c0, c0, c1],
+    ];
+    let unitary_matrix = operation.unitary_matrix().unwrap();
+    for (column, basis) in basis_states.into_iter().enumerate() {
+        // Create the readout registers
+        let (
+            mut bit_registers,
+            mut float_registers,
+            mut complex_registers,
+            mut bit_registers_output,
+        ) = create_empty_registers();
+        // Register for state_vector readout
+        complex_registers.insert("state_vec".to_string(), Vec::new());
+        // initialize with basis vector to reconstruct unitary gate
+        let mut qureg = Qureg::new(3, false);
         let set_basis_operation: operations::Operation = PragmaSetStateVector::new(basis).into();
         call_operation(
             &set_basis_operation,

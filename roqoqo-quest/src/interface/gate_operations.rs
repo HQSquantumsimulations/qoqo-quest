@@ -10,8 +10,6 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::borrow::BorrowMut;
-
 use crate::ComplexMatrixN;
 use crate::Qureg;
 use roqoqo::operations::*;
@@ -60,11 +58,16 @@ pub fn execute_generic_three_qubit_operation(
             }
         })?;
     }
+    let mut targets: Vec<i32> = vec![
+        *operation.control_0() as i32,
+        *operation.control_1() as i32,
+        *operation.target() as i32,
+    ];
     unsafe {
         quest_sys::multiQubitUnitary(
             qureg.quest_qureg,
-            (*operation.target() as i32).borrow_mut(),
-            1,
+            targets.as_mut_ptr(),
+            3,
             complex_matrix.complex_matrix,
         )
     };
