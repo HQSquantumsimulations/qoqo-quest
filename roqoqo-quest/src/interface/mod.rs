@@ -546,7 +546,7 @@ pub fn call_operation_with_device(
                 check_three_qubit_availability(&op, device)?;
                 execute_generic_three_qubit_operation(&op, qureg)
             } else if let Ok(op) = MultiQubitGateOperation::try_from(operation) {
-                check_mulit_qubit_availability(&op, device)?;
+                check_multi_qubit_availability(&op, device)?;
                 execute_generic_multi_qubit_operation(&op, qureg)
             } else if let Ok(_op) = PragmaNoiseOperation::try_from(operation) {
                 // Not working yet WIP
@@ -621,10 +621,9 @@ fn check_three_qubit_availability<T>(
 where
     T: OperateThreeQubit,
 {
-    if device.is_some() {
-        match op.hqslang() {
-            "ControlledControlledPauliZ" => Ok(()),
-            "ControlledControlledPhaseShift" => Ok(()),
+    if let Some(device_box) = device {
+        match device_box.three_qubit_gate_time(op.hqslang(), op.control_0(), op.control_1(), op.target()) {
+            Some(_) => Ok(()),
             _ => Err(RoqoqoBackendError::GenericError {
                 msg: format!(
                     "Operation {:?} not available for control_0 {} control0_1 {} target {} in device",
@@ -640,7 +639,7 @@ where
     }
 }
 
-fn check_mulit_qubit_availability<T>(
+fn check_multi_qubit_availability<T>(
     op: &T,
     device: &Option<Box<dyn roqoqo::devices::Device>>,
 ) -> Result<(), RoqoqoBackendError>
