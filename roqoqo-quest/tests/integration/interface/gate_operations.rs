@@ -12,9 +12,9 @@
 //
 //! Integration test for call_operation for gate operations
 
-use ndarray::{array, Array1};
+use ndarray::{array, Array1, Array2};
 use num_complex::{Complex, Complex64};
-use roqoqo::operations::OperateMultiQubit;
+use roqoqo::operations::{OperateMultiQubit, PragmaSetDensityMatrix, PragmaGetDensityMatrix};
 use roqoqo::operations::{self, PragmaGetStateVector, PragmaSetStateVector};
 use roqoqo::prelude::{OperateGate, OperateSingleQubitGate};
 use roqoqo::registers::{BitOutputRegister, BitRegister, ComplexRegister, FloatRegister};
@@ -131,6 +131,73 @@ fn test_single_qubit_gate(operation: operations::SingleQubitGateOperation) {
     }
 }
 
+#[test_case(operations::Operation::from(operations::Hadamard::new(1)); "Hadamard")]
+fn test_acts_on_qubits_in_qureg(operation: operations::Operation) {
+    let mut qureg = Qureg::new(1, false);
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    let call_result = call_operation(
+        &operation,
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert_eq!(call_result, Err(roqoqo::RoqoqoBackendError::GenericError { msg: "Not enough qubits reserved. QuEST simulator used 1 qubits but operation acting on 1".to_string() }));
+}
+
+#[test_case(operations::Operation::from(operations::PragmaDamping::new(1, 10.0.into(), 10.0.into())); "PragmaDamping")]
+fn test_dont_act_with_noise_on_qubits_outside_of_qureg(operation: operations::Operation) {
+    let mut qureg = Qureg::new(1, true);
+
+    let c0: Complex64 = Complex::new(0.0, 0.0);
+    let c1: Complex64 = Complex::new(1.0, 0.0);
+    let density_matrix: Array2<Complex64> = array![[c0, c0],[c0, c1] ];
+    let set_basis_operation: operations::Operation =
+        PragmaSetDensityMatrix::new(density_matrix.clone()).into();
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    call_operation(
+        &set_basis_operation,
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    )
+    .unwrap();
+
+    call_operation(
+        &operation,
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    )
+    .unwrap();
+    let extract_density_matrix_operation: operations::Operation =
+        PragmaGetDensityMatrix::new("density_matrix".to_string(), None).into();
+    call_operation(
+        &extract_density_matrix_operation,
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    )
+    .unwrap();
+    for (row, check_value) in density_matrix.into_iter().enumerate() {
+        let value = complex_registers.get("density_matrix").unwrap()[row];
+        // Check if entries are the same
+        if !is_close(value, check_value) {
+            // Check if reconstructed entry and entry of unitary is the same with global phase
+            panic!("Reconstructed state vector entry does not match target. ")
+        }
+    }
+}
+
 #[test_case(operations::TwoQubitGateOperation::from(operations::CNOT::new(1,0)); "CNOT")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::SWAP::new(1,0)); "SWAP")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::FSwap::new(1,0)); "FSwap")]
@@ -153,8 +220,8 @@ fn test_single_qubit_gate(operation: operations::SingleQubitGateOperation) {
 #[test_case(operations::TwoQubitGateOperation::from(operations::Bogoliubov::new(1,0, 1.0.into(), 2.0.into())); "Bogoliubov")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledZ::new(1,0, 3.0.into())); "PhaseShiftedControlledZ")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledPhase::new(1,0, 3.0.into(), 2.0.into())); "PhaseShiftedControlledPhase")]
-#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateX::new(0,1, 1.0.into())); "ControlledRotateX")]
-#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateXY::new(0,1, 1.0.into(), 0.5.into())); "ControlledRotateXY")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateX::new(1,0, 1.0.into())); "ControlledRotateX")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateXY::new(1,0, 1.0.into(), 0.5.into())); "ControlledRotateXY")]
 fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
@@ -209,6 +276,8 @@ fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
             &mut bit_registers_output,
         )
         .unwrap();
+        println!("{}", unitary_matrix);
+        println!("{:?}", complex_registers.get("state_vec").unwrap());
         for (row, check_value) in unitary_matrix.column(column).into_iter().enumerate() {
             let value = complex_registers.get("state_vec").unwrap()[row];
             // Check if entries are the same
