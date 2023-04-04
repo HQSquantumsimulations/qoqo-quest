@@ -21,7 +21,7 @@ doctest = false
 
 [dependencies]
 quest-sys = {version="0.9.2", path="../quest-sys", default-features=false}
-roqoqo = {git="https://github.com/HQSquantumsimulations/qoqo", features=["serialize"]}
+roqoqo = {version ="1.2", features=["serialize"]}
 
 qoqo_calculator = { version="1.1"}
 num-complex = {version="0.4"}
