@@ -153,8 +153,8 @@ fn test_single_qubit_gate(operation: operations::SingleQubitGateOperation) {
 #[test_case(operations::TwoQubitGateOperation::from(operations::Bogoliubov::new(1,0, 1.0.into(), 2.0.into())); "Bogoliubov")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledZ::new(1,0, 3.0.into())); "PhaseShiftedControlledZ")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledPhase::new(1,0, 3.0.into(), 2.0.into())); "PhaseShiftedControlledPhase")]
-#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateX::new(0,1, 1.0.into())); "ControlledRotateX")]
-#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateXY::new(0,1, 1.0.into(), 0.5.into())); "ControlledRotateXY")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateX::new(1,0, 1.0.into())); "ControlledRotateX")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateXY::new(1,0, 1.0.into(), 0.5.into())); "ControlledRotateXY")]
 fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
