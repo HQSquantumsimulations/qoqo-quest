@@ -153,6 +153,8 @@ fn test_single_qubit_gate(operation: operations::SingleQubitGateOperation) {
 #[test_case(operations::TwoQubitGateOperation::from(operations::Bogoliubov::new(1,0, 1.0.into(), 2.0.into())); "Bogoliubov")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledZ::new(1,0, 3.0.into())); "PhaseShiftedControlledZ")]
 #[test_case(operations::TwoQubitGateOperation::from(operations::PhaseShiftedControlledPhase::new(1,0, 3.0.into(), 2.0.into())); "PhaseShiftedControlledPhase")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateX::new(0,1, 1.0.into())); "ControlledRotateX")]
+#[test_case(operations::TwoQubitGateOperation::from(operations::ControlledRotateXY::new(0,1, 1.0.into(), 0.5.into())); "ControlledRotateXY")]
 fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
@@ -221,6 +223,7 @@ fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
 
 #[test_case(operations::ThreeQubitGateOperation::from(operations::ControlledControlledPauliZ::new(0,1,2)); "ControlledControlledPauliZ")]
 #[test_case(operations::ThreeQubitGateOperation::from(operations::ControlledControlledPhaseShift::new(0,1,2, 2.0.into())); "ControlledControlledPhaseShift")]
+#[test_case(operations::ThreeQubitGateOperation::from(operations::Toffoli::new(0,1,2)); "Toffoli")]
 fn test_three_qubit_gate(operation: operations::ThreeQubitGateOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
@@ -292,6 +295,7 @@ fn test_three_qubit_gate(operation: operations::ThreeQubitGateOperation) {
 }
 
 #[test_case(operations::MultiQubitGateOperation::from(operations::MultiQubitMS::new(vec![0,1,2,3], 1.0.into())); "MultiQubitMS")]
+#[test_case(operations::MultiQubitGateOperation::from(operations::MultiQubitZZ::new(vec![0,1,2,3], 1.0.into())); "MultiQubitZZ")]
 fn test_multi_qubit_gate(operation: operations::MultiQubitGateOperation) {
     let c1: Complex64 = Complex::new(1.0, 0.0);
     let mut basis_states: Vec<Array1<Complex64>> = Vec::new();
