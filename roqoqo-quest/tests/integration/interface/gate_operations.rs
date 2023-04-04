@@ -14,8 +14,8 @@
 
 use ndarray::{array, Array1, Array2};
 use num_complex::{Complex, Complex64};
-use roqoqo::operations::{OperateMultiQubit, PragmaSetDensityMatrix, PragmaGetDensityMatrix};
 use roqoqo::operations::{self, PragmaGetStateVector, PragmaSetStateVector};
+use roqoqo::operations::{OperateMultiQubit, PragmaGetDensityMatrix, PragmaSetDensityMatrix};
 use roqoqo::prelude::{OperateGate, OperateSingleQubitGate};
 use roqoqo::registers::{BitOutputRegister, BitRegister, ComplexRegister, FloatRegister};
 use roqoqo_quest::{call_operation, Qureg};
@@ -153,7 +153,7 @@ fn test_dont_act_with_noise_on_qubits_outside_of_qureg(operation: operations::Op
 
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
-    let density_matrix: Array2<Complex64> = array![[c0, c0],[c0, c1] ];
+    let density_matrix: Array2<Complex64> = array![[c0, c0], [c0, c1]];
     let set_basis_operation: operations::Operation =
         PragmaSetDensityMatrix::new(density_matrix.clone()).into();
     let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
