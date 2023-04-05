@@ -4,6 +4,12 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.10.0
+
+* Update and support of qoqo 1.3
+* Improved error when applying operation to qubit outside of qureg
+* Ignoring PragmaNoise operations applied to qubits outside of qureg
+
 ## 0.9.2
 
 * Fixed build.rs for quest-sys to support building on Linux, macos on x86_64 and aarch64 and on Windows.
