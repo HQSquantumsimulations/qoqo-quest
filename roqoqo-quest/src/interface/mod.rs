@@ -344,23 +344,11 @@ pub fn call_operation_with_device(
             }
             Ok(())
         }
-        Operation::PhaseShiftState0(op) => {
-            check_acts_on_qubits_in_qureg(operation, qureg)?;
-            check_single_qubit_availability(op, device)?;
-            unsafe {
-                quest_sys::rotateZ(
-                    qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
-                    -*op.theta().float()?,
-                )
-            }
-            Ok(())
-        }
         Operation::PhaseShiftState1(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
-                quest_sys::rotateZ(
+                quest_sys::phaseShift(
                     qureg.quest_qureg,
                     *op.qubit() as ::std::os::raw::c_int,
                     *op.theta().float()?,
