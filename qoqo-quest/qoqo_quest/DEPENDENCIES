@@ -3017,7 +3017,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-crossbeam-channel 0.5.7
+crossbeam-channel 0.5.8
 https://github.com/crossbeam-rs/crossbeam/tree/master/crossbeam-channel
 by 
 Multi-producer multi-consumer channels for message passing
@@ -5069,7 +5069,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-getrandom 0.2.8
+getrandom 0.2.9
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -14177,7 +14177,7 @@ LICENSE:
 
 
 ====================================================
-qoqo 1.3.1
+qoqo 1.3.2
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Quantum computing circuit toolkit. Python interface of roqoqo
@@ -14389,7 +14389,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-macros 1.3.1
+qoqo-macros 1.3.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the qoqo crate
 License: Apache-2.0
@@ -14600,7 +14600,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.10.0
+qoqo-quest 0.10.1
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -15236,7 +15236,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.10.0
+quest-sys 0.10.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -17887,7 +17887,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-roqoqo 1.3.1
+roqoqo 1.3.2
 https://github.com/HQSquantumsimulations/qoqo
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Rust Quantum Computing Toolkit by HQS
@@ -18099,7 +18099,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-derive 1.3.1
+roqoqo-derive 1.3.2
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Macros for the roqoqo crate
 License: Apache-2.0
@@ -18310,7 +18310,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.10.0
+roqoqo-quest 0.10.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
@@ -19311,7 +19311,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde 1.0.159
+serde 1.0.160
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A generic serialization/deserialization framework
@@ -19525,7 +19525,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde_derive 1.0.159
+serde_derive 1.0.160
 https://serde.rs
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 Macros 1.1 implementation of #[derive(Serialize, Deserialize)]
@@ -19953,7 +19953,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-simba 0.8.0
+simba 0.8.1
 https://github.com/dimforge/simba
 by sebcrozet <developer@crozet.re>
 SIMD algebra for Rust
@@ -20645,7 +20645,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-syn 2.0.13
+syn 2.0.14
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
