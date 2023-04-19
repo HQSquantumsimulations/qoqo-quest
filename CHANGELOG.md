@@ -4,6 +4,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+* Fix missing error when PragmaSetNumberOfMeasurements is used without corresponding MeasureQubit
+
 ## 0.10.1
 
 * Fix wrong global phase when applying PhaseShiftState0 and PHaseShiftState1 operations
