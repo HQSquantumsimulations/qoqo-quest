@@ -13,6 +13,9 @@
 use roqoqo::backends::EvaluatingBackend;
 use roqoqo::measurements::ClassicalRegister;
 use roqoqo::operations;
+use roqoqo::operations::DefinitionBit;
+use roqoqo::operations::MeasureQubit;
+use roqoqo::operations::PragmaSetNumberOfMeasurements;
 use roqoqo::Circuit;
 use roqoqo_quest::Backend;
 
@@ -46,6 +49,17 @@ fn test_measurement_with_repeated_measurement() {
         assert!(repetition[1]);
         assert!(!repetition[2]);
     }
+}
+
+#[test]
+fn test_failing_set_number_of_measurments() {
+    let mut circuit = Circuit::new();
+    circuit += DefinitionBit::new("ro".to_string(), 1, true);
+    circuit += MeasureQubit::new(0, "ro".to_string(), 0);
+    circuit += PragmaSetNumberOfMeasurements::new(10, "ro_misspelled".to_string());
+    let backend = Backend::new(1);
+    let res = backend.run_circuit(&circuit);
+    assert!(res.is_err());
 }
 
 #[cfg(feature = "async")]

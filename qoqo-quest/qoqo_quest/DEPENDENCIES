@@ -12749,7 +12749,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-pyo3 0.18.2
+pyo3 0.18.3
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Bindings to Python interpreter
@@ -12949,7 +12949,7 @@ LICENSE:
 
 
 ====================================================
-pyo3-build-config 0.18.2
+pyo3-build-config 0.18.3
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Build configuration for the PyO3 ecosystem
@@ -13149,7 +13149,7 @@ LICENSE:
 
 
 ====================================================
-pyo3-ffi 0.18.2
+pyo3-ffi 0.18.3
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Python-API bindings for the PyO3 ecosystem
@@ -13777,7 +13777,7 @@ docs/license.html_lib.
 
 
 ====================================================
-pyo3-macros 0.18.2
+pyo3-macros 0.18.3
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Proc macros for PyO3 package
@@ -13977,7 +13977,7 @@ LICENSE:
 
 
 ====================================================
-pyo3-macros-backend 0.18.2
+pyo3-macros-backend 0.18.3
 https://github.com/pyo3/pyo3
 by PyO3 Project and Contributors <https://github.com/PyO3>
 Code generation for PyO3 package
@@ -19739,7 +19739,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde_json 1.0.95
+serde_json 1.0.96
 https://github.com/serde-rs/json
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A JSON serialization file format
@@ -20645,7 +20645,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-syn 2.0.14
+syn 2.0.15
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
