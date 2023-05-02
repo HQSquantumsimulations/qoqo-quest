@@ -18,7 +18,8 @@ use roqoqo::operations::{self, PragmaGetStateVector, PragmaSetStateVector};
 use roqoqo::operations::{OperateMultiQubit, PragmaGetDensityMatrix, PragmaSetDensityMatrix};
 use roqoqo::prelude::{OperateGate, OperateSingleQubitGate};
 use roqoqo::registers::{BitOutputRegister, BitRegister, ComplexRegister, FloatRegister};
-use roqoqo_quest::{call_operation, Qureg};
+use roqoqo::Circuit;
+use roqoqo_quest::{call_circuit, call_operation, Qureg};
 use std::collections::HashMap;
 use std::convert::TryInto;
 use test_case::test_case;
@@ -58,6 +59,9 @@ fn create_empty_registers() -> Registers {
 #[test_case(operations::SingleQubitGateOperation::from(operations::InvSqrtPauliX::new(0)); "InvSqrtPauliX")]
 #[test_case(operations::SingleQubitGateOperation::from(operations::RotateAroundSphericalAxis::new(0, 1.0.into(), 0.5.into(), 1.0.into())); "RotateAroundSphericalAxis")]
 #[test_case(operations::SingleQubitGateOperation::from(operations::SingleQubitGate::new(0,0.5.into(),  0.5.into(), 0.5.into(), 0.5.into(), 0.5.into()));"SingleQubitGate")]
+#[test_case(operations::SingleQubitGateOperation::from(operations::GPi::new(0,0.5.into(),));"GPi")]
+#[test_case(operations::SingleQubitGateOperation::from(operations::GPi2::new(0,0.5.into(),));"Gpi2")]
+
 fn test_single_qubit_gate(operation: operations::SingleQubitGateOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
@@ -145,6 +149,24 @@ fn test_acts_on_qubits_in_qureg(operation: operations::Operation) {
         &mut bit_registers_output,
     );
     assert_eq!(call_result, Err(roqoqo::RoqoqoBackendError::GenericError { msg: "Not enough qubits reserved. QuEST simulator used 1 qubits but operation acting on 1".to_string() }));
+}
+
+#[test_case(operations::Operation::from(operations::Hadamard::new(0)); "Hadamard")]
+fn test_call_circuit(operation: operations::Operation) {
+    let mut qureg = Qureg::new(1, false);
+    let mut circuit = Circuit::new();
+    circuit += operation;
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    let call_result = call_circuit(
+        &circuit,
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(call_result.is_ok());
 }
 
 #[test_case(operations::Operation::from(operations::PragmaDamping::new(1, 10.0.into(), 10.0.into())); "PragmaDamping")]
