@@ -287,7 +287,7 @@ pub fn execute_pragma_random_noise(
     } else {
         let choices = [1, 2, 3];
         let distribution =
-            WeightedIndex::new(&probas).map_err(|err| RoqoqoBackendError::GenericError {
+            WeightedIndex::new(probas).map_err(|err| RoqoqoBackendError::GenericError {
                 msg: format!("Probabilites from quantum register {:?}", err),
             })?;
         match choices[distribution.sample(&mut rng)] {
