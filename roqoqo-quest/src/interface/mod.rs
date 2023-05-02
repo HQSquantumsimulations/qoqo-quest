@@ -593,7 +593,7 @@ pub fn call_operation_with_device(
             device,
         ),
         Operation::InputBit(op) => execute_pragma_input_bit(op, bit_registers),
-        // Operation::PragmaRandomNoise(op) => execute_pragma_random_noise(op, qureg),
+        Operation::PragmaRandomNoise(op) => execute_pragma_random_noise(op, qureg),
         _ => {
             if let Ok(op) = TwoQubitGateOperation::try_from(operation) {
                 check_acts_on_qubits_in_qureg(operation, qureg)?;

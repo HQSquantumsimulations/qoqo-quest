@@ -263,67 +263,67 @@ pub fn execute_pragma_input_bit(
     Ok(())
 }
 
-// pub fn execute_pragma_random_noise(
-//     operation: &PragmaRandomNoise,
-//     qureg: &mut Qureg,
-// ) -> Result<(), RoqoqoBackendError> {
-//     let mut rng = thread_rng();
-//     let r0 = rng.gen_range(0.0..1.0);
-//     let rates = [
-//         operation.depolarising_rate().float()? / 4.0,
-//         operation.depolarising_rate().float()? / 4.0,
-//         (operation.depolarising_rate().float()? / 4.0) + (operation.dephasing_rate().float()?),
-//     ];
-//     let gate_time = operation.gate_time().float()?;
-//     let mut probas: [f64; 3] = [0.0; 3];
-//     for (i, rate) in rates.iter().enumerate() {
-//         if rate >= &f64::EPSILON {
-//             probas[i] = *rate;
-//         }
-//     }
-//     let sum: f64 = rates.clone().iter().sum();
-//     if r0 < (gate_time * sum * -1.0) - 1.0 {
-//         Ok(())
-//     } else {
-//         let choices = [1, 2, 3];
-//         let distribution =
-//             WeightedIndex::new(&probas).map_err(|err| RoqoqoBackendError::GenericError {
-//                 msg: format!("Probabilites from quantum register {:?}", err),
-//             })?;
-//         match choices[distribution.sample(&mut rng)] {
-//             1 => {
-//                 unsafe {
-//                     quest_sys::pauliX(
-//                         qureg.quest_qureg,
-//                         *operation.qubit() as ::std::os::raw::c_int,
-//                     )
-//                 }
-//                 Ok(())
-//             }
-//             2 => {
-//                 unsafe {
-//                     quest_sys::pauliY(
-//                         qureg.quest_qureg,
-//                         *operation.qubit() as ::std::os::raw::c_int,
-//                     )
-//                 }
-//                 Ok(())
-//             }
-//             3 => {
-//                 unsafe {
-//                     quest_sys::pauliZ(
-//                         qureg.quest_qureg,
-//                         *operation.qubit() as ::std::os::raw::c_int,
-//                     )
-//                 }
-//                 Ok(())
-//             }
-//             x => Err(RoqoqoBackendError::GenericError {
-//                 msg: format!("Incorrect Pauli selected: {:?}", x),
-//             }),
-//         }
-//     }
-// }
+pub fn execute_pragma_random_noise(
+    operation: &PragmaRandomNoise,
+    qureg: &mut Qureg,
+) -> Result<(), RoqoqoBackendError> {
+    let mut rng = thread_rng();
+    let r0 = rng.gen_range(0.0..1.0);
+    let rates = [
+        operation.depolarising_rate().float()? / 4.0,
+        operation.depolarising_rate().float()? / 4.0,
+        (operation.depolarising_rate().float()? / 4.0) + (operation.dephasing_rate().float()?),
+    ];
+    let gate_time = operation.gate_time().float()?;
+    let mut probas: [f64; 3] = [0.0; 3];
+    for (i, rate) in rates.iter().enumerate() {
+        if rate >= &f64::EPSILON {
+            probas[i] = *rate;
+        }
+    }
+    let sum: f64 = rates.clone().iter().sum();
+    if r0 < (gate_time * sum) - 1.0 {
+        Ok(())
+    } else {
+        let choices = [1, 2, 3];
+        let distribution =
+            WeightedIndex::new(probas).map_err(|err| RoqoqoBackendError::GenericError {
+                msg: format!("Probabilites from quantum register {:?}", err),
+            })?;
+        match choices[distribution.sample(&mut rng)] {
+            1 => {
+                unsafe {
+                    quest_sys::pauliX(
+                        qureg.quest_qureg,
+                        *operation.qubit() as ::std::os::raw::c_int,
+                    )
+                }
+                Ok(())
+            }
+            2 => {
+                unsafe {
+                    quest_sys::pauliY(
+                        qureg.quest_qureg,
+                        *operation.qubit() as ::std::os::raw::c_int,
+                    )
+                }
+                Ok(())
+            }
+            3 => {
+                unsafe {
+                    quest_sys::pauliZ(
+                        qureg.quest_qureg,
+                        *operation.qubit() as ::std::os::raw::c_int,
+                    )
+                }
+                Ok(())
+            }
+            x => Err(RoqoqoBackendError::GenericError {
+                msg: format!("Incorrect Pauli selected: {:?}", x),
+            }),
+        }
+    }
+}
 
 pub fn execute_pragma_loop(
     operation: &PragmaLoop,
