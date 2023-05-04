@@ -621,7 +621,7 @@ fn test_statevec_multiplication_quest() {
                 {
                     // Check if reconstructed entry and enty of unitary is the same with global phase
                     panic!("Reconstructed matrix entry does not match targe matrix, index: {}, test_number: {}, value_from_multiplication: {} value_from_quest: {} ",
-                        index, test_number, value_test.re, value_comp)
+                       index, test_number, value_test.re, value_comp)
                 }
             }
         }
