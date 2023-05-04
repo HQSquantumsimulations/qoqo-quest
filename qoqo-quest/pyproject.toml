@@ -29,7 +29,4 @@ docs = [
     "recommonmark",
     "myst_parser",
     "sphinx_rtd_theme",
-    "numpy",
-    "qoqo_calculator_pyo3>=1.1",
-    "qoqo>=1.4"
 ]
