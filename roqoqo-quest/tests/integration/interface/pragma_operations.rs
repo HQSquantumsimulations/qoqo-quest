@@ -619,6 +619,7 @@ fn test_statevec_multiplication_quest() {
                 if let Some(Ordering::Greater) =
                     (value_test.re - value_comp).abs().partial_cmp(&1e-10)
                 {
+                    // Check if reconstructed entry and enty of unitary is the same with global phase
                     panic!("Reconstructed matrix entry does not match targe matrix, index: {}, test_number: {}, value_from_multiplication: {} value_from_quest: {} ",
                        index, test_number, value_test.re, value_comp)
                 }
@@ -837,7 +838,7 @@ fn test_active_reset() {
         // Apply tested operation to output
         let pragma: operations::Operation = operations::PragmaActiveReset::new(1).into();
         call_operation(
-            &pragma.clone(),
+            &pragma,
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,
@@ -905,7 +906,7 @@ fn test_conditional() {
         let pragma: operations::Operation =
             operations::PragmaConditional::new("conditional".into(), 1, circuit).into();
         call_operation(
-            &pragma.clone(),
+            &pragma,
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,

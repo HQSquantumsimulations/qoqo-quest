@@ -268,7 +268,7 @@ fn test_get_pauli_product() {
         let pragma: operations::Operation =
             operations::PragmaGetPauliProduct::new(qubit_paulis, "ro".into(), circuit).into();
         call_operation(
-            &pragma.clone(),
+            &pragma,
             &mut qureg,
             &mut bit_registers,
             &mut float_registers,

@@ -127,7 +127,7 @@ fn test_running_with_device() {
     assert!(res.is_err());
     let mut circuit = Circuit::new();
     circuit += MultiQubitZZ::new(vec![0, 1, 2], 0.1.into());
-    let mut dev: Option<Box<dyn Device>> = Some(Box::new(device.clone()));
+    let mut dev: Option<Box<dyn Device>> = Some(Box::new(device));
     let res = backend.run_circuit_iterator_with_device(circuit.iter(), &mut dev);
     assert!(res.is_err());
 }
