@@ -1,10 +1,10 @@
 [project]
 name = "qoqo-quest"
-version = "0.9.1"
+version = "0.11.0"
 dependencies = [
   'numpy',
-  'qoqo>=1.2.0',
-  'qoqo_calculator_pyo3>=1.1.0',
+  'qoqo>=1.4',
+  'qoqo_calculator_pyo3>=1.1',
 ]
 license = {text="Apache-2.0 AND Apache-2.0 with LLVM-exception AND MIT AND Unicode-DFS-2016 AND BSD-2-Clause AND BSD-3-CLause"}
 maintainers = [{name = "HQS Quantum Simulations GmbH", email = "info@quantumsimulations.de"}]

@@ -29,14 +29,14 @@ use roqoqo_quest::{call_operation, Qureg};
 use std::collections::HashMap;
 use test_case::test_case;
 
-type AllRegisters = (
+type Registers = (
     HashMap<String, BitRegister>,
     HashMap<String, FloatRegister>,
     HashMap<String, ComplexRegister>,
     HashMap<String, BitOutputRegister>,
 );
 
-fn create_empty_registers() -> AllRegisters {
+fn create_empty_registers() -> Registers {
     let bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
     let bit_registers: HashMap<String, BitRegister> = HashMap::new();
     let float_registers: HashMap<String, FloatRegister> = HashMap::new();

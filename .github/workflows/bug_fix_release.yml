@@ -1,0 +1,20 @@
+name: bugfix release
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+
+  # Build linux wheels and upload them to PyPi
+  build_maturin_builds_linux:
+    name: maturin_build-linux
+    uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_build_maturin_linux.yml@main
+    with: 
+      py_interface_folder: "qoqo-quest"
+      deploy: true
+      # Whether to build for aarch64. Can fail if there are C/C++ dependencies
+      build_for_arm: false
+    secrets: inherit
+
+

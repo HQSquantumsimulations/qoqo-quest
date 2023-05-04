@@ -4,6 +4,26 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.11
+
+* Update to qoqo 1.4
+* Fix missing error when PragmaSetNumberOfMeasurements is used without corresponding MeasureQubit
+
+## 0.10.1
+
+* Fix wrong global phase when applying PhaseShiftState0 and PHaseShiftState1 operations
+
+## 0.10.0
+
+* Update and support of qoqo 1.3
+* Improved error when applying operation to qubit outside of qureg
+* Ignoring PragmaNoise operations applied to qubits outside of qureg
+
+## 0.9.2
+
+* Fixed build.rs for quest-sys to support building on Linux, macos on x86_64 and aarch64 and on Windows.
+* Updated to qoqo 1.3
+
 ## 0.9.1
 
 * Update to pyo3 0.18 and enabling cross-compilation with zig

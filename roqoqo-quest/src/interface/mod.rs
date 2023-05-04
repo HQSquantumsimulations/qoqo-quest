@@ -197,6 +197,7 @@ pub fn call_operation_with_device(
             execute_pragma_repeated_measurement(op, qureg, bit_registers, bit_registers_output)
         }
         Operation::MeasureQubit(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             unsafe {
                 let register = bit_registers.get_mut(op.readout()).ok_or(
                     RoqoqoBackendError::GenericError {
@@ -308,6 +309,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::RotateX(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::rotateX(
@@ -319,6 +321,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::RotateY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::rotateY(
@@ -330,6 +333,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::RotateZ(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::rotateZ(
@@ -340,21 +344,11 @@ pub fn call_operation_with_device(
             }
             Ok(())
         }
-        Operation::PhaseShiftState0(op) => {
-            check_single_qubit_availability(op, device)?;
-            unsafe {
-                quest_sys::rotateZ(
-                    qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
-                    -*op.theta().float()?,
-                )
-            }
-            Ok(())
-        }
         Operation::PhaseShiftState1(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
-                quest_sys::rotateZ(
+                quest_sys::phaseShift(
                     qureg.quest_qureg,
                     *op.qubit() as ::std::os::raw::c_int,
                     *op.theta().float()?,
@@ -363,36 +357,43 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::PauliX(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe { quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
             Ok(())
         }
         Operation::PauliY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe { quest_sys::pauliY(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
             Ok(())
         }
         Operation::PauliZ(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe { quest_sys::pauliZ(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
             Ok(())
         }
         Operation::Hadamard(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe { quest_sys::hadamard(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
             Ok(())
         }
         Operation::SGate(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe { quest_sys::sGate(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
             Ok(())
         }
         Operation::TGate(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe { quest_sys::tGate(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
             Ok(())
         }
         Operation::SqrtPauliX(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::rotateX(
@@ -404,6 +405,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::InvSqrtPauliX(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::rotateX(
@@ -415,6 +417,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::RotateAroundSphericalAxis(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             let vector: Vector = Vector::new(
                 op.spherical_theta().sin().float()? * op.spherical_phi().cos().float()?,
@@ -432,6 +435,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::CNOT(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_two_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::controlledNot(
@@ -443,6 +447,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::ControlledPhaseShift(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_two_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::controlledPhaseShift(
@@ -455,6 +460,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::ControlledPauliY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_two_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::controlledPauliY(
@@ -466,6 +472,7 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::ControlledPauliZ(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_two_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::controlledPhaseFlip(
@@ -476,7 +483,47 @@ pub fn call_operation_with_device(
             }
             Ok(())
         }
+        Operation::ControlledRotateX(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
+            check_two_qubit_availability(op, device)?;
+            unsafe {
+                quest_sys::controlledRotateX(
+                    qureg.quest_qureg,
+                    *op.control() as ::std::os::raw::c_int,
+                    *op.target() as ::std::os::raw::c_int,
+                    *op.theta().float()?,
+                )
+            }
+            Ok(())
+        }
+        Operation::ControlledRotateXY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
+            check_two_qubit_availability(op, device)?;
+            let rotate_op = RotateXY::new(0, op.theta().clone(), op.phi().clone());
+            let unitary_matrix = rotate_op.unitary_matrix()?;
+            let complex_matrix = quest_sys::ComplexMatrix2 {
+                // row major version only used for Complex2/4/N intio
+                real: [
+                    [unitary_matrix[(0, 0)].re, unitary_matrix[(0, 1)].re],
+                    [unitary_matrix[(1, 0)].re, unitary_matrix[(1, 1)].re],
+                ],
+                imag: [
+                    [unitary_matrix[(0, 0)].im, unitary_matrix[(0, 1)].im],
+                    [unitary_matrix[(1, 0)].im, unitary_matrix[(1, 1)].im],
+                ],
+            };
+            unsafe {
+                quest_sys::controlledUnitary(
+                    qureg.quest_qureg,
+                    *op.control() as ::std::os::raw::c_int,
+                    *op.target() as ::std::os::raw::c_int,
+                    complex_matrix,
+                )
+            }
+            Ok(())
+        }
         Operation::SWAP(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_two_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::swapGate(
@@ -488,36 +535,48 @@ pub fn call_operation_with_device(
             Ok(())
         }
         Operation::PragmaDamping(op) => {
-            unsafe {
-                quest_sys::mixDamping(
-                    qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
-                    f64::try_from(op.probability())?,
-                )
+            if acts_on_qubits_in_qureg(operation, qureg) {
+                unsafe {
+                    quest_sys::mixDamping(
+                        qureg.quest_qureg,
+                        *op.qubit() as ::std::os::raw::c_int,
+                        f64::try_from(op.probability())?,
+                    )
+                }
             }
             Ok(())
         }
         Operation::PragmaDephasing(op) => {
-            unsafe {
-                quest_sys::mixDephasing(
-                    qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
-                    f64::try_from(op.probability())?,
-                )
+            if acts_on_qubits_in_qureg(operation, qureg) {
+                unsafe {
+                    quest_sys::mixDephasing(
+                        qureg.quest_qureg,
+                        *op.qubit() as ::std::os::raw::c_int,
+                        f64::try_from(op.probability())?,
+                    )
+                }
             }
             Ok(())
         }
         Operation::PragmaDepolarising(op) => {
-            unsafe {
-                quest_sys::mixDepolarising(
-                    qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
-                    f64::try_from(op.probability())?,
-                )
+            if acts_on_qubits_in_qureg(operation, qureg) {
+                unsafe {
+                    quest_sys::mixDepolarising(
+                        qureg.quest_qureg,
+                        *op.qubit() as ::std::os::raw::c_int,
+                        f64::try_from(op.probability())?,
+                    )
+                }
             }
             Ok(())
         }
-        Operation::PragmaGeneralNoise(op) => execute_generic_single_qubit_noise(op, qureg),
+        Operation::PragmaGeneralNoise(op) => {
+            if acts_on_qubits_in_qureg(operation, qureg) {
+                execute_generic_single_qubit_noise(op, qureg)
+            } else {
+                Ok(())
+            }
+        }
         Operation::PragmaChangeDevice(op) => {
             if let Some(device_box) = device {
                 device_box.change_device(&op.wrapped_hqslang, &op.wrapped_operation)?;
@@ -534,16 +593,23 @@ pub fn call_operation_with_device(
             device,
         ),
         Operation::InputBit(op) => execute_pragma_input_bit(op, bit_registers),
-        // Operation::PragmaRandomNoise(op) => execute_pragma_random_noise(op, qureg),
+        Operation::PragmaRandomNoise(op) => execute_pragma_random_noise(op, qureg),
         _ => {
             if let Ok(op) = TwoQubitGateOperation::try_from(operation) {
+                check_acts_on_qubits_in_qureg(operation, qureg)?;
                 check_two_qubit_availability(&op, device)?;
                 execute_generic_two_qubit_operation(&op, qureg)
             } else if let Ok(op) = SingleQubitGateOperation::try_from(operation) {
+                check_acts_on_qubits_in_qureg(operation, qureg)?;
                 check_single_qubit_availability(&op, device)?;
                 execute_generic_single_qubit_operation(&op, qureg)
+            } else if let Ok(op) = ThreeQubitGateOperation::try_from(operation) {
+                check_acts_on_qubits_in_qureg(operation, qureg)?;
+                check_three_qubit_availability(&op, device)?;
+                execute_generic_three_qubit_operation(&op, qureg)
             } else if let Ok(op) = MultiQubitGateOperation::try_from(operation) {
-                check_mulit_qubit_availability(&op, device)?;
+                check_acts_on_qubits_in_qureg(operation, qureg)?;
+                check_multi_qubit_availability(&op, device)?;
                 execute_generic_multi_qubit_operation(&op, qureg)
             } else if let Ok(_op) = PragmaNoiseOperation::try_from(operation) {
                 // Not working yet WIP
@@ -564,6 +630,7 @@ pub fn call_operation_with_device(
     }
 }
 
+#[inline]
 fn check_single_qubit_availability<T>(
     op: &T,
     device: &Option<Box<dyn roqoqo::devices::Device>>,
@@ -587,6 +654,7 @@ where
     }
 }
 
+#[inline]
 fn check_two_qubit_availability<T>(
     op: &T,
     device: &Option<Box<dyn roqoqo::devices::Device>>,
@@ -611,7 +679,63 @@ where
     }
 }
 
-fn check_mulit_qubit_availability<T>(
+#[inline]
+fn check_three_qubit_availability<T>(
+    op: &T,
+    device: &Option<Box<dyn roqoqo::devices::Device>>,
+) -> Result<(), RoqoqoBackendError>
+where
+    T: OperateThreeQubit,
+{
+    if let Some(device_box) = device {
+        match device_box.three_qubit_gate_time(op.hqslang(), op.control_0(), op.control_1(), op.target()) {
+            Some(_) => Ok(()),
+            _ => Err(RoqoqoBackendError::GenericError {
+                msg: format!(
+                    "Operation {:?} not available for control_0 {} control0_1 {} target {} in device",
+                    op,
+                    op.control_0(),
+                    op.control_1(),
+                    op.target()
+                ),
+            }),
+        }
+    } else {
+        Ok(())
+    }
+}
+
+#[inline]
+fn check_acts_on_qubits_in_qureg(
+    operation: &Operation,
+    qureg: &Qureg,
+) -> Result<(), RoqoqoBackendError> {
+    let number_qubits = qureg.number_qubits() as usize;
+    if let InvolvedQubits::Set(involved_qubits) = operation.involved_qubits() {
+        for q in involved_qubits.iter() {
+            if *q >= number_qubits {
+                return Err(RoqoqoBackendError::GenericError { msg: format!("Not enough qubits reserved. QuEST simulator used {} qubits but operation acting on {}" ,number_qubits, q) });
+            }
+        }
+    }
+    Ok(())
+}
+
+#[inline]
+fn acts_on_qubits_in_qureg(operation: &Operation, qureg: &Qureg) -> bool {
+    let number_qubits = qureg.number_qubits() as usize;
+    if let InvolvedQubits::Set(involved_qubits) = operation.involved_qubits() {
+        for q in involved_qubits.iter() {
+            if *q >= number_qubits {
+                return false;
+            }
+        }
+    }
+    true
+}
+
+#[inline]
+fn check_multi_qubit_availability<T>(
     op: &T,
     device: &Option<Box<dyn roqoqo::devices::Device>>,
 ) -> Result<(), RoqoqoBackendError>
