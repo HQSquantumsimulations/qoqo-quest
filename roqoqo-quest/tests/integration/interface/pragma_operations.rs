@@ -26,6 +26,7 @@ use roqoqo::{
     Circuit,
 };
 use roqoqo_quest::{call_operation, Qureg};
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use test_case::test_case;
 
@@ -259,7 +260,6 @@ fn test_store_load_density_matrix_qureg() {
 #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDepolarising::new(0, 0.01.into(),  2.0.into())); "PragmaDepolarising001")]
 #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDepolarising::new(0, 0.1.into(),  2.0.into())); "PragmaDepolarising01")]
 #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaDepolarising::new(0, 1.0.into(),  2.0.into())); "PragmaDepolarising1")]
-// #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaRandomNoise::new(0, 0.01.into(),  2.0.into(), 0.0.into())); "PragmaRandomNoise")]
 fn test_general_noise(operation: PragmaNoiseOperation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
@@ -357,6 +357,84 @@ fn test_general_noise(operation: PragmaNoiseOperation) {
                     index, test_number, calculated_value, check_value)
             }
         }
+    }
+}
+
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaRandomNoise::new(0, 1.0.into(),  1.0.into(), 0.0.into())); "PragmaRandomNoise")]
+fn test_random_noise(operation: PragmaNoiseOperation) {
+    let number_repetitions = 1000;
+    let c0: Complex64 = Complex::new(0.0, 0.0);
+    let c1: Complex64 = Complex::new(1.0, 0.0);
+    let basis_state = array![c1, c0];
+    let density_matrix_nothing = array![c1, c0, c0, c0];
+    let density_matrix_x = array![c0, c0, c0, c1];
+    let density_matrix_y = array![c0, c0, c0, c1];
+    let density_matrix_z = array![c1, c0, c0, c0];
+    let density_matrix_collection = [
+        density_matrix_nothing,
+        density_matrix_x,
+        density_matrix_y,
+        density_matrix_z,
+    ];
+    let mut density_matrices: Vec<Array1<Complex64>> = Vec::with_capacity(number_repetitions);
+    for _ in 0..number_repetitions {
+        let (
+            mut bit_registers,
+            mut float_registers,
+            mut complex_registers,
+            mut bit_registers_output,
+        ) = create_empty_registers();
+        complex_registers.insert("state_vector".to_string(), Vec::new());
+        let mut qureg = Qureg::new(1, true);
+
+        let set_basis_operation: operations::Operation =
+            PragmaSetStateVector::new(basis_state.clone()).into();
+        call_operation(
+            &set_basis_operation,
+            &mut qureg,
+            &mut bit_registers,
+            &mut float_registers,
+            &mut complex_registers,
+            &mut bit_registers_output,
+        )
+        .unwrap();
+        // Apply tested operation to output
+        call_operation(
+            &operation.clone().into(),
+            &mut qureg,
+            &mut bit_registers,
+            &mut float_registers,
+            &mut complex_registers,
+            &mut bit_registers_output,
+        )
+        .unwrap();
+
+        // Extract state vector
+        let extract_state_vector_operation: operations::Operation =
+            PragmaGetDensityMatrix::new("density_matrix".to_string(), None).into();
+        call_operation(
+            &extract_state_vector_operation,
+            &mut qureg,
+            &mut bit_registers,
+            &mut float_registers,
+            &mut complex_registers,
+            &mut bit_registers_output,
+        )
+        .unwrap();
+        let tmp: Array1<Complex64> = Array1::from_iter(
+            complex_registers
+                .get("density_matrix")
+                .unwrap()
+                .iter()
+                .cloned(),
+        );
+        density_matrices.push(tmp);
+    }
+    for dm in density_matrices.iter() {
+        assert!(density_matrix_collection.contains(dm));
+    }
+    for dm in density_matrix_collection.iter() {
+        assert!(density_matrices.contains(dm));
     }
 }
 
@@ -538,10 +616,12 @@ fn test_statevec_multiplication_quest() {
                 .enumerate()
             {
                 // Check if entries are the same
-                if (value_test.re - value_comp).abs() > 1e-10 {
+                if let Some(Ordering::Greater) =
+                    (value_test.re - value_comp).abs().partial_cmp(&1e-10)
+                {
                     // Check if reconstructed entry and enty of unitary is the same with global phase
                     panic!("Reconstructed matrix entry does not match targe matrix, index: {}, test_number: {}, value_from_multiplication: {} value_from_quest: {} ",
-                           index, test_number, value_test.re, value_comp)
+                        index, test_number, value_test.re, value_comp)
                 }
             }
         }

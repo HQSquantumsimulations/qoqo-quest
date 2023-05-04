@@ -1,4 +1,7 @@
 target/*
+*__pycache__*
+*.mypy_cache*
+*.egg-info*
 */docs/_build*
 */docs/generated*
 *.DS_Store
