@@ -53,6 +53,15 @@ impl Qureg {
         }
     }
 
+    /// Resets the quantum register to the default initial state |000...0>
+    ///
+    /// Works for state vector and density matrix registers.
+    pub fn reset(&mut self) {
+        unsafe {
+            quest_sys::initClassicalState(self.quest_qureg, 0);
+        }
+    }
+
     /// Returns the number of qubits in the qureg.
     pub fn number_qubits(&self) -> u32 {
         self.quest_qureg.numQubitsRepresented as u32

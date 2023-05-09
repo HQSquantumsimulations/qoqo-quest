@@ -23,6 +23,7 @@ mod pragma_operations;
 use pragma_operations::*;
 mod gate_operations;
 use gate_operations::*;
+pub(crate) use pragma_operations::execute_pragma_repeated_measurement;
 
 // Pragma operations that are ignored by backend and do not throw an error
 const ALLOWED_OPERATIONS: &[&str; 10] = &[
@@ -198,15 +199,14 @@ pub fn call_operation_with_device(
         }
         Operation::MeasureQubit(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
-            unsafe {
-                let register = bit_registers.get_mut(op.readout()).ok_or(
-                    RoqoqoBackendError::GenericError {
+            let register =
+                bit_registers
+                    .get_mut(op.readout())
+                    .ok_or(RoqoqoBackendError::GenericError {
                         msg: format!("Bit register {} not found to write output to", op.readout()),
-                    },
-                )?;
-                register[*op.readout_index()] =
-                    quest_sys::measure(qureg.quest_qureg, *op.qubit() as i32) == 1;
-            }
+                    })?;
+            let res = unsafe { quest_sys::measure(qureg.quest_qureg, *op.qubit() as i32) };
+            register[*op.readout_index()] = res == 1;
             Ok(())
         }
         Operation::PragmaSetStateVector(op) => execute_pragma_set_state_vector(op, qureg),
