@@ -298,8 +298,6 @@ fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
             &mut bit_registers_output,
         )
         .unwrap();
-        println!("{}", unitary_matrix);
-        println!("{:?}", complex_registers.get("state_vec").unwrap());
         for (row, check_value) in unitary_matrix.column(column).into_iter().enumerate() {
             let value = complex_registers.get("state_vec").unwrap()[row];
             // Check if entries are the same
