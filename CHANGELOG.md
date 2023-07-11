@@ -4,6 +4,11 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.11.1
+
+* Updated to qoqo 1.5
+* Updated to pyo3 0.19
+
 ## 0.11
 
 * Update to qoqo 1.4
@@ -46,10 +51,6 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 * Support for `parallelization` feature, evaluating circuits from one `Measurement` in parallel
 * Updated to QuEST 3.5.0
 
-## 0.7.2
-
-* Updated dependencies
-
 ## 0.7.1
 
 * Fixed: Bug in calculating result for PragmaGetPauliProduct
@@ -65,12 +66,6 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 ## 0.7.2
 
 * Updated dependencies
-
-## 0.7.1
-
-* Fixed: Bug in calculating result for PragmaGetPauliProduct
-
-
 
 ## 0.7.0
 

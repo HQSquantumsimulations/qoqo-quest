@@ -63,7 +63,8 @@ QuEST supports distributed computing and the use of GPU computing. The support c
 
 This software is still in the beta stage. Functions and documentation are not yet complete and breaking changes can occur.
 
-This project is partly supported by [PlanQK](https://planqk.de).
+This project has been partly supported by [PlanQK](https://planqk.de) and is partially supported by [QSolid](https://www.q-solid.de/).
+
 
 ## Contributing
 

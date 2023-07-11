@@ -20,7 +20,7 @@ use roqoqo::operations::DefinitionBit;
 use roqoqo::operations::DefinitionComplex;
 use roqoqo::operations::DefinitionFloat;
 use roqoqo::operations::Hadamard;
-use roqoqo::operations::InputSymbolic;
+
 use roqoqo::operations::MeasureQubit;
 use roqoqo::operations::MultiQubitZZ;
 use roqoqo::operations::PauliX;
