@@ -12,10 +12,11 @@ This repository contains three components:
 
 ## qoqo-quest
 
-[![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/qoqo-quest-ci-tests/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions)
+
 [![PyPI](https://img.shields.io/pypi/v/qoqo-quest)](https://pypi.org/project/qoqo-quest/)
 [![PyPI - Format](https://img.shields.io/pypi/format/qoqo-quest)](https://pypi.org/project/qoqo-quest/)
 ![Crates.io](https://img.shields.io/crates/l/roqoqo-quest)
+<!-- [![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/qoqo-quest-ci-tests/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions/) -->
 
 [QuEST](https://github.com/QuEST-Kit/QuEST) based simulator backend for the qoqo quantum toolkit by [HQS Quantum Simulations](https://quantumsimulations.de).
 
@@ -46,9 +47,9 @@ pip install qoqo-quest
 ## roqoqo-quest
 
 [![Crates.io](https://img.shields.io/crates/v/roqoqo-quest)](https://crates.io/crates/roqoqo-quest)
-[![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/qoqo-quest-ci-tests/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions)
 [![docs.rs](https://img.shields.io/docsrs/roqoqo-quest)](https://docs.rs/roqoqo-quest/)
 ![Crates.io](https://img.shields.io/crates/l/roqoqo-quest)
+<!-- [![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/qoqo-quest-ci-tests/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions) -->
 
 [QuEST](https://github.com/QuEST-Kit/QuEST) based simulator backend for the roqoqo quantum toolkit by [HQS Quantum Simulations](https://quantumsimulations.de).
 
@@ -64,7 +65,8 @@ QuEST supports distributed computing and the use of GPU computing. The support c
 
 This software is still in the beta stage. Functions and documentation are not yet complete and breaking changes can occur.
 
-This project is partly supported by [PlanQK](https://planqk.de).
+This project has been partly supported by [PlanQK](https://planqk.de) and is partially supported by [QSolid](https://www.q-solid.de/).
+
 
 ## Contributing
 
