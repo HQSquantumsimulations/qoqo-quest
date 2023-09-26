@@ -308,6 +308,7 @@ impl Backend {
                         }
                     }
                 }
+                Operation::PragmaStopParallelBlock(_) => {}
                 // Check that no operation acts on repeated measured qubits after measurement
                 // If it does revert to full iterations of circuit
                 _ => match op.involved_qubits() {

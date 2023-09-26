@@ -173,6 +173,7 @@ pub fn call_operation_with_device(
     device: &mut Option<Box<dyn roqoqo::devices::Device>>,
 ) -> Result<(), RoqoqoBackendError> {
     match operation {
+        Operation::PragmaStopParallelBlock(_) => Ok(()),
         Operation::DefinitionBit(def) => {
             if *def.is_output() {
                 bit_registers.insert(def.name().clone(), vec![false; *def.length()]);
