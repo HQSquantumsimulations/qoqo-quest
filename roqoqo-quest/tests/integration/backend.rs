@@ -10,29 +10,18 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::collections::HashMap;
+
 use num_complex::Complex64;
 use roqoqo::backends::EvaluatingBackend;
 use roqoqo::devices::AllToAllDevice;
 use roqoqo::devices::Device;
 use roqoqo::measurements::ClassicalRegister;
+use roqoqo::measurements::PauliProductsToExpVal;
 use roqoqo::operations;
-use roqoqo::operations::DefinitionBit;
-use roqoqo::operations::DefinitionComplex;
-use roqoqo::operations::DefinitionFloat;
-use roqoqo::operations::Hadamard;
 
-use roqoqo::operations::MeasureQubit;
-use roqoqo::operations::MultiQubitZZ;
-use roqoqo::operations::PauliX;
-use roqoqo::operations::PragmaGetStateVector;
-use roqoqo::operations::PragmaGlobalPhase;
-use roqoqo::operations::PragmaRandomNoise;
-use roqoqo::operations::PragmaRepeatedMeasurement;
-use roqoqo::operations::PragmaSetNumberOfMeasurements;
-use roqoqo::operations::RotateX;
-use roqoqo::operations::RotateZ;
-use roqoqo::operations::Toffoli;
-use roqoqo::operations::CNOT;
+use roqoqo::operations::*;
+use roqoqo::prelude::Measure;
 use roqoqo::Circuit;
 use roqoqo_quest::Backend;
 
@@ -384,5 +373,234 @@ fn test_circuit_with_repeated_measurement_async() {
         assert!(!repetition[0]);
         assert!(repetition[1]);
         assert!(!repetition[2]);
+    }
+}
+
+#[test]
+fn test_pragma_stop_parallel_block_slow() {
+    // loop circuit of cst circiut
+    let mut loop_circ = Circuit::new();
+    loop_circ += RotateZ::new(0, 0.03.into());
+    loop_circ += RotateZ::new(1, 0.03.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, (-std::f64::consts::FRAC_PI_2).into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += CNOT::new(0, 1);
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, 1.5707963267948972.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateX::new(0, 1.6207963267948968.into());
+    loop_circ += RotateX::new(1, 1.5707963267948974.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, 1.5707963267948963.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += CNOT::new(0, 1);
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, (-4.71238898038469).into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateX::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateX::new(1, 1.5707963267948974.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += CNOT::new(0, 1);
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(1, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, (-std::f64::consts::FRAC_PI_2).into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += CNOT::new(0, 1);
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, 1.5707963267948972.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateX::new(0, 1.6207963267948968.into());
+    loop_circ += RotateX::new(1, 1.5707963267948974.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, 1.5707963267948963.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += CNOT::new(0, 1);
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, (-4.71238898038469).into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateX::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateX::new(1, 1.5707963267948974.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += RotateZ::new(1, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += CNOT::new(0, 1);
+    loop_circ += PragmaStopParallelBlock::new(vec![1, 0], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(1, std::f64::consts::FRAC_PI_2.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += RotateZ::new(1, 0.03.into());
+    loop_circ += RotateZ::new(0, 0.03.into());
+    loop_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    loop_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    loop_circ += PragmaGlobalPhase::new(std::f64::consts::PI.into());
+    loop_circ += PragmaGlobalPhase::new(std::f64::consts::PI.into());
+    loop_circ += PragmaGlobalPhase::new(std::f64::consts::FRAC_PI_2.into());
+    loop_circ += PragmaGlobalPhase::new(3.9269908169872414.into());
+    loop_circ += PragmaGlobalPhase::new((-std::f64::consts::FRAC_PI_4).into());
+    loop_circ += PragmaGlobalPhase::new(std::f64::consts::PI.into());
+    loop_circ += PragmaGlobalPhase::new(std::f64::consts::PI.into());
+    loop_circ += PragmaGlobalPhase::new(std::f64::consts::FRAC_PI_2.into());
+    loop_circ += PragmaGlobalPhase::new(3.9269908169872414.into());
+    loop_circ += PragmaGlobalPhase::new((-std::f64::consts::FRAC_PI_4).into());
+
+    // rest of cst circuit
+    let mut cst_circ = Circuit::new();
+    cst_circ += RotateZ::new(0, (-std::f64::consts::FRAC_PI_2).into());
+    cst_circ += RotateZ::new(1, (-std::f64::consts::FRAC_PI_2).into());
+    cst_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    cst_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    cst_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    cst_circ += RotateX::new(0, std::f64::consts::PI.into());
+    cst_circ += RotateX::new(1, std::f64::consts::PI.into());
+    cst_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    cst_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    cst_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    cst_circ += RotateZ::new(0, std::f64::consts::FRAC_PI_2.into());
+    cst_circ += RotateZ::new(1, std::f64::consts::FRAC_PI_2.into());
+    cst_circ += PragmaStopParallelBlock::new(vec![0, 1], 1.0.into());
+    cst_circ += PragmaDamping::new(0, 1.0.into(), 0.0004.into());
+    cst_circ += PragmaDamping::new(1, 1.0.into(), 0.0004.into());
+    cst_circ += PragmaLoop::new("number_trottersteps".into(), loop_circ);
+
+    // circuit in circuits
+    let mut circ = Circuit::new();
+    circ += DefinitionBit::new("ro_0".into(), 2, true);
+    circ += MeasureQubit::new(1, "ro_0".into(), 1);
+    circ += MeasureQubit::new(0, "ro_0".into(), 0);
+    circ += PragmaStopParallelBlock::new(vec![0, 1], 0.0.into());
+    circ += PragmaSetNumberOfMeasurements::new(100000, "ro_0".into());
+
+    let internal_hash: HashMap<usize, Vec<usize>> =
+        HashMap::from([(0, vec![0, 1]), (1, vec![1]), (2, vec![0])]);
+    let mut input = roqoqo::measurements::PauliZProductInput {
+        pauli_product_qubit_masks: HashMap::<String, HashMap<usize, Vec<usize>>>::from([(
+            "ro_0".to_string(),
+            internal_hash,
+        )]),
+        number_qubits: 2,
+        number_pauli_products: 3,
+        measured_exp_vals: HashMap::<String, PauliProductsToExpVal>::new(),
+        use_flipped_measurement: false,
+    };
+    input
+        .add_linear_exp_val(
+            "operator_2_re".to_string(),
+            HashMap::<usize, f64>::from([(0, 1.0), (1, 0.0), (2, 0.0)]),
+        )
+        .unwrap();
+    input
+        .add_linear_exp_val(
+            "operator_2_im".to_string(),
+            HashMap::<usize, f64>::from([(0, 0.0), (1, 0.0), (2, 0.0)]),
+        )
+        .unwrap();
+    input
+        .add_linear_exp_val(
+            "operator_1_re".to_string(),
+            HashMap::<usize, f64>::from([(0, 0.0), (1, 1.0), (2, 0.0)]),
+        )
+        .unwrap();
+    input
+        .add_linear_exp_val(
+            "operator_1_im".to_string(),
+            HashMap::<usize, f64>::from([(0, 0.0), (1, 0.0), (2, 0.0)]),
+        )
+        .unwrap();
+    input
+        .add_linear_exp_val(
+            "operator_0_re".to_string(),
+            HashMap::<usize, f64>::from([(0, 0.0), (1, 0.0), (2, 1.0)]),
+        )
+        .unwrap();
+    input
+        .add_linear_exp_val(
+            "operator_0_im".to_string(),
+            HashMap::<usize, f64>::from([(0, 0.0), (1, 0.0), (2, 0.0)]),
+        )
+        .unwrap();
+    let measurement = roqoqo::measurements::PauliZProduct {
+        constant_circuit: Some(cst_circ),
+        circuits: vec![circ],
+        input,
+    };
+    let number_trottersteps = 500;
+    let backend = roqoqo_quest::Backend::new(2);
+
+    for i in 0..number_trottersteps {
+        let substituted = measurement
+            .clone()
+            .substitute_parameters(HashMap::<String, f64>::from([(
+                "number_trottersteps".to_string(),
+                i as f64,
+            )]))
+            .unwrap();
+        let (bit_registers, float_registers, complex_registers) =
+            backend.run_measurement_registers(&substituted).unwrap();
+        let res = roqoqo::prelude::MeasureExpectationValues::evaluate(
+            &measurement,
+            bit_registers,
+            float_registers,
+            complex_registers,
+        );
+        assert!(res.is_ok());
+        assert!(res.unwrap().is_some());
     }
 }

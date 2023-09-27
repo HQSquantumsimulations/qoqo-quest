@@ -4,6 +4,11 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.11.2
+
+* Updated to qoqo 1.7
+* Bugfix for PragmaStopParallelBlock with MeasureQubit and PragmaSetNumberOfMeasurements
+
 ## 0.11.1
 
 * Updated to qoqo 1.5
