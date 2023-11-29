@@ -918,7 +918,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo-quest"
-version = "0.11.3-alpha.0"
+version = "0.11.3-alpha.1"
 dependencies = [
  "bincode",
  "pyo3",
@@ -961,7 +961,7 @@ dependencies = [
 
 [[package]]
 name = "quest-sys"
-version = "0.11.2"
+version = "0.11.3-alpha.1"
 dependencies = [
  "bindgen",
  "cc",
@@ -1119,7 +1119,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-quest"
-version = "0.11.3-alpha.0"
+version = "0.11.3-alpha.1"
 dependencies = [
  "async-trait",
  "criterion",

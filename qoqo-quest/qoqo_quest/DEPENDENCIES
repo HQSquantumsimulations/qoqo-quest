@@ -15244,7 +15244,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.11.3-alpha.0
+qoqo-quest 0.11.3-alpha.1
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -15880,7 +15880,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.11.2
+quest-sys 0.11.3-alpha.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -19195,7 +19195,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.11.3-alpha.0
+roqoqo-quest 0.11.3-alpha.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
