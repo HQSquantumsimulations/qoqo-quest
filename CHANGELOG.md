@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.11.3-alpha.0
+
+* Updated to qoqo 1.8.0-alpha.2
+
 ## 0.11.2
 
 * Updated to qoqo 1.7
