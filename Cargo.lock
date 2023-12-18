@@ -77,7 +77,7 @@ dependencies = [
  "regex",
  "rustc-hash",
  "shlex",
- "syn 2.0.39",
+ "syn 2.0.40",
  "which",
 ]
 
@@ -821,7 +821,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ae005bd773ab59b4725093fd7df83fd7892f7d8eafb48dbd7de6e024e4215f9d"
 dependencies = [
  "proc-macro2",
- "syn 2.0.39",
+ "syn 2.0.40",
 ]
 
 [[package]]
@@ -936,7 +936,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo-quest"
-version = "0.11.3"
+version = "0.12.0-alpha.0"
 dependencies = [
  "bincode",
  "pyo3",
@@ -979,7 +979,7 @@ dependencies = [
 
 [[package]]
 name = "quest-sys"
-version = "0.11.3"
+version = "0.12.0-alpha.0"
 dependencies = [
  "bindgen",
  "cc",
@@ -1137,7 +1137,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-quest"
-version = "0.11.3"
+version = "0.12.0-alpha.0"
 dependencies = [
  "async-trait",
  "criterion",

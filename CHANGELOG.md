@@ -4,6 +4,9 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+* Update to QuEST 3.7
+* Option to build for CUDA
+
 ## 0.11.3
 
 * Updated to qoqo 1.8.0 and pyo3 0.20
