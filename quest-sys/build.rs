@@ -79,6 +79,7 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
     fs::create_dir_all(out_path.clone()).expect("Cannot create directory for x86_64 library");
 
     #[cfg(not(feature = "cuda"))]
+    #[cfg(not(feature = "cuquantum"))]
     {
         files.push(src_path.join("CPU").join("QuEST_cpu.c"));
         files.push(src_path.join("CPU").join("QuEST_cpu_local.c"));
