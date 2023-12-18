@@ -10,15 +10,27 @@
  * @author Tyson Jones (doc)
  */
 
-# include <math.h>
-
 # ifndef QUEST_PRECISION_H
 # define QUEST_PRECISION_H
+
+# include <math.h>
+
+
+// define CUDA complex types as void if not using cuQuantum.
+// note we used cuComplex.h for complex numbers, in lieu of
+// Thrust's complex<qreal>, so that the QuEST.h header can
+// always be compiled with C99, rather than C++14.
+# ifdef USE_CUQUANTUM
+    # include <cuComplex.h>
+# else
+    # define cuFloatComplex void
+    # define cuDoubleComplex void
+# endif
 
 
 // set default double precision if not set during compilation
 # ifndef QuEST_PREC
-# define QuEST_PREC 2
+    # define QuEST_PREC 2
 # endif
 
 
@@ -28,6 +40,7 @@
 # if QuEST_PREC==1
     # define qreal float
     // \cond HIDDEN_SYMBOLS   
+    # define cuAmp cuFloatComplex
     # define MPI_QuEST_REAL MPI_FLOAT
     # define MPI_MAX_AMPS_IN_MSG (1LL<<29) // must be 2^int
     # define REAL_STRING_FORMAT "%.8f"
@@ -41,7 +54,8 @@
  */
 # elif QuEST_PREC==2
     # define qreal double
-    // \cond HIDDEN_SYMBOLS   
+    // \cond HIDDEN_SYMBOLS
+    # define cuAmp cuDoubleComplex
     # define MPI_QuEST_REAL MPI_DOUBLE
     # define MPI_MAX_AMPS_IN_MSG (1LL<<28) // must be 2^int
     # define REAL_STRING_FORMAT "%.14f"
@@ -57,6 +71,7 @@
 # elif QuEST_PREC==4
     # define qreal long double
     // \cond HIDDEN_SYMBOLS   
+    # define cuAmp void // invalid
     # define MPI_QuEST_REAL MPI_LONG_DOUBLE
     # define MPI_MAX_AMPS_IN_MSG (1LL<<27) // must be 2^int
     # define REAL_STRING_FORMAT "%.17Lf"
@@ -64,6 +79,19 @@
     # define REAL_EPS 1e-14
     # define REAL_SPECIFIER "%Lf"
     # define absReal(X) fabsl(X)
+    # define sin(x) sinl(x)
+    # define cos(x) cosl(x)
+    # define tan(x) tanl(x)
+    # define exp(x) expl(x)
+    # define fabs(x) fabsl(x)
+    # define pow(x,y) powl(x,y)
+    # define sqrt(x) sqrtl(x)
+    # define asin(x) asinl(x)
+    # define acos(x) acosl(x)
+    # define atan(x) atanl(x)
+    # define atan2(x,y) atan2l(x,y)
+    # define ceil(x) ceill(x)
+    # define floor(x) floorl(x)
     // \endcond
 # endif
 

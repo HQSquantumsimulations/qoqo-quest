@@ -20,7 +20,7 @@ fn main() {
     #[cfg(feature = "rebuild")]
     let builder = bindgen::Builder::default()
         .header("wrapper.h")
-        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .allowlist_function("create.*")
         .allowlist_function("cloneQureg")
         .allowlist_function("destroy.*")
@@ -68,45 +68,104 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
     let base_path = Path::new("QuEST").join("QuEST");
     let src_path = base_path.join("src");
     let include_path = base_path.join("include");
-    let files = [
+    let mut files = vec![
         src_path.join("QuEST.c"),
         src_path.join("QuEST_common.c"),
         src_path.join("QuEST_qasm.c"),
         src_path.join("QuEST_validation.c"),
         src_path.join("mt19937ar.c"),
-        src_path.join("CPU").join("QuEST_cpu.c"),
-        src_path.join("CPU").join("QuEST_cpu_local.c"),
     ];
     let out_path = out_dir.join("build");
     fs::create_dir_all(out_path.clone()).expect("Cannot create directory for x86_64 library");
 
-    #[cfg(target_arch = "x86_64")]
-    cc::Build::new()
-        .include(src_path)
-        .include(include_path)
-        .files(files)
-        .define("MULTITHREADED", "0")
-        .opt_level(2)
-        .debug(false)
-        .warnings(false)
-        .static_flag(true)
-        .out_dir(out_path.clone())
-        .flag("-std=c99")
-        .flag("-mavx")
-        .compile("QuEST");
-    #[cfg(not(target_arch = "x86_64"))]
-    cc::Build::new()
-        .include(src_path)
-        .include(include_path)
-        .files(files)
-        .define("MULTITHREADED", "0")
-        .opt_level(2)
-        .debug(false)
-        .warnings(false)
-        .static_flag(true)
-        .out_dir(out_path.clone())
-        .flag("-std=c99")
-        .compile("QuEST");
+    #[cfg(not(feature = "cuda"))]
+    {
+        files.push(src_path.join("CPU").join("QuEST_cpu.c"));
+        files.push(src_path.join("CPU").join("QuEST_cpu_local.c"));
+
+        #[cfg(target_arch = "x86_64")]
+        cc::Build::new()
+            .include(src_path)
+            .include(include_path)
+            .files(files)
+            .define("MULTITHREADED", "0")
+            .opt_level(2)
+            .debug(false)
+            .warnings(false)
+            .static_flag(true)
+            .out_dir(out_path.clone())
+            .flag("-std=c99")
+            .flag("-mavx")
+            .compile("QuEST");
+        #[cfg(not(target_arch = "x86_64"))]
+        cc::Build::new()
+            .include(src_path)
+            .include(include_path)
+            .files(files)
+            .define("MULTITHREADED", "0")
+            .opt_level(2)
+            .debug(false)
+            .warnings(false)
+            .static_flag(true)
+            .out_dir(out_path)
+            .flag("-std=c99")
+            .compile("QuEST");
+    }
+
+    #[cfg(feature = "cuda")]
+    {
+        if cfg!(feature = "cuquantum") {
+            panic!("cuQuantum feature is different from CUDA feature. Choose one.");
+        }
+        let mut files = files.clone();
+        files.push(src_path.join("GPU").join("QuEST_gpu.c"));
+        files.push(src_path.join("GPU").join("QuEST_gpu_common.c"));
+        cc::Build::new()
+            .include(src_path.clone())
+            .include(include_path.clone())
+            .files(files.clone())
+            .define("MULTITHREADED", "0")
+            .define("USE_CUQUANTUM", "0")
+            .define("USE_HID", "0")
+            .opt_level(2)
+            .debug(false)
+            .warnings(false)
+            .static_flag(true)
+            .out_dir(out_path.clone())
+            .cuda(true)
+            .compile("QuEST");
+    }
+    #[cfg(feature = "cuquantum")]
+    {
+        if cfg!(feature = "cuda") {
+            panic!("cuQuantum feature is different from CUDA feature. Choose one.");
+        }
+        let custate_include_lib = PathBuf::from(
+            env::var("CUSTATE_INCLUDE_DIR")
+                .expect("Cannot find CUSTATE_INCLUDE_DIR. Needs to be given explicitely."),
+        );
+
+        println!("cargo:rustc-link-lib=custatevec");
+
+        files.push(src_path.join("GPU").join("QuEST_gpu.c"));
+        files.push(src_path.join("GPU").join("QuEST_gpu_common.c"));
+        cc::Build::new()
+            .include(src_path)
+            .include(include_path)
+            .include(custate_include_lib)
+            .files(files)
+            .define("MULTITHREADED", "0")
+            .define("USE_CUQUANTUM", "1")
+            .define("USE_HID", "0")
+            .opt_level(2)
+            .debug(false)
+            .warnings(false)
+            .static_flag(true)
+            .out_dir(out_path.clone())
+            .cuda(true)
+            .compile("QuEST");
+    }
+
     out_path
 }
 

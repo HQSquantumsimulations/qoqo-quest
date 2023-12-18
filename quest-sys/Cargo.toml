@@ -26,10 +26,12 @@ openmp-sys ={version = "1.2.0", features=["static"], optional=true}
 
 [build-dependencies]
 # cmake = {version ="0.1", features=[]}
-bindgen = {version="0.64", optional=true}
+bindgen = {version="0.69", optional=true}
 cc = {version="1.0"}
 
 [features]
 default = []
 openmp = ["openmp-sys"]
 rebuild = ["bindgen"]
+cuda = []
+cuquantum = []

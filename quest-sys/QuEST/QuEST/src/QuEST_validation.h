@@ -26,6 +26,12 @@ void validateNumQubitsInMatrix(int numQubits, const char* caller);
 
 void validateNumQubitsInDiagOp(int numQubits, int numRanks, const char* caller);
 
+void validateNumQubitsInSubDiagOp(int numQubits, const char* caller);
+
+void validateSubDiagOpTargets(Qureg qureg, int* qubits, int numQubits, SubDiagonalOp op, const char* caller);
+
+void validateUnitarySubDiagOp(SubDiagonalOp op, const char* caller);
+
 void validateAmpIndex(Qureg qureg, long long int ampInd, const char* caller);
 
 void validateStateIndex(Qureg qureg, long long int stateInd, const char* caller);
@@ -168,9 +174,9 @@ void validateDiagonalOpAllocation(DiagonalOp* op, QuESTEnv env, const char* call
 
 void validateDiagonalOpGPUAllocation(DiagonalOp* op, QuESTEnv env, const char* caller);
 
-// This is really just a dummy shim, because the scope of GPUExists()
-// is limited to the QuEST_gpu.cu file.
 void validateGPUExists(int GPUPresent, const char* caller);
+
+void validateGPUIsCuQuantumCompatible(int supportsMemPools, const char* caller);
 
 void raiseQASMBufferOverflow(const char* caller);
 

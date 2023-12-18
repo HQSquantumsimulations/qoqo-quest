@@ -7,7 +7,8 @@ on:
       - develop
   pull_request:
     branches:
-      - '**'
+      - master
+      - develop
 
 jobs:
 
@@ -33,5 +34,5 @@ jobs:
         working-directory: build_dir
 
       - name: cmake test
-        run: ctest -j2 --output-on-failure --timeout 5000 -E mixMultiQubitKrausMap
+        run: ctest -j2 --output-on-failure --timeout 5000
         working-directory: build_dir

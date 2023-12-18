@@ -1336,6 +1336,55 @@ void statevec_destroyQureg(Qureg qureg, QuESTEnv env){
     qureg.pairStateVec.imag = NULL;
 }
 
+void statevec_applySubDiagonalOp(Qureg qureg, int* targets, SubDiagonalOp op, int conj) {
+    
+    // each node/chunk modifies only its values in an embarrassingly parallelisable way
+    long long int numLocalAmps = qureg.numAmpsPerChunk;
+    qreal* stateRe = qureg.stateVec.real;
+    qreal* stateIm = qureg.stateVec.imag;
+    qreal* opRe = op.real;
+    qreal* opIm = op.imag;
+    
+    long long int indPref = qureg.chunkId * numLocalAmps;
+    int numTargets = op.numQubits;
+    
+    int conjFac = 1;
+    if (conj)
+        conjFac = -1;
+    
+    int t;
+    long long int i, j, v;
+    qreal elemRe, elemIm, ampRe, ampIm;
+    
+# ifdef _OPENMP
+# pragma omp parallel \
+    shared    (numLocalAmps, indPref, numTargets, targets, stateRe,stateIm) \
+    private   (j,i,v,t, elemRe,elemIm, ampRe,ampIm)
+# endif 
+    {
+# ifdef _OPENMP
+# pragma omp for schedule  (static)
+# endif
+        for (j=0; j<numLocalAmps; j++) {
+            
+            i = indPref | j;
+            v = 0;
+            for (t=0; t<numTargets; t++)
+                v |= extractBit(targets[t], i) << t;
+                
+            elemRe = opRe[v];
+            elemIm = opIm[v] * conjFac;
+            
+            ampRe = stateRe[j];
+            ampIm = stateIm[j];
+            
+            // (a + b i)(c + d i) = (a c - b d) + i (a d + b c)
+            stateRe[j] = ampRe*elemRe - ampIm*elemIm;
+            stateIm[j] = ampRe*elemIm + ampIm*elemRe;
+        }
+    }
+}
+
 DiagonalOp agnostic_createDiagonalOp(int numQubits, QuESTEnv env) {
 
     // the 2^numQubits values will be evenly split between the env.numRanks nodes
@@ -1593,53 +1642,6 @@ void statevec_cloneQureg(Qureg targetQureg, Qureg copyQureg) {
 }
 
 /**
- * Initialise the state vector of probability amplitudes such that one qubit is set to 'outcome' and all other qubits are in an equal superposition of zero and one.
- * @param[in,out] qureg object representing the set of qubits to be initialised
- * @param[in] qubitId id of qubit to set to state 'outcome'
- * @param[in] outcome of qubit 'qubitId'
- */
-void statevec_initStateOfSingleQubit(Qureg *qureg, int qubitId, int outcome)
-{
-    long long int chunkSize, stateVecSize;
-    long long int index;
-    int bit;
-    long long int chunkId=qureg->chunkId;
-
-    // dimension of the state vector
-    chunkSize = qureg->numAmpsPerChunk;
-    stateVecSize = chunkSize*qureg->numChunks;
-    qreal normFactor = 1.0/sqrt((qreal)stateVecSize/2.0);
-
-    // Can't use qureg->stateVec as a private OMP var
-    qreal *stateVecReal = qureg->stateVec.real;
-    qreal *stateVecImag = qureg->stateVec.imag;
-
-    // initialise the state to |0000..0000>
-# ifdef _OPENMP
-# pragma omp parallel \
-    default  (none) \
-    shared   (chunkSize, stateVecReal, stateVecImag, normFactor, qubitId, outcome, chunkId) \
-    private  (index, bit)
-# endif
-    {
-# ifdef _OPENMP
-# pragma omp for schedule (static)
-# endif
-        for (index=0; index<chunkSize; index++) {
-            bit = extractBit(qubitId, index+chunkId*chunkSize);
-            if (bit==outcome) {
-                stateVecReal[index] = normFactor;
-                stateVecImag[index] = 0.0;
-            } else {
-                stateVecReal[index] = 0.0;
-                stateVecImag[index] = 0.0;
-            }
-        }
-    }
-}
-
-
-/**
  * Initialise the state vector of probability amplitudes to an (unphysical) state with
  * each component of each probability amplitude a unique floating point value. For debugging processes
  * @param[in,out] qureg object representing the set of qubits to be initialised
@@ -1675,62 +1677,6 @@ void statevec_initDebugState (Qureg qureg)
             stateVecImag[index] = ((indexOffset + index)*2.0+1.0)/10.0;
         }
     }
-}
-
-// returns 1 if successful, else 0
-int statevec_initStateFromSingleFile(Qureg *qureg, char filename[200], QuESTEnv env){
-    long long int chunkSize, stateVecSize;
-    long long int indexInChunk, totalIndex;
-
-    chunkSize = qureg->numAmpsPerChunk;
-    stateVecSize = chunkSize*qureg->numChunks;
-
-    qreal *stateVecReal = qureg->stateVec.real;
-    qreal *stateVecImag = qureg->stateVec.imag;
-
-    FILE *fp;
-    char line[200];
-
-    for (int rank=0; rank<(qureg->numChunks); rank++){
-        if (rank==qureg->chunkId){
-            fp = fopen(filename, "r");
-            
-            // indicate file open failure
-            if (fp == NULL)
-                return 0;
-            
-            indexInChunk = 0; totalIndex = 0;
-            while (fgets(line, sizeof(char)*200, fp) != NULL && totalIndex<stateVecSize){
-                if (line[0]!='#'){
-                    int chunkId = (int) (totalIndex/chunkSize);
-                    if (chunkId==qureg->chunkId){
-                        sscanf(line, REAL_SPECIFIER ", " REAL_SPECIFIER, &(stateVecReal[indexInChunk]),
-                                &(stateVecImag[indexInChunk])); 
-                        indexInChunk += 1;
-                    }
-                    totalIndex += 1;
-                }
-            }   
-            fclose(fp);
-        }
-        syncQuESTEnv(env);
-    }
-    
-    // indicate success
-    return 1;
-}
-
-int statevec_compareStates(Qureg mq1, Qureg mq2, qreal precision){
-    qreal diff;
-    long long int chunkSize = mq1.numAmpsPerChunk;
-    
-    for (long long int i=0; i<chunkSize; i++){
-        diff = absReal(mq1.stateVec.real[i] - mq2.stateVec.real[i]);
-        if (diff>precision) return 0;
-        diff = absReal(mq1.stateVec.imag[i] - mq2.stateVec.imag[i]);
-        if (diff>precision) return 0;
-    }
-    return 1;
 }
 
 void statevec_compactUnitaryLocal (Qureg qureg, int targetQubit, Complex alpha, Complex beta)
@@ -4545,16 +4491,25 @@ void statevec_applyParamNamedPhaseFuncOverrides(
                 // compute Euclidean distance related phases 
                 else if (phaseFuncName == DISTANCE || phaseFuncName == INVERSE_DISTANCE ||
                          phaseFuncName == SCALED_DISTANCE || phaseFuncName == SCALED_INVERSE_DISTANCE ||
-                         phaseFuncName == SCALED_INVERSE_SHIFTED_DISTANCE) {
+                         phaseFuncName == SCALED_INVERSE_SHIFTED_DISTANCE || phaseFuncName == SCALED_INVERSE_SHIFTED_WEIGHTED_DISTANCE) {
 
                     dist = 0;
                     if (phaseFuncName == SCALED_INVERSE_SHIFTED_DISTANCE) {
                         for (r=0; r<numRegs; r+=2)
                             dist += (phaseInds[r] - phaseInds[r+1] - params[2+r/2])*(phaseInds[r] - phaseInds[r+1] - params[2+r/2]);
                     }
+                    else if (phaseFuncName == SCALED_INVERSE_SHIFTED_WEIGHTED_DISTANCE) {
+                        for (r=0; r<numRegs; r+=2)
+                            dist += params[2+r] * (phaseInds[r] - phaseInds[r+1] - params[2+r+1])*(phaseInds[r] - phaseInds[r+1] - params[2+r+1]);
+                    }
                     else
                         for (r=0; r<numRegs; r+=2)
                             dist += (phaseInds[r+1] - phaseInds[r])*(phaseInds[r+1] - phaseInds[r]);
+
+                    // if sqrt() arg would be negative, set it to divergence param
+                    if (dist < 0)
+                        dist = 0;
+
                     dist = sqrt(dist);
 
                     if (phaseFuncName == DISTANCE)
@@ -4563,7 +4518,7 @@ void statevec_applyParamNamedPhaseFuncOverrides(
                         phase = (dist == 0.)? params[0] : 1/dist; // smallest non-zero dist is 1
                     else if (phaseFuncName == SCALED_DISTANCE)
                         phase = params[0] * dist;
-                    else if (phaseFuncName == SCALED_INVERSE_DISTANCE || phaseFuncName == SCALED_INVERSE_SHIFTED_DISTANCE)
+                    else if (phaseFuncName == SCALED_INVERSE_DISTANCE || phaseFuncName == SCALED_INVERSE_SHIFTED_DISTANCE || phaseFuncName == SCALED_INVERSE_SHIFTED_WEIGHTED_DISTANCE)
                         phase = (dist <= REAL_EPS)? params[1] : params[0] / dist; // unless shifted closer to 0
                 }
             }
@@ -4581,6 +4536,88 @@ void statevec_applyParamNamedPhaseFuncOverrides(
             // = {re[amp] cos(phase) - im[amp] sin(phase)} + i {re[amp] sin(phase) + im[amp] cos(phase)}
             stateRe[index] = re*c - im*s;
             stateIm[index] = re*s + im*c;
+        }
+    }
+}
+
+void densmatr_setQuregToPauliHamil(Qureg qureg, PauliHamil hamil) {
+
+    // flattened {I,X,Y,Z} matrix elements, where [k] = [p][i][j]
+    int pauliRealElems[] = {   1,0, 0,1,   0,1, 1,0,   0,0, 0,0,   1,0, 0,-1  };
+    int pauliImagElems[] = {   0,0, 0,0,   0,0, 0,0,   0,-1,1,0,   0,0, 0,0   };
+    
+    // constants (unpacked to prevent OpenMP struct tantrum)
+    int numTerms = hamil.numSumTerms;
+    int numQubits = hamil.numQubits;
+    enum pauliOpType* paulis = hamil.pauliCodes;
+    qreal* termCoeffs = hamil.termCoeffs;
+    qreal* stateRe = qureg.stateVec.real;
+    qreal* stateIm = qureg.stateVec.imag;
+    long long int numLocAmps = qureg.numAmpsPerChunk;
+    long long int nOffset = numLocAmps * qureg.chunkId;
+    
+    // private threading vars
+    long long int n, nGlob, r, c, t, pInd;
+    int q, i, j, p, k;
+    qreal elemRe, elemIm;
+    int kronRe, kronIm;
+    int pauliRe, pauliIm, tmp;
+    
+    // use a private thread for every overwritten amplitude
+# ifdef _OPENMP
+# pragma omp parallel \
+    default  (none) \
+    shared   (pauliRealElems,pauliImagElems, numTerms,numQubits,numLocAmps,nOffset,  paulis,termCoeffs, stateRe,stateIm) \
+    private  (q,i,j,p,k, r,c,n,nGlob,t,pInd, elemRe,elemIm, kronRe,kronIm, pauliRe,pauliIm, tmp)
+# endif
+    {
+# ifdef _OPENMP
+# pragma omp for schedule (static)
+# endif
+        for (n=0; n<numLocAmps; n++) {
+            
+            // |nGlob> = |rank>|n>
+            nGlob = nOffset + n;
+            
+            // |nGlob> = |c>|r>
+            r = nGlob & ((1LL << numQubits) - 1);
+            c = nGlob >> numQubits;
+
+            // new amplitude of |n>
+            elemRe = 0;
+            elemIm = 0;
+            
+            for (t=0; t<numTerms; t++) {
+                
+                // pauliKronecker[r][c] = prod_q Pauli[q][q-th bit of r and c]
+                kronRe = 1;
+                kronIm = 0;
+                pInd = numQubits * t;
+                
+                for (q=0; q<numQubits; q++) {
+                    
+                    // get element of Pauli matrix
+                    i = (r >> q) & 1;
+                    j = (c >> q) & 1;
+                    p = (int) paulis[pInd++];
+                    k = (p<<2) + (i<<1) + j;
+                    pauliRe = pauliRealElems[k]; 
+                    pauliIm = pauliImagElems[k];
+                    
+                    // kron *= pauli
+                    tmp = (pauliRe*kronRe) - (pauliIm*kronIm);
+                    kronIm = (pauliRe*kronIm) + (pauliIm*kronRe);
+                    kronRe = tmp;
+                }
+                
+                // elem = sum_t coeffs[t] pauliKronecker[r][c]
+                elemRe += termCoeffs[t] * kronRe;
+                elemIm += termCoeffs[t] * kronIm;
+            }
+            
+            // overwrite the density matrix entry
+            stateRe[n] = elemRe;
+            stateIm[n] = elemIm;
         }
     }
 }
