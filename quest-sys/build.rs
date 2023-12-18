@@ -117,9 +117,8 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
         if cfg!(feature = "cuquantum") {
             panic!("cuQuantum feature is different from CUDA feature. Choose one.");
         }
-        let mut files = files.clone();
-        files.push(src_path.join("GPU").join("QuEST_gpu.c"));
-        files.push(src_path.join("GPU").join("QuEST_gpu_common.c"));
+        files.push(src_path.join("GPU").join("QuEST_gpu.cu"));
+        files.push(src_path.join("GPU").join("QuEST_gpu_common.cu"));
         cc::Build::new()
             .include(src_path.clone())
             .include(include_path.clone())
@@ -130,7 +129,6 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
             .opt_level(2)
             .debug(false)
             .warnings(false)
-            .static_flag(true)
             .out_dir(out_path.clone())
             .cuda(true)
             .compile("QuEST");
@@ -147,8 +145,8 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
 
         println!("cargo:rustc-link-lib=custatevec");
 
-        files.push(src_path.join("GPU").join("QuEST_gpu.c"));
-        files.push(src_path.join("GPU").join("QuEST_gpu_common.c"));
+        files.push(src_path.join("GPU").join("QuEST_cuQuantum.cu"));
+        files.push(src_path.join("GPU").join("QuEST_gpu_common.cu"));
         cc::Build::new()
             .include(src_path)
             .include(include_path)
@@ -160,7 +158,6 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
             .opt_level(2)
             .debug(false)
             .warnings(false)
-            .static_flag(true)
             .out_dir(out_path.clone())
             .cuda(true)
             .compile("QuEST");
