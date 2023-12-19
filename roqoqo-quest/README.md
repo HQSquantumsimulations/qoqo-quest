@@ -55,9 +55,9 @@ roqoqo-quest allows to simulate the execution of roqoqo quantum circuits directl
 roqoqo-quest is designed to be able to simulate all operations that are part of roqoqo.
 For usage examples see the examples section of [roqoqo](https://github.com/HQSquantumsimulations/qoqo/).
 
-### QuEST build options
+## QuEST build options
 
-QuEST supports distributed computing and the use of GPU computing. The support can be controlled with cmake options. roqoqo-quest is not tested together with these advanced features. If you want to try using these features we recommend cloning this repository and modifying the cmake options in the build.rs rust build script.
+QuEST supports distributed computing and the use of GPU computing. `qoqo-quest` and `roqoqo-quest` are not tested against distributed builds, but have preliminary support for `GPU` computation. The `PyPi` distributed versions do not support GPU computation. For the moment GPU support can be enabled for NVIDIA GPUs using either the `cuda` feature or the `cuquantum` feature when compiling  `qoqo-quest` with `maturin` or `roqoqo-quest` as a rust library. The `cuda` feature uses QuEST's CUDA-based simulator implementation and needs the cuda-compiler (nvcc) available during build. The `cuquantum` feature uses the cuda quantum simulator and requires the cuda-compiler (nvcc) during build as well as the cuquantum libraries.
 
 ## General Notes
 
