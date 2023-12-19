@@ -108,18 +108,16 @@ void densmatr_applyDiagonalOp(Qureg qureg, DiagonalOp op);
 
 Complex densmatr_calcExpecDiagonalOp(Qureg qureg, DiagonalOp op);
 
+void densmatr_applyMultiQubitKrausSuperoperator(Qureg qureg, int *targets, int numTargets, ComplexMatrixN superOp); // exposed for QuESTlink Monte Carlo
+
+void densmatr_setQuregToPauliHamil(Qureg qureg, PauliHamil hamil);
+
 
 /* 
  * operations upon state vectors
  */
     
 void statevec_reportStateToScreen(Qureg qureg, QuESTEnv env, int reportRank);
-
-int statevec_compareStates(Qureg mq1, Qureg mq2, qreal precision);
-
-int statevec_initStateFromSingleFile(Qureg *qureg, char filename[200], QuESTEnv env);
-
-void statevec_initStateOfSingleQubit(Qureg *qureg, int qubitId, int outcome);
 
 void statevec_createQureg(Qureg *qureg, int numQubits, QuESTEnv env);
 
@@ -274,6 +272,8 @@ void statevec_applyParamNamedPhaseFuncOverrides(Qureg qureg, int* qubits, int* n
 void statevec_copySubstateToGPU(Qureg qureg, long long int startInd, long long int numAmps);
 
 void statevec_copySubstateFromGPU(Qureg qureg, long long int startInd, long long int numAmps);
+
+void statevec_applySubDiagonalOp(Qureg qureg, int* targets, SubDiagonalOp op, int conj);
 
 
 /* 
