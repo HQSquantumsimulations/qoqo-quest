@@ -24,7 +24,7 @@ use std::collections::HashMap;
 ///
 /// Negative probabilities with a smaller absolute value will be interpreted as 0.
 /// Negative probabilities with a larger absolute value will cause an error.
-const NEGATIVE_PROBABILITIES_CUTOFF: f64 = -1.0e-15;
+const NEGATIVE_PROBABILITIES_CUTOFF: f64 = -1.0e-14;
 
 pub fn execute_pragma_repeated_measurement(
     operation: &PragmaRepeatedMeasurement,
