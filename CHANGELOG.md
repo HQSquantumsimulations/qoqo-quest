@@ -8,6 +8,7 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 * Update to QuEST 3.7
 * Option to build for CUDA
+* Relaxed cutoff of reinterpreting negative probabilities of states as zero. Cutoff is now -1e-14 probabilities p with `-1e-14 < p < 0` will now be interpreted as zero.
 
 ## 0.11.3
 
