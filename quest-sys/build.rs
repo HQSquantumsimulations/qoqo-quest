@@ -21,6 +21,8 @@ fn main() {
     let builder = bindgen::Builder::default()
         .header("wrapper.h")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
+        .allowlist_function("copyStateFromGPU")
+        .allowlist_function("copyStateToPU")
         .allowlist_function("create.*")
         .allowlist_function("cloneQureg")
         .allowlist_function("destroy.*")
