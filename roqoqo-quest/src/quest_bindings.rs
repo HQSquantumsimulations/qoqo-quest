@@ -11,6 +11,7 @@
 // limitations under the License.
 
 use num_complex::Complex64;
+use roqoqo::RoqoqoBackendError;
 
 /// Wrapper around QuEST quantum register
 ///
@@ -74,20 +75,142 @@ impl Qureg {
         let number_qubits = self.number_qubits();
         let dimension: u32 = 2u32.pow(number_qubits);
         let mut probabilites: Vec<f64> = Vec::with_capacity(dimension as usize);
+        unsafe {
+            quest_sys::copyStateFromGPU(self.quest_qureg);
+        }
         if self.is_density_matrix {
             for index in 0..dimension {
+                let density_index = index + index * dimension;
                 unsafe {
-                    probabilites.push(
-                        quest_sys::getDensityAmp(self.quest_qureg, index.into(), index.into()).real,
-                    )
+                    let real_amp = *self
+                        .quest_qureg
+                        .stateVec
+                        .real
+                        .wrapping_add(density_index.try_into().expect("Indexing error"));
+                    let imag_amp = *self
+                        .quest_qureg
+                        .stateVec
+                        .imag
+                        .wrapping_add(density_index.try_into().expect("Indexing error"));
+                    probabilites.push(real_amp * real_amp + imag_amp * imag_amp);
                 };
             }
         } else {
             for index in 0..dimension {
-                unsafe { probabilites.push(quest_sys::getProbAmp(self.quest_qureg, index.into())) };
+                unsafe {
+                    let real_amp = *self
+                        .quest_qureg
+                        .stateVec
+                        .real
+                        .wrapping_add(index.try_into().expect("Indexing error"));
+                    let imag_amp = *self
+                        .quest_qureg
+                        .stateVec
+                        .imag
+                        .wrapping_add(index.try_into().expect("Indexing error"));
+                    probabilites.push(real_amp * real_amp + imag_amp * imag_amp);
+                };
             }
         }
         probabilites
+    }
+
+    /// Returns the state_vector in the quantum register.
+    pub fn state_vector(&self) -> Result<Vec<Complex64>, RoqoqoBackendError> {
+        let number_qubits = self.number_qubits();
+        let dimension: u32 = 2u32.pow(number_qubits);
+        let mut statevector: Vec<Complex64> = Vec::with_capacity(dimension.try_into().unwrap());
+        unsafe {
+            quest_sys::copyStateFromGPU(self.quest_qureg);
+        }
+        if self.is_density_matrix {
+            return Err(RoqoqoBackendError::GenericError {
+                msg: "Trying to obtain state vector from density matrix quantum register"
+                    .to_string(),
+            });
+        } else {
+            for i in 0..2_usize.pow(self.number_qubits()) as i64 {
+                unsafe {
+                    let real_amp = *self
+                        .quest_qureg
+                        .stateVec
+                        .real
+                        .wrapping_add(i.try_into().expect("Indexing error"));
+                    let imag_amp = *self
+                        .quest_qureg
+                        .stateVec
+                        .imag
+                        .wrapping_add(i.try_into().expect("Indexing error"));
+
+                    statevector.push(Complex64::new(real_amp, imag_amp))
+                }
+            }
+        }
+        Ok(statevector)
+    }
+
+    /// Returns the density matrix in the quantum register in flattened form (row major).
+    pub fn density_matrix_flattened_row_major(&self) -> Result<Vec<Complex64>, RoqoqoBackendError> {
+        let number_qubits = self.number_qubits();
+        let dimension: u32 = 2u32.pow(number_qubits);
+        unsafe {
+            quest_sys::copyStateFromGPU(self.quest_qureg);
+        }
+        let mut density_matrix_flattened_row_major: Vec<Complex64> =
+            Vec::with_capacity(4_usize.pow(self.number_qubits()));
+        if self.is_density_matrix {
+            for row in 0..dimension {
+                for column in 0..dimension {
+                    let density_index = row + column * dimension;
+                    unsafe {
+                        let real_amp = *self
+                            .quest_qureg
+                            .stateVec
+                            .real
+                            .wrapping_add(density_index.try_into().expect("Indexing error"));
+                        let imag_amp = *self
+                            .quest_qureg
+                            .stateVec
+                            .imag
+                            .wrapping_add(density_index.try_into().expect("Indexing error"));
+
+                        density_matrix_flattened_row_major.push(Complex64::new(real_amp, imag_amp))
+                    }
+                }
+            }
+        } else {
+            for row in 0..dimension {
+                for column in 0..dimension {
+                    let value = unsafe {
+                        let real_amp_row = *self
+                            .quest_qureg
+                            .stateVec
+                            .real
+                            .wrapping_add(row.try_into().expect("Indexing error"));
+                        let imag_amp_row = *self
+                            .quest_qureg
+                            .stateVec
+                            .imag
+                            .wrapping_add(row.try_into().expect("Indexing error"));
+                        let real_amp_column = *self
+                            .quest_qureg
+                            .stateVec
+                            .real
+                            .wrapping_add(column.try_into().expect("Indexing error"));
+                        let imag_amp_column = *self
+                            .quest_qureg
+                            .stateVec
+                            .imag
+                            .wrapping_add(column.try_into().expect("Indexing error"));
+
+                        Complex64::new(real_amp_row, imag_amp_row)
+                            * Complex64::new(real_amp_column, imag_amp_column).conj()
+                    };
+                    density_matrix_flattened_row_major.push(value);
+                }
+            }
+        }
+        Ok(density_matrix_flattened_row_major)
     }
 }
 

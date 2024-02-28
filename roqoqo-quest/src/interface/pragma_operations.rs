@@ -11,7 +11,6 @@
 // limitations under the License.
 
 use crate::Qureg;
-use num_complex::Complex64;
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 use roqoqo::devices::Device;
@@ -361,22 +360,9 @@ pub fn execute_pragma_get_state_vector(
     complex_registers: &mut HashMap<String, ComplexRegister>,
 ) -> Result<(), RoqoqoBackendError> {
     let readout = operation.readout();
-    if qureg.is_density_matrix {
-        Err(RoqoqoBackendError::GenericError {
-            msg: "Trying to obtain state vector from density matrix quantum register".to_string(),
-        })
-    } else {
-        let mut statevector: Vec<Complex64> =
-            Vec::with_capacity(2_usize.pow(qureg.number_qubits()));
-        for i in 0..2_usize.pow(qureg.number_qubits()) as i64 {
-            statevector.push(Complex64::new(
-                unsafe { quest_sys::getRealAmp(qureg.quest_qureg, i) },
-                unsafe { quest_sys::getImagAmp(qureg.quest_qureg, i) },
-            ))
-        }
-        complex_registers.insert(readout.clone(), statevector);
-        Ok(())
-    }
+    let statevector = qureg.state_vector()?;
+    complex_registers.insert(readout.clone(), statevector);
+    Ok(())
 }
 
 pub fn execute_pragma_get_density_matrix(
@@ -385,33 +371,7 @@ pub fn execute_pragma_get_density_matrix(
     complex_registers: &mut HashMap<String, ComplexRegister>,
 ) -> Result<(), RoqoqoBackendError> {
     let readout = operation.readout();
-    let dimension = 2_i64.pow(qureg.number_qubits());
-    let mut density_matrix_flattened_row_major: Vec<Complex64> =
-        Vec::with_capacity(4_usize.pow(qureg.number_qubits()));
-    if qureg.is_density_matrix {
-        for row in 0..dimension {
-            for column in 0..dimension {
-                density_matrix_flattened_row_major.push(Complex64::new(
-                    unsafe { quest_sys::getDensityAmp(qureg.quest_qureg, row, column).real },
-                    unsafe { quest_sys::getDensityAmp(qureg.quest_qureg, row, column).imag },
-                ))
-            }
-        }
-    } else {
-        for row in 0..dimension {
-            for column in 0..dimension {
-                let value = Complex64::new(
-                    unsafe { quest_sys::getRealAmp(qureg.quest_qureg, row) },
-                    unsafe { quest_sys::getImagAmp(qureg.quest_qureg, row) },
-                ) * Complex64::new(
-                    unsafe { quest_sys::getRealAmp(qureg.quest_qureg, column) },
-                    unsafe { quest_sys::getImagAmp(qureg.quest_qureg, column) },
-                )
-                .conj();
-                density_matrix_flattened_row_major.push(value);
-            }
-        }
-    }
+    let density_matrix_flattened_row_major = qureg.density_matrix_flattened_row_major()?;
     complex_registers.insert(readout.clone(), density_matrix_flattened_row_major);
     Ok(())
 }
