@@ -127,7 +127,6 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
             .include(include_path.clone())
             .files(files.clone())
             .define("MULTITHREADED", "0")
-            .define("USE_CUQUANTUM", "0")
             .define("USE_HID", "0")
             .opt_level(2)
             .debug(false)
