@@ -6345,7 +6345,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-hermit-abi 0.3.8
+hermit-abi 0.3.9
 https://github.com/hermit-os/hermit-rs
 by Stefan Lankes
 Hermit system calls definitions.
@@ -6584,7 +6584,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-indexmap 2.2.3
+indexmap 2.2.4
 https://github.com/indexmap-rs/indexmap
 by 
 A hash table with consistent order and fast iteration.
@@ -8952,7 +8952,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-log 0.4.20
+log 0.4.21
 https://github.com/rust-lang/log
 by The Rust Project Developers
 A lightweight logging facade for Rust
@@ -14478,7 +14478,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.12.1
+qoqo-quest 0.12.2
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -15114,7 +15114,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.12.1
+quest-sys 0.12.2
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -18429,7 +18429,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.12.1
+roqoqo-quest 0.12.2
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
@@ -21573,7 +21573,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-syn 2.0.51
+syn 2.0.52
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -26798,7 +26798,7 @@ license-mit:
 
 
 ====================================================
-windows-targets 0.52.3
+windows-targets 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import libs for Windows
@@ -27272,7 +27272,7 @@ license-mit:
 
 
 ====================================================
-windows_aarch64_gnullvm 0.52.3
+windows_aarch64_gnullvm 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -27746,7 +27746,7 @@ license-mit:
 
 
 ====================================================
-windows_aarch64_msvc 0.52.3
+windows_aarch64_msvc 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -28220,7 +28220,7 @@ license-mit:
 
 
 ====================================================
-windows_i686_gnu 0.52.3
+windows_i686_gnu 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -28694,7 +28694,7 @@ license-mit:
 
 
 ====================================================
-windows_i686_msvc 0.52.3
+windows_i686_msvc 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -29168,7 +29168,7 @@ license-mit:
 
 
 ====================================================
-windows_x86_64_gnu 0.52.3
+windows_x86_64_gnu 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -29642,7 +29642,7 @@ license-mit:
 
 
 ====================================================
-windows_x86_64_gnullvm 0.52.3
+windows_x86_64_gnullvm 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
@@ -30116,7 +30116,7 @@ license-mit:
 
 
 ====================================================
-windows_x86_64_msvc 0.52.3
+windows_x86_64_msvc 0.52.4
 https://github.com/microsoft/windows-rs
 by Microsoft
 Import lib for Windows
