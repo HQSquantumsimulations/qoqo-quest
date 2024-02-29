@@ -26,7 +26,7 @@ use gate_operations::*;
 pub(crate) use pragma_operations::execute_pragma_repeated_measurement;
 
 // Pragma operations that are ignored by backend and do not throw an error
-const ALLOWED_OPERATIONS: &[&str; 10] = &[
+const ALLOWED_OPERATIONS: &[&str; 11] = &[
     "PragmaSetNumberOfMeasurements",
     "PragmaBoostNoise",
     "PragmaStopParallelBlock",
@@ -37,6 +37,7 @@ const ALLOWED_OPERATIONS: &[&str; 10] = &[
     "PragmaStartDecompositionBlock",
     "PragmaStopDecompositionBlock",
     "PragmaOverrotation",
+    "PragmaSleep",
 ];
 
 /// Simulate all operations in a [roqoqo::Circuit] acting on a quantum register
