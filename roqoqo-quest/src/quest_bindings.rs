@@ -92,7 +92,7 @@ impl Qureg {
                         .stateVec
                         .imag
                         .wrapping_add(density_index.try_into().expect("Indexing error"));
-                    probabilites.push(real_amp * real_amp + imag_amp * imag_amp);
+                    probabilites.push(real_amp); // * real_amp + imag_amp * imag_amp);
                 };
             }
         } else {
