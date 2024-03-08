@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.12.2
+
+* Fixed PragmaSleep in circuit returning error when it should be supported.
+
 ## 0.12.1
 
 * Fixing bug when building for GPU

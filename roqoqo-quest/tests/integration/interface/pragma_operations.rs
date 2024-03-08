@@ -638,6 +638,8 @@ fn test_statevec_multiplication_quest() {
 #[test_case(operations::Operation::from(operations::PragmaStopDecompositionBlock::new(vec![0, 1])); "PragmaStopDecompositionBlock")]
 #[test_case(operations::Operation::from(operations::DefinitionUsize::new("ro".into(), 2, false)); "DefinitionUsize")]
 #[test_case(operations::Operation::from(operations::InputSymbolic::new("ro".into(), 2.0)); "InputSymbolic")]
+#[test_case(operations::Operation::from(operations::PragmaSleep::new(vec![1,2,3], 1.0.into())); "PragmaSleep")]
+
 fn test_skipped_operations(pragma: operations::Operation) {
     let c0: Complex64 = Complex::new(0.0, 0.0);
     let c1: Complex64 = Complex::new(1.0, 0.0);
@@ -936,32 +938,6 @@ fn test_conditional() {
             }
         }
     }
-}
-
-#[test]
-fn test_sleep_pragma() {
-    let pragma = operations::PragmaSleep::new(vec![0, 1], 0.5.into());
-    let mut qureg = Qureg::new(1, false);
-    // Create the readout registers
-    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
-        create_empty_registers();
-    // Apply tested operation to output
-    let error = call_operation(
-        &pragma.into(),
-        &mut qureg,
-        &mut bit_registers,
-        &mut float_registers,
-        &mut complex_registers,
-        &mut bit_registers_output,
-    );
-    assert!(error.is_err());
-    assert_eq!(
-        error,
-        Err(RoqoqoBackendError::OperationNotInBackend {
-            backend: "QuEST",
-            hqslang: "PragmaSleep",
-        })
-    );
 }
 
 #[test]
