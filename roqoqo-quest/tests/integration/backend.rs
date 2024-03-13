@@ -299,6 +299,7 @@ fn test_circuit_with_repeated_measurement_and_previous_measurement() {
     }
 }
 
+// Test fails due because the action of InputBit is overwritten.
 #[test]
 fn test_circuit_with_repeated_measurement_and_input() {
     let mut circuit = Circuit::new();
@@ -313,7 +314,6 @@ fn test_circuit_with_repeated_measurement_and_input() {
     assert!(bit_result.contains_key("ro"));
     let nested_vec = bit_result.get("ro").unwrap();
     assert!(nested_vec.len() == 10);
-    println!("{:?}", nested_vec);
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
         assert!(!repetition[0]);
