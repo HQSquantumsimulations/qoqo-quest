@@ -23,6 +23,8 @@ mod pragma_operations;
 use pragma_operations::*;
 mod gate_operations;
 use gate_operations::*;
+mod preprocessing;
+pub use preprocessing::get_number_used_qubits_and_registers;
 pub(crate) use pragma_operations::execute_pragma_repeated_measurement;
 
 // Pragma operations that are ignored by backend and do not throw an error
@@ -715,6 +717,7 @@ fn check_acts_on_qubits_in_qureg(
     let number_qubits = qureg.number_qubits() as usize;
     if let InvolvedQubits::Set(involved_qubits) = operation.involved_qubits() {
         for q in involved_qubits.iter() {
+            println!("{:?}", operation);
             if *q >= number_qubits {
                 return Err(RoqoqoBackendError::GenericError { msg: format!("Not enough qubits reserved. QuEST simulator used {} qubits but operation acting on {}" ,number_qubits, q) });
             }

@@ -89,7 +89,7 @@ fn test_failing_two_set_measurments() {
 
 #[test]
 fn test_set_repetitions() {
-    let backend = Backend::new(1);
+    let backend = Backend::new(2);
     assert_eq!(backend.repetitions, 1);
     let backend = backend.set_repetitions(10);
     assert_eq!(backend.repetitions, 10);
@@ -103,7 +103,7 @@ fn test_set_repetitions() {
 
 #[test]
 fn test_readout_into_partial_register() {
-    let backend = Backend::new(3);
+    let backend = Backend::new(6);
     let mut circuit = Circuit::new();
     circuit += DefinitionBit::new("ro_0".to_string(), 6, true);
     circuit += Hadamard::new(0);
@@ -124,7 +124,7 @@ fn test_readout_into_partial_register() {
 
 #[test]
 fn test_readout_into_partial_register_set_number_measurements() {
-    let backend = Backend::new(3);
+    let backend = Backend::new(6);
     let mut circuit = Circuit::new();
     circuit += DefinitionBit::new("ro_0".to_string(), 6, true);
     circuit += PauliX::new(0);
@@ -146,7 +146,7 @@ fn test_readout_into_partial_register_set_number_measurements() {
 
 #[test]
 fn test_failing_set_number_measurements() {
-    let backend = Backend::new(3);
+    let backend = Backend::new(6);
     let mut circuit = Circuit::new();
     circuit += DefinitionBit::new("ro_0".to_string(), 6, true);
     circuit += Hadamard::new(0);
@@ -206,7 +206,7 @@ fn test_global_phase() {
     circuit += DefinitionComplex::new("ro".to_string(), 2, true);
     circuit += PragmaGlobalPhase::new(0.1.into());
     circuit += PragmaGetStateVector::new("ro".to_string(), None);
-    let backend = Backend::new(1);
+    let backend = Backend::new(2);
     let (_, _, complex_res) = backend.run_circuit(&circuit).unwrap();
     assert_eq!(
         complex_res.get("ro").unwrap()[0][0],
@@ -284,7 +284,7 @@ fn test_circuit_with_repeated_measurement_and_previous_measurement() {
     circuit += operations::MeasureQubit::new(0, "ro".to_string(), 1);
     circuit += operations::PauliX::new(0);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let backend = Backend::new(1);
+    let backend = Backend::new(2);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
     assert!(float_result.is_empty());
@@ -305,7 +305,7 @@ fn test_circuit_with_repeated_measurement_and_input() {
     circuit += operations::DefinitionBit::new("ro".to_string(), 2, true);
     circuit += operations::InputBit::new("ro".to_string(), 1, true);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let backend = Backend::new(1);
+    let backend = Backend::new(2);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
     assert!(float_result.is_empty());
@@ -313,6 +313,7 @@ fn test_circuit_with_repeated_measurement_and_input() {
     assert!(bit_result.contains_key("ro"));
     let nested_vec = bit_result.get("ro").unwrap();
     assert!(nested_vec.len() == 10);
+    println!("{:?}", nested_vec);
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
         assert!(!repetition[0]);

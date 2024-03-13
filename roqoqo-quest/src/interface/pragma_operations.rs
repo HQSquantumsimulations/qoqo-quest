@@ -62,8 +62,11 @@ pub fn execute_pragma_repeated_measurement(
                 for (a, b) in index_to_qubits(index, number_qubits)
                     .into_iter()
                     .enumerate()
-                {
-                    tmp[a] = b
+                {   
+                    if  !tmp[a] {
+                        tmp[a] = b
+                    }
+                
                 }
                 output_register.push(tmp)
             }

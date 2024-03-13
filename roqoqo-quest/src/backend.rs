@@ -10,7 +10,7 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::interface::{call_operation_with_device, execute_pragma_repeated_measurement};
+use crate::interface::{call_operation_with_device, execute_pragma_repeated_measurement, get_number_used_qubits_and_registers};
 #[cfg(feature = "async")]
 use async_trait::async_trait;
 use qoqo_calculator::CalculatorFloat;
@@ -195,8 +195,14 @@ impl Backend {
             Some(_) => self.repetitions,
             None => 1,
         };
-
-        let mut qureg = Qureg::new(self.number_qubits as u32, is_density_matrix);
+        
+        let (number_used_qubits, register_lengths) = get_number_used_qubits_and_registers(&circuit_vec);
+        
+        if number_used_qubits > self.number_qubits {
+            return Err(RoqoqoBackendError::GenericError { msg: format!(" Number of qubits available in the backend is not sufficient. Available qubits = `{}`, while number of qubits defined in the circuit = `{}` ", self.number_qubits, number_used_qubits) });
+        }
+    
+        let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
 
         // Set up output registers
         let mut bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
@@ -294,7 +300,18 @@ impl Backend {
                 Operation::PragmaRepeatedMeasurement(o) => {
                     if let Some(nm) = number_measurements {
                         // Construct involved qubits
-                        let involved_qubits: Vec<usize> = (0..self.number_qubits).collect();
+                        let involved_qubits: Vec<usize> = match register_lengths.get(o.readout()) {
+                        Some(pragma_nm) => {
+                            let n = *pragma_nm as usize;
+                            (0..(n-1)).collect() }
+                        
+                        None => { 
+                            return Err(RoqoqoBackendError::GenericError{msg: format!("No register corresponding to PragmaRepeatedMeasurement readout found")});
+
+                        }
+
+                        };
+
                         if o.readout() != &repeated_measurement_readout {
                             return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )});
                         } else if measured_qubits.iter().any(|q| involved_qubits.contains(q)) {
@@ -366,7 +383,7 @@ impl Backend {
             let mut float_registers_internal: HashMap<String, FloatRegister> = HashMap::new();
             let mut complex_registers_internal: HashMap<String, ComplexRegister> = HashMap::new();
             run_inner_circuit_loop(
-                self.number_qubits,
+                &register_lengths,
                 &circuit_vec,
                 (replace_measurements, &repeated_measurement_pragma),
                 &mut qureg,
@@ -412,7 +429,7 @@ impl Backend {
 type ReplacedMeasurementInformation<'a> = (Option<usize>, &'a Option<PragmaRepeatedMeasurement>);
 
 fn run_inner_circuit_loop(
-    number_qubits: usize,
+    register_lengths: &HashMap<String, usize>,
     circuit_vec: &[&Operation],
     replaced_measurement_information: ReplacedMeasurementInformation,
     qureg: &mut Qureg,
@@ -427,6 +444,15 @@ fn run_inner_circuit_loop(
         match op {
             Operation::PragmaRepeatedMeasurement(rm) => match replace_measurements {
                 None => {
+                    let number_qubits: usize = match register_lengths.get(rm.readout()) {
+                        Some(pragma_nm) => {
+                            let n = *pragma_nm as usize;
+                            n-1}
+                        None => { 
+                            return Err(RoqoqoBackendError::GenericError{msg: format!("No register corresponding to PragmaRepeatedMeasurement readout found")});
+
+                        }
+                    };
                     for qb in 0..number_qubits {
                         let ro_index = match rm.qubit_mapping() {
                             Some(mp) => mp.get(&qb).unwrap_or(&qb),
