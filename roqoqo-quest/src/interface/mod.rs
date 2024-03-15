@@ -717,7 +717,6 @@ fn check_acts_on_qubits_in_qureg(
     let number_qubits = qureg.number_qubits() as usize;
     if let InvolvedQubits::Set(involved_qubits) = operation.involved_qubits() {
         for q in involved_qubits.iter() {
-            println!("{:?}", operation);
             if *q >= number_qubits {
                 return Err(RoqoqoBackendError::GenericError { msg: format!("Not enough qubits reserved. QuEST simulator used {} qubits but operation acting on {}" ,number_qubits, q) });
             }

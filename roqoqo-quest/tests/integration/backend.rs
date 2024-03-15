@@ -24,6 +24,7 @@ use roqoqo::operations::*;
 use roqoqo::prelude::Measure;
 use roqoqo::Circuit;
 use roqoqo_quest::Backend;
+use roqoqo::RoqoqoBackendError;
 
 #[cfg(feature = "async")]
 use futures::executor::block_on;
@@ -299,7 +300,6 @@ fn test_circuit_with_repeated_measurement_and_previous_measurement() {
     }
 }
 
-// Test fails due because the action of InputBit is overwritten.
 #[test]
 fn test_circuit_with_repeated_measurement_and_input() {
     let mut circuit = Circuit::new();
@@ -317,7 +317,7 @@ fn test_circuit_with_repeated_measurement_and_input() {
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
         assert!(!repetition[0]);
-        assert!(repetition[1]);
+        assert!(!repetition[1]);
     }
 }
 
@@ -604,4 +604,41 @@ fn test_pragma_stop_parallel_block_slow() {
         assert!(res.is_ok());
         assert!(res.unwrap().is_some());
     }
+}
+
+#[test]
+fn test_insufficient_qubit_error1() {
+    let mut circuit = Circuit::new();
+    circuit += operations::PauliX::new(0);
+    circuit += operations::PauliX::new(1);
+    circuit += operations::PauliX::new(2);
+    circuit += operations::PauliX::new(5);
+    circuit += operations::MeasureQubit::new(0, "ro0".to_string(), 0);
+    circuit += operations::MeasureQubit::new(3, "ro3".to_string(), 3);
+    let backend = Backend::new(4);
+    let res = backend.run_circuit_iterator(circuit.iter());
+    assert!(res.is_err());
+    let e = res.unwrap_err();
+    assert_eq!(
+        e,
+        RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`4`. Number of qubits used in circuit:`6` ".to_string() }
+    )
+    
+}
+
+#[test]
+fn test_insufficient_qubit_error2() {
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
+    circuit += operations::PauliX::new(1);
+    circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
+    let backend = Backend::new(1);
+    let res = backend.run_circuit_iterator(circuit.iter());
+    assert!(res.is_err());
+    let e = res.unwrap_err();
+    assert_eq!(
+        e,
+        RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`1`. Number of qubits used in circuit:`4` ".to_string() }
+    )
+    
 }

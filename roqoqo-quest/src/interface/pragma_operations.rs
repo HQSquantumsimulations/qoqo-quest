@@ -63,9 +63,7 @@ pub fn execute_pragma_repeated_measurement(
                     .into_iter()
                     .enumerate()
                 {   
-                    if  !tmp[a] {
                         tmp[a] = b
-                    }
                 
                 }
                 output_register.push(tmp)
