@@ -243,21 +243,13 @@ impl Backend {
                 Operation::PragmaRepeatedMeasurement(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => { 
-                                number_measurements = Some(*o.number_measurements()); 
-                                repeated_measurement_readout = o.readout().clone();  
-                                replace_measurements=Some(0);
-                            }
+                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=Some(0);}
                         }
                 }
                 Operation::PragmaSetNumberOfMeasurements(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => {
-                                number_measurements = Some(*o.number_measurements()); 
-                                repeated_measurement_readout = o.readout().clone(); 
-                                replace_measurements=Some(0);
-                        }
+                        None => {number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=Some(0);}
                     }
                 }
                 _ => ()

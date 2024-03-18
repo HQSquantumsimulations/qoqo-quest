@@ -22,7 +22,9 @@ pub fn get_number_used_qubits_and_registers(
     let mut registers: HashMap<String, usize> = HashMap::new();
     let mut max_qubit: usize = 0;
     for op in circuit {
-        if let InvolvedQubits::Set(n) = op.involved_qubits() { used_qubits.extend(&n) }
+        if let InvolvedQubits::Set(n) = op.involved_qubits() {
+            used_qubits.extend(&n)
+        }
         match op {
             Operation::DefinitionBit(def) => {
                 if *def.is_output() {
