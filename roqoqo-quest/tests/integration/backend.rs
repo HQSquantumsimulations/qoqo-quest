@@ -204,7 +204,7 @@ fn test_running_with_device() {
 #[test]
 fn test_global_phase() {
     let mut circuit = Circuit::new();
-    circuit += DefinitionComplex::new("ro".to_string(), 2, true);
+    circuit += DefinitionComplex::new("ro".to_string(), 4, true);
     circuit += PragmaGlobalPhase::new(0.1.into());
     circuit += PragmaGetStateVector::new("ro".to_string(), None);
     let backend = Backend::new(2);
