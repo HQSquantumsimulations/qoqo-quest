@@ -38,8 +38,9 @@ pub fn get_number_used_qubits_and_registers(
             }
             Operation::DefinitionComplex(def) => {
                 if *def.is_output() {
-                    registers.insert(def.name().clone(), *def.length());
-                    max_qubit = cmp::max(max_qubit, *def.length())
+                    let bits = u64::BITS - (def.length()).leading_zeros();
+                    registers.insert(def.name().clone(), bits as usize);
+                    max_qubit = cmp::max(max_qubit, bits as usize)
                 }
             }
             _ => (),
@@ -145,26 +146,28 @@ mod tests {
         assert_eq!(cmp_register, reg);
 
         let mut c = Circuit::new();
-        c += DefinitionComplex::new("ro".to_string(), 2, true);
+        c += DefinitionComplex::new("ro".to_string(), 9, true);
         c += DefinitionComplex::new("ri".to_string(), 2, false);
         c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let (used, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
-        let cmp_register = HashMap::from([("ro".to_string(), 2 as usize)]);
+        let cmp_register = HashMap::from([("ro".to_string(), 4 as usize)]);
         assert_eq!(cmp_register, reg);
+        assert_eq!(used, 4);
 
         let mut c = Circuit::new();
         c += DefinitionBit::new("ro".to_string(), 2, true);
         c += DefinitionComplex::new("ri".to_string(), 10, true);
         c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let (used, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
         let cmp_register = HashMap::from([
             ("ro".to_string(), 2 as usize),
-            ("ri".to_string(), 10 as usize),
+            ("ri".to_string(), 4 as usize),
         ]);
         assert_eq!(cmp_register, reg);
+        assert_eq!(used, 4);
     }
 }
