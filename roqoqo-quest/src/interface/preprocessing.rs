@@ -38,6 +38,7 @@ pub fn get_number_used_qubits_and_registers(
             }
             Operation::DefinitionComplex(def) => {
                 if *def.is_output() {
+                    // Used bits is given by ceiling of Log2
                     let bits = u64::BITS - (def.length()).leading_zeros();
                     registers.insert(def.name().clone(), bits as usize);
                     max_qubit = cmp::max(max_qubit, bits as usize)
