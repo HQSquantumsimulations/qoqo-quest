@@ -62,9 +62,8 @@ pub fn execute_pragma_repeated_measurement(
                 for (a, b) in index_to_qubits(index, number_qubits)
                     .into_iter()
                     .enumerate()
-                {   
-                        tmp[a] = b
-                
+                {
+                    tmp[a] = b
                 }
                 output_register.push(tmp)
             }
@@ -382,6 +381,7 @@ fn index_to_qubits(index: usize, number_qubits: u32) -> Vec<bool> {
     let mut binary_list: Vec<bool> = Vec::with_capacity(number_qubits as usize);
     for k in 0..number_qubits {
         // (index // 2**k) % 2 => 0 -> false 1 -> true
+        // Converts index to a binary number
         binary_list.push(index.div_euclid(2usize.pow(k)).rem_euclid(2) == 1)
     }
     binary_list

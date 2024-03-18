@@ -10,7 +10,10 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::interface::{call_operation_with_device, execute_pragma_repeated_measurement, get_number_used_qubits_and_registers};
+use crate::interface::{
+    call_operation_with_device, execute_pragma_repeated_measurement,
+    get_number_used_qubits_and_registers,
+};
 #[cfg(feature = "async")]
 use async_trait::async_trait;
 use qoqo_calculator::CalculatorFloat;
@@ -195,13 +198,14 @@ impl Backend {
             Some(_) => self.repetitions,
             None => 1,
         };
-        
-        let (number_used_qubits, register_lengths) = get_number_used_qubits_and_registers(&circuit_vec);
-        
+
+        let (number_used_qubits, register_lengths) =
+            get_number_used_qubits_and_registers(&circuit_vec);
+
         if number_used_qubits > self.number_qubits {
             return Err(RoqoqoBackendError::GenericError { msg: format!(" Insufficient qubits in backend. Available qubits:`{}`. Number of qubits used in circuit:`{}` ", self.number_qubits, number_used_qubits) });
         }
-    
+
         let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
 
         // Set up output registers
@@ -239,14 +243,20 @@ impl Backend {
                 Operation::PragmaRepeatedMeasurement(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone();  replace_measurements=Some(0);}
-                    }
+                        None => { 
+                                number_measurements = Some(*o.number_measurements()); 
+                                repeated_measurement_readout = o.readout().clone();  
+                                replace_measurements=Some(0);
+                            }
+                        }
                 }
                 Operation::PragmaSetNumberOfMeasurements(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
                         None => {
-                            number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=Some(0);
+                                number_measurements = Some(*o.number_measurements()); 
+                                repeated_measurement_readout = o.readout().clone(); 
+                                replace_measurements=Some(0);
                         }
                     }
                 }
@@ -301,15 +311,14 @@ impl Backend {
                     if let Some(nm) = number_measurements {
                         // Construct involved qubits
                         let involved_qubits: Vec<usize> = match register_lengths.get(o.readout()) {
-                        Some(pragma_nm) => {
-                            let n = *pragma_nm as usize;
-                            (0..(n-1)).collect() }
-                        
-                        None => { 
-                            return Err(RoqoqoBackendError::GenericError{msg: format!("No register corresponding to PragmaRepeatedMeasurement readout found")});
+                            Some(pragma_nm) => {
+                                let n = *pragma_nm;
+                                (0..(n - 1)).collect()
+                            }
 
-                        }
-
+                            None => {
+                                return Err(RoqoqoBackendError::GenericError{msg: "No register corresponding to PragmaRepeatedMeasurement readout found".to_string()});
+                            }
                         };
 
                         if o.readout() != &repeated_measurement_readout {
@@ -446,11 +455,11 @@ fn run_inner_circuit_loop(
                 None => {
                     let number_qubits: usize = match register_lengths.get(rm.readout()) {
                         Some(pragma_nm) => {
-                            let n = *pragma_nm as usize;
-                            n-1}
-                        None => { 
-                            return Err(RoqoqoBackendError::GenericError{msg: format!("No register corresponding to PragmaRepeatedMeasurement readout found")});
-
+                            let n = *pragma_nm;
+                            n - 1
+                        }
+                        None => {
+                            return Err(RoqoqoBackendError::GenericError{msg: "No register corresponding to PragmaRepeatedMeasurement readout found".to_string()});
                         }
                     };
                     for qb in 0..number_qubits {

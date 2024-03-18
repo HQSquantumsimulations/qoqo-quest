@@ -10,20 +10,19 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
+use roqoqo::operations::*;
 use std::cmp;
 use std::collections::HashMap;
 use std::collections::HashSet;
-use roqoqo::operations::*;
 
-pub fn get_number_used_qubits_and_registers(circuit: &Vec<& Operation> ) -> (usize,HashMap<String, usize>){
+pub fn get_number_used_qubits_and_registers(
+    circuit: &Vec<&Operation>,
+) -> (usize, HashMap<String, usize>) {
     let mut used_qubits: HashSet<usize> = HashSet::new();
     let mut registers: HashMap<String, usize> = HashMap::new();
     let mut max_qubit: usize = 0;
     for op in circuit {
-        match op.involved_qubits() {
-            InvolvedQubits::Set(n) => {used_qubits.extend(&n)}
-            _ => ()
-        }
+        if let InvolvedQubits::Set(n) = op.involved_qubits() { used_qubits.extend(&n) }
         match op {
             Operation::DefinitionBit(def) => {
                 if *def.is_output() {
@@ -48,7 +47,7 @@ pub fn get_number_used_qubits_and_registers(circuit: &Vec<& Operation> ) -> (usi
     }
     let largest_used_qubit = match used_qubits.iter().max() {
         Some(l) => *l + 1,
-        None => 0
+        None => 0,
     };
 
     max_qubit = cmp::max(largest_used_qubit, max_qubit);
@@ -76,14 +75,16 @@ mod tests {
         c += CNOT::new(0, 1);
         c += PauliX::new(4);
         c += PauliX::new(5);
-        c+= PragmaGetStateVector::new("ro".to_string(), None);
+        c += PragmaGetStateVector::new("ro".to_string(), None);
 
-        let (n,reg) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (n, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
         assert_eq!(6, n);
-        
-        let cmp_register = HashMap::from([("ro".to_string(), 3 as usize), ("ro1".to_string(), 4 as usize)]);
+
+        let cmp_register = HashMap::from([
+            ("ro".to_string(), 3 as usize),
+            ("ro1".to_string(), 4 as usize),
+        ]);
         assert_eq!(cmp_register, reg);
-        
     }
 
     #[test]
@@ -92,9 +93,9 @@ mod tests {
         c += DefinitionBit::new("ro".to_string(), 10, true);
         c += RotateX::new(0, 0.0.into());
         c += CNOT::new(0, 1);
-        c+= PragmaGetDensityMatrix::new("ro".to_string(), None);
+        c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (n,_) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
         assert_eq!(10, n);
 
         let mut c = Circuit::new();
@@ -102,24 +103,23 @@ mod tests {
         c += DefinitionFloat::new("ro".to_string(), 5, true);
         c += RotateX::new(0, 0.0.into());
         c += CNOT::new(0, 1);
-        c+= PragmaGetDensityMatrix::new("ro".to_string(), None);
+        c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (n,_) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
         assert_eq!(10, n);
-        
+
         let mut c = Circuit::new();
         c += RotateX::new(0, 0.0.into());
 
-        let (n,_) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
         assert_eq!(1, n);
 
         let mut c = Circuit::new();
         c += RotateX::new(0, 0.0.into());
         c += RotateX::new(12, 0.0.into());
 
-        let (n,_) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
         assert_eq!(13, n);
-        
     }
 
     #[test]
@@ -127,9 +127,9 @@ mod tests {
         let mut c = Circuit::new();
         c += DefinitionBit::new("ro".to_string(), 2, true);
         c += DefinitionBit::new("ri".to_string(), 2, false);
-        c+= PragmaGetDensityMatrix::new("ro".to_string(), None);
+        c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (_,reg) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
         let cmp_register = HashMap::from([("ro".to_string(), 2 as usize)]);
         assert_eq!(cmp_register, reg);
@@ -137,9 +137,9 @@ mod tests {
         let mut c = Circuit::new();
         c += DefinitionFloat::new("ro".to_string(), 2, true);
         c += DefinitionFloat::new("ri".to_string(), 2, false);
-        c+= PragmaGetDensityMatrix::new("ro".to_string(), None);
+        c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (_,reg) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
         let cmp_register = HashMap::from([("ro".to_string(), 2 as usize)]);
         assert_eq!(cmp_register, reg);
@@ -147,9 +147,9 @@ mod tests {
         let mut c = Circuit::new();
         c += DefinitionComplex::new("ro".to_string(), 2, true);
         c += DefinitionComplex::new("ri".to_string(), 2, false);
-        c+= PragmaGetDensityMatrix::new("ro".to_string(), None);
+        c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (_,reg) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
         let cmp_register = HashMap::from([("ro".to_string(), 2 as usize)]);
         assert_eq!(cmp_register, reg);
@@ -157,15 +157,14 @@ mod tests {
         let mut c = Circuit::new();
         c += DefinitionBit::new("ro".to_string(), 2, true);
         c += DefinitionComplex::new("ri".to_string(), 10, true);
-        c+= PragmaGetDensityMatrix::new("ro".to_string(), None);
+        c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (_,reg) = get_number_used_qubits_and_registers( &c.iter().into_iter().collect());
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
-        let cmp_register = HashMap::from([("ro".to_string(), 2 as usize), ("ri".to_string(), 10 as usize)]);
+        let cmp_register = HashMap::from([
+            ("ro".to_string(), 2 as usize),
+            ("ri".to_string(), 10 as usize),
+        ]);
         assert_eq!(cmp_register, reg);
-        
-        
     }
-
-
 }

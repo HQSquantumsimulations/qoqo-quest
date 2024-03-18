@@ -24,8 +24,8 @@ use pragma_operations::*;
 mod gate_operations;
 use gate_operations::*;
 mod preprocessing;
-pub use preprocessing::get_number_used_qubits_and_registers;
 pub(crate) use pragma_operations::execute_pragma_repeated_measurement;
+pub use preprocessing::get_number_used_qubits_and_registers;
 
 // Pragma operations that are ignored by backend and do not throw an error
 const ALLOWED_OPERATIONS: &[&str; 11] = &[

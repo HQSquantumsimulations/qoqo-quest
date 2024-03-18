@@ -23,8 +23,8 @@ use roqoqo::operations;
 use roqoqo::operations::*;
 use roqoqo::prelude::Measure;
 use roqoqo::Circuit;
-use roqoqo_quest::Backend;
 use roqoqo::RoqoqoBackendError;
+use roqoqo_quest::Backend;
 
 #[cfg(feature = "async")]
 use futures::executor::block_on;
@@ -304,7 +304,8 @@ fn test_circuit_with_repeated_measurement_and_previous_measurement() {
 fn test_circuit_with_repeated_measurement_and_input() {
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("ro".to_string(), 2, true);
-    circuit += operations::InputBit::new("ro".to_string(), 1, true);
+    circuit += operations::DefinitionBit::new("ro1".to_string(), 2, true);
+    circuit += operations::InputBit::new("ro1".to_string(), 1, true);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
     let backend = Backend::new(2);
     let (bit_result, float_result, complex_result) =
@@ -314,10 +315,11 @@ fn test_circuit_with_repeated_measurement_and_input() {
     assert!(bit_result.contains_key("ro"));
     let nested_vec = bit_result.get("ro").unwrap();
     assert!(nested_vec.len() == 10);
+    let nested_vec = bit_result.get("ro1").unwrap();
     for repetition in nested_vec {
         assert!(repetition.len() == 2);
         assert!(!repetition[0]);
-        assert!(!repetition[1]);
+        assert!(repetition[1]);
     }
 }
 
@@ -623,7 +625,6 @@ fn test_insufficient_qubit_error1() {
         e,
         RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`4`. Number of qubits used in circuit:`6` ".to_string() }
     )
-    
 }
 
 #[test]
@@ -640,5 +641,4 @@ fn test_insufficient_qubit_error2() {
         e,
         RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`1`. Number of qubits used in circuit:`4` ".to_string() }
     )
-    
 }
