@@ -40,8 +40,8 @@ pub fn get_number_used_qubits_and_registers(
             }
             Operation::DefinitionComplex(def) => {
                 if *def.is_output() {
-                    // Used bits is given by ceiling of Log2
-                    let bits = u64::BITS - (def.length() - 1).leading_zeros();
+                    // Size of register = 4^(qubits_used)
+                    let bits = (u64::BITS - (def.length() - 1).leading_zeros())/2;
                     registers.insert(def.name().clone(), bits as usize);
                     max_qubit = cmp::max(max_qubit, bits as usize)
                 }
@@ -155,9 +155,9 @@ mod tests {
 
         let (used, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
-        let cmp_register = HashMap::from([("ro".to_string(), 6 as usize)]);
+        let cmp_register = HashMap::from([("ro".to_string(), 3 as usize)]);
         assert_eq!(cmp_register, reg);
-        assert_eq!(used, 6);
+        assert_eq!(used, 3);
 
         let mut c = Circuit::new();
         c += DefinitionBit::new("ro".to_string(), 2, true);
@@ -168,9 +168,9 @@ mod tests {
 
         let cmp_register = HashMap::from([
             ("ro".to_string(), 2 as usize),
-            ("ri".to_string(), 4 as usize),
+            ("ri".to_string(), 2 as usize),
         ]);
         assert_eq!(cmp_register, reg);
-        assert_eq!(used, 4);
+        assert_eq!(used, 2);
     }
 }
