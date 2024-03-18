@@ -147,15 +147,15 @@ mod tests {
         assert_eq!(cmp_register, reg);
 
         let mut c = Circuit::new();
-        c += DefinitionComplex::new("ro".to_string(), 8, true);
+        c += DefinitionComplex::new("ro".to_string(), 64, true);
         c += DefinitionComplex::new("ri".to_string(), 2, false);
         c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
         let (used, reg) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
 
-        let cmp_register = HashMap::from([("ro".to_string(), 3 as usize)]);
+        let cmp_register = HashMap::from([("ro".to_string(), 6 as usize)]);
         assert_eq!(cmp_register, reg);
-        assert_eq!(used, 3);
+        assert_eq!(used, 6);
 
         let mut c = Circuit::new();
         c += DefinitionBit::new("ro".to_string(), 2, true);
