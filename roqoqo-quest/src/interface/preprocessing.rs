@@ -41,7 +41,7 @@ pub fn get_number_used_qubits_and_registers(
             Operation::DefinitionComplex(def) => {
                 if *def.is_output() {
                     // Size of register = 4^(qubits_used)
-                    let bits = (u64::BITS - (def.length() - 1).leading_zeros())/2;
+                    let bits = (u64::BITS - (def.length() - 1).leading_zeros()) / 2;
                     registers.insert(def.name().clone(), bits as usize);
                     max_qubit = cmp::max(max_qubit, bits as usize)
                 }
