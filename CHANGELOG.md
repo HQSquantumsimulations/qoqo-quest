@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.12.4
+
+* Changed the meaning of `number_qubits` in Backend. It mean the maximum number of qubits available for simulation. `Qureg` is now initalized with number of qubits being used in the circuit.
+
 ## 0.12.3
 
 * Fixed bug in probabilities function in quest bindings.
