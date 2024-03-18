@@ -58,7 +58,7 @@ fn test_running_circuit() {
     Python::with_gil(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type
-            .call1((2,))
+            .call1((3,))
             .unwrap()
             .downcast::<PyCell<BackendWrapper>>()
             .unwrap();
@@ -88,7 +88,7 @@ fn test_running_measurement() {
     Python::with_gil(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type
-            .call1((2,))
+            .call1((3,))
             .unwrap()
             .downcast::<PyCell<BackendWrapper>>()
             .unwrap();
