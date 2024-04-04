@@ -200,8 +200,10 @@ impl Backend {
         };
 
         let (number_used_qubits, register_lengths) =
-            get_number_used_qubits_and_registers(&circuit_vec);
+            get_number_used_qubits_and_registers(&circuit_vec, is_density_matrix);
 
+        println!("{}", is_density_matrix);
+        println!("In Quest: {}, {:?}", number_used_qubits, register_lengths);
         if number_used_qubits > self.number_qubits {
             return Err(RoqoqoBackendError::GenericError { msg: format!(" Insufficient qubits in backend. Available qubits:`{}`. Number of qubits used in circuit:`{}` ", self.number_qubits, number_used_qubits) });
         }
