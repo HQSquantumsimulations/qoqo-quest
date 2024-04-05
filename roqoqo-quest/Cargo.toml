@@ -21,7 +21,7 @@ doctest = false
 
 [dependencies]
 quest-sys = {version="0.13.0", path="../quest-sys", default-features=false}
-roqoqo = {version="1.10", features=["serialize"]}
+roqoqo = {version="1.11", features=["serialize"]}
 
 qoqo_calculator = { version="1.1"}
 num-complex = {version="0.4"}
