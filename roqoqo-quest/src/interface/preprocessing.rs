@@ -12,7 +12,6 @@
 
 use roqoqo::operations::*;
 use roqoqo::RoqoqoBackendError;
-use std::cmp;
 use std::collections::HashMap;
 use std::collections::HashSet;
 pub fn get_number_used_qubits_and_registers(
@@ -86,6 +85,9 @@ pub fn get_number_used_qubits_and_registers(
             Operation::PragmaGetPauliProduct(get_op) => {
                 used_qubits.extend(get_op.qubit_paulis().keys());
                 if let Some(length) = float_registers.get(get_op.readout()) {
+                    if length < &get_op.qubit_paulis().len() {
+                        return Err(RoqoqoBackendError::GenericError{msg: format!("No Float readout register {} to small for numer of readouts in PragmaGetPauliProduct operation. Register length {} number of readouts {}",get_op.readout(), length, get_op.qubit_paulis().len() )});
+                    }
                 } else {
                     return Err(RoqoqoBackendError::GenericError{msg: format!("No Float readout register {} defined for PragmaGetPauliProduct operation. Did you forget to add a DefinitionFloat operation?",get_op.readout() )});
                 }
