@@ -898,7 +898,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo"
-version = "1.10.0"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bcef723585b1323e549de2816c0e9477b1f4c7da1ce3925f35cd6c0c20db7173"
 dependencies = [
@@ -925,7 +925,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo-macros"
-version = "1.10.0"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a798053dc161fbf00c34c63efa06fa380c081e87cccb0b62812ea69d4259f4a1"
 dependencies = [
@@ -1101,7 +1101,7 @@ checksum = "adad44e29e4c806119491a7f06f03de4d1af22c3a680dd47f1e6e179439d1f56"
 
 [[package]]
 name = "roqoqo"
-version = "1.10.0"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fca877b44047454b7d544ef0124f96232f29fc274ddf98612bbd7ac42c05b973"
 dependencies = [
@@ -1126,7 +1126,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-derive"
-version = "1.10.0"
+version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b967f057ea8343811ad3f723a5315efc5ff4760997ab823b9a186f582fc3f24"
 dependencies = [
