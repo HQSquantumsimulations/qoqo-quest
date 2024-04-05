@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qoqo_quest &mdash; qoqo_quest 0.12.4 documentation</title>
+  <title>qoqo_quest &mdash; qoqo_quest 0.13.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=be2deef1"></script>
+        <script src="../_static/documentation_options.js?v=d2781cd5"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -38,7 +38,7 @@
             qoqo_quest
           </a>
               <div class="version">
-                0.12.4
+                0.13.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_circuit"><code class="docutils literal notranslate"><span class="pre">Backend.run_circuit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_measurement"><code class="docutils literal notranslate"><span class="pre">Backend.run_measurement()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_measurement_registers"><code class="docutils literal notranslate"><span class="pre">Backend.run_measurement_registers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_program"><code class="docutils literal notranslate"><span class="pre">Backend.run_program()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.to_bincode"><code class="docutils literal notranslate"><span class="pre">Backend.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.to_json"><code class="docutils literal notranslate"><span class="pre">Backend.to_json()</span></code></a></li>
 </ul>
@@ -243,6 +244,32 @@ The results of each repetition are concatenated in OutputRegisters
 <dd class="field-even"><ul class="simple">
 <li><p><strong>TypeError</strong> -- Cannot extract constant circuit from measurement</p></li>
 <li><p><strong>RuntimeError</strong> -- Running Circuit failed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qoqo_quest.Backend.run_program">
+<span class="sig-name descname"><span class="pre">run_program</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.run_program" title="Link to this definition"></a></dt>
+<dd><p>Runs a QuantumProgram with the backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>program</strong> (<em>QuantumProgram</em>) -- The quantum program that is run on the backend.</p></li>
+<li><p><strong>parameters</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) -- The free parameter inputs for the quantum program.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The  dictionary of expectation values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Dict[str, float]]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> -- Measurement evaluate function could not be used</p></li>
+<li><p><strong>RuntimeError</strong> -- Internal error measurement.evaluation returned unknown type</p></li>
 </ul>
 </dd>
 </dl>

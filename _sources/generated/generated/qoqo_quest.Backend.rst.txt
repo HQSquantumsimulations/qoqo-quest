@@ -19,6 +19,7 @@ qoqo\_quest.Backend
       ~Backend.run_circuit
       ~Backend.run_measurement
       ~Backend.run_measurement_registers
+      ~Backend.run_program
       ~Backend.to_bincode
       ~Backend.to_json
    
