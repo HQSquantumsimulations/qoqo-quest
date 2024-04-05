@@ -64,7 +64,7 @@ pub fn get_number_used_qubits_and_registers(
                     if let Some(mapping) = rep_measure.qubit_mapping() {
                         for x in mapping.values() {
                             if x >= length {
-                                return Err(RoqoqoBackendError::GenericError{msg: format!("Trying to write a qubit measurement in index {} or a bit register of length {}. Did define a large enough register with the DefinitionBit operation?", x, length)});
+                                return Err(RoqoqoBackendError::GenericError{msg: format!("Trying to write a qubit measurement in index {} or a bit register of length {}. Did you define a large enough register with the DefinitionBit operation?", x, length)});
                             }
                         }
                         used_qubits.extend(mapping.keys());
