@@ -12,15 +12,19 @@
 
 //! Integration test for public API of Basis rotation measurement
 
+use std::collections::HashMap;
+
 use pyo3::prelude::*;
 use pyo3::Python;
 use qoqo::measurements::ClassicalRegisterWrapper;
+use qoqo::measurements::{PauliZProductInputWrapper, PauliZProductWrapper};
 use qoqo::CircuitWrapper;
+use qoqo::QuantumProgramWrapper;
 use qoqo_quest::BackendWrapper;
 use roqoqo::measurements::ClassicalRegister;
+use roqoqo::measurements::{PauliZProduct, PauliZProductInput};
 use roqoqo::operations;
 use roqoqo::Circuit;
-
 #[test]
 fn test_creating_backend() {
     pyo3::prepare_freethreaded_python();
@@ -94,6 +98,64 @@ fn test_running_measurement() {
             .unwrap();
         let _ = backend
             .call_method1("run_measurement_registers", (crm_wrapper,))
+            .unwrap();
+    })
+}
+
+/// Test new and run functions of QuantumProgram with all PauliZProduct measurement input
+#[test]
+fn test_new_run_br() {
+    pyo3::prepare_freethreaded_python();
+    Python::with_gil(|py| {
+        let input_type = py.get_type::<PauliZProductInputWrapper>();
+        let input_instance = input_type
+            .call1((3, false))
+            .unwrap()
+            .downcast::<PyCell<PauliZProductInputWrapper>>()
+            .unwrap();
+        let _ = input_instance
+            .call_method1("add_pauliz_product", ("ro", vec![0]))
+            .unwrap();
+
+        let mut circs: Vec<CircuitWrapper> = vec![CircuitWrapper::new()];
+        let mut circ1 = CircuitWrapper::new();
+        circ1.internal += operations::RotateX::new(0, 0.0.into());
+        circ1.internal += operations::DefinitionBit::new("ro".to_string(), 1, true);
+        circs.push(circ1.clone());
+        let br_type = py.get_type::<PauliZProductWrapper>();
+        let input = br_type
+            .call1((Some(CircuitWrapper::new()), circs.clone(), input_instance))
+            .unwrap()
+            .downcast::<PyCell<PauliZProductWrapper>>()
+            .unwrap();
+
+        let program_type = py.get_type::<QuantumProgramWrapper>();
+        let program = program_type
+            .call1((input, vec!["test".to_string()]))
+            .unwrap()
+            .downcast::<PyCell<QuantumProgramWrapper>>()
+            .unwrap();
+        let program_wrapper = program.extract::<QuantumProgramWrapper>().unwrap();
+
+        let mut bri = PauliZProductInput::new(3, false);
+        let _ = bri.add_pauliz_product("ro".to_string(), vec![0]);
+        let br = PauliZProduct {
+            constant_circuit: Some(Circuit::new()),
+            circuits: vec![Circuit::new(), circ1.internal],
+            input: bri,
+        };
+
+        let backend_type = py.get_type::<BackendWrapper>();
+        let backend = backend_type
+            .call1((3,))
+            .unwrap()
+            .downcast::<PyCell<BackendWrapper>>()
+            .unwrap();
+
+        let result: HashMap<String, f64> = backend
+            .call_method1("run_program", (program, vec![0.0]))
+            .unwrap()
+            .extract()
             .unwrap();
     })
 }

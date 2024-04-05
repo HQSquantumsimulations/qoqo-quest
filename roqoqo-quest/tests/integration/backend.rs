@@ -611,6 +611,8 @@ fn test_pragma_stop_parallel_block_slow() {
 #[test]
 fn test_insufficient_qubit_error1() {
     let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro0".into(), 1, true);
+    circuit += operations::DefinitionBit::new("ro3".into(), 4, true);
     circuit += operations::PauliX::new(0);
     circuit += operations::PauliX::new(1);
     circuit += operations::PauliX::new(2);

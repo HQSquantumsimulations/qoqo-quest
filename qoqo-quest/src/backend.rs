@@ -321,6 +321,32 @@ impl BackendWrapper {
                 )
             })
     }
+
+    /// Runs a QuantumProgram with the backend.
+    ///
+    ///
+    /// Args:
+    ///     program (QuantumProgram): The quantum program that is run on the backend.
+    ///     parameters (List[float]): The free parameter inputs for the quantum program.
+    /// Returns:
+    ///     Optional[Dict[str, float]]: The  dictionary of expectation values.
+    ///
+    /// Raises:
+    ///     TypeError: Measurement evaluate function could not be used
+    ///     RuntimeError: Internal error measurement.evaluation returned unknown type
+    pub fn run_program(
+        &self,
+        program: &PyAny,
+        parameters: Vec<f64>,
+    ) -> PyResult<Option<HashMap<String, f64>>> {
+        let program = qoqo::convert_into_quantum_program(program)
+            .map_err(|err| PyTypeError::new_err(format!("{}", err,)))?;
+        let backend = self.internal.clone();
+        let results = program
+            .run(backend, &parameters)
+            .map_err(|err| PyRuntimeError::new_err(format!("{}", err,)))?;
+        Ok(results)
+    }
 }
 
 /// Convert generic python object to [roqoqo_quest::Backend].

@@ -4,6 +4,12 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.13.0
+
+* Better error reporting when readout register size missmatches measurement outputs
+* Added `run_program` function to qoqo-quest interface so a QuantumProgram can be run by invoking `backend.run_program(program, [0.1, 0.2])` where the list of floats are the values to be used for the free input parameters of the QuantumProgram.
+
+
 ## 0.12.4
 
 * Changed the meaning of `number_qubits` in Backend. It mean the maximum number of qubits available for simulation. `Qureg` is now initalized with number of qubits being used in the circuit.
