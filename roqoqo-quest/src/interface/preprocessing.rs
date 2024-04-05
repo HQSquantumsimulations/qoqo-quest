@@ -95,7 +95,7 @@ pub fn get_number_used_qubits_and_registers(
             Operation::MeasureQubit(measure_op) => {
                 if let Some(length) = bit_registers.get(measure_op.readout()) {
                     if measure_op.readout_index() >= length {
-                        return Err(RoqoqoBackendError::GenericError{msg: format!("Trying to write a qubit measurement in index {} or a bit register of length {}. Did define a large enough register with the DefinitionBit operation?", measure_op.readout_index(), length)});
+                        return Err(RoqoqoBackendError::GenericError{msg: format!("Trying to write a qubit measurement in index {} or a bit register of length {}. Did you define a large enough register with the DefinitionBit operation?", measure_op.readout_index(), length)});
                     }
                 } else {
                     return Err(RoqoqoBackendError::GenericError{msg: format!("No Bit readout register {} defined for MeasureQubit operation. Did you forget to add a DefinitionBit operation?", measure_op.readout())});
