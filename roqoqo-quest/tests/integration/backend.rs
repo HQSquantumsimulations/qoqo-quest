@@ -644,3 +644,21 @@ fn test_insufficient_qubit_error2() {
         RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`1`. Number of qubits used in circuit:`4` ".to_string() }
     )
 }
+
+/// Tests the case that fewer qubits are measured with MeasureQubit than are operated on and PragmaSetNumberOfMeasurements is used.
+/// used. This failed in the past due to a replacement PragmaRepeatedMeasurement trying to write all qubit readouts to the array.
+#[test]
+fn test_replaced_repeated_measurement_fewer_qubits() {
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 2, true);
+    circuit += operations::PauliX::new(0);
+    circuit += operations::PauliX::new(1);
+    circuit += operations::PauliX::new(2);
+    circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+    circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+
+    circuit += operations::PragmaSetNumberOfMeasurements::new(10, "ro".to_string());
+    let backend = Backend::new(1);
+    let res = backend.run_circuit_iterator(circuit.iter());
+    assert!(res.is_ok());
+}
