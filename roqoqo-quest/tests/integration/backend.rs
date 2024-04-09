@@ -658,7 +658,7 @@ fn test_replaced_repeated_measurement_fewer_qubits() {
     circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
 
     circuit += operations::PragmaSetNumberOfMeasurements::new(10, "ro".to_string());
-    let backend = Backend::new(1);
+    let backend = Backend::new(3);
     let res = backend.run_circuit_iterator(circuit.iter());
     assert!(res.is_ok());
 }
