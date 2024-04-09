@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.13.1
+
+* Fixing out-of-index bug when using MeasureQubit together with PragmaSetNumberOfMeasurements when measuring fewer qubits than are used in a circuit 
+
 ## 0.13.0
 
 * Better error reporting when readout register size missmatches measurement outputs

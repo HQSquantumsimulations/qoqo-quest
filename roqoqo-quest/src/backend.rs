@@ -12,7 +12,7 @@
 
 use crate::interface::{
     call_operation_with_device, execute_pragma_repeated_measurement,
-    get_number_used_qubits_and_registers,
+    execute_replaced_repeated_measurement, get_number_used_qubits_and_registers,
 };
 #[cfg(feature = "async")]
 use async_trait::async_trait;
@@ -485,7 +485,7 @@ fn run_inner_circuit_loop(
                 if let Some(position) = replace_measurements {
                     if internal_op.qubit() == &position {
                         if let Some(helper) = repeated_measurement_pragma.as_ref() {
-                            execute_pragma_repeated_measurement(
+                            execute_replaced_repeated_measurement(
                                 helper,
                                 qureg,
                                 bit_registers_internal,

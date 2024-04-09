@@ -1037,7 +1037,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-bumpalo 3.15.4
+bumpalo 3.16.0
 https://github.com/fitzgen/bumpalo
 by Nick Fitzgerald <fitzgen@gmail.com>
 A fast bump allocation arena for Rust.
@@ -1619,7 +1619,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-cc 1.0.90
+cc 1.0.92
 https://github.com/rust-lang/cc-rs
 by Alex Crichton <alex@alexcrichton.com>
 A build-time dependency for Cargo build scripts to assist in invoking the native
@@ -5608,7 +5608,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-getrandom 0.2.12
+getrandom 0.2.14
 https://github.com/rust-random/getrandom
 by The Rand Project Developers
 A small cross-platform library for retrieving random data from system source
@@ -5850,7 +5850,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-half 2.4.0
+half 2.4.1
 https://github.com/starkat99/half-rs
 by Kathryn Long <squeeself@gmail.com>
 Half-precision floating point f16 and bf16 types for Rust implementing the IEEE 754-2008 standard binary16 and bfloat16 types.
@@ -14478,7 +14478,7 @@ LICENSE:
 
 
 ====================================================
-qoqo-quest 0.13.0
+qoqo-quest 0.13.1
 https://github.com/HQSquantumsimulations/qoqo_quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator backend for qoqo quantum computing toolkit
@@ -15114,7 +15114,7 @@ LICENSE:
 
 
 ====================================================
-quest-sys 0.13.0
+quest-sys 0.13.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 Bindings to the QuEST quantum computer simulator C library
@@ -18429,7 +18429,7 @@ LICENSE:
 
 
 ====================================================
-roqoqo-quest 0.13.0
+roqoqo-quest 0.13.1
 https://github.com/HQSquantumsimulations/qoqo-quest
 by HQS Quantum Simulations <info@quantumsimulations.de>
 QuEST simulator for the qoqo quantum computing toolkit
