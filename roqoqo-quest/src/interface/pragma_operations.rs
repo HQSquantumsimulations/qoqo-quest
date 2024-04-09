@@ -106,7 +106,13 @@ pub fn execute_replaced_repeated_measurement(
     let existing_register = bit_registers
         .get(operation.readout())
         .map(|x| x.to_owned())
-        .unwrap_or_else(|| vec![false; usize::try_from(number_qubits).unwrap()]);
+        .unwrap_or_else(|| {
+            vec![
+                false;
+                usize::try_from(number_qubits)
+                    .expect("Cannot transform u32 to usize on this platform")
+            ]
+        });
     let output_register: &mut BitOutputRegister = bit_registers_output
         .get_mut(operation.readout())
         .ok_or(RoqoqoBackendError::GenericError {
@@ -126,11 +132,8 @@ pub fn execute_replaced_repeated_measurement(
                 let tmp_output = index_to_qubits(index, number_qubits);
                 let mut new_output: Vec<bool> = existing_register.clone();
                 for (k, val) in tmp_output.into_iter().enumerate() {
-                    match mapping.get(&k) {
-                        Some(ind) => {
-                            new_output[*ind] = val;
-                        }
-                        None => (),
+                    if let Some(ind) = mapping.get(&k) {
+                        new_output[*ind] = val;
                     }
                 }
                 output_register.push(new_output);
