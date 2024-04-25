@@ -909,6 +909,7 @@ dependencies = [
 [[package]]
 name = "qoqo"
 version = "1.12.0"
+source = "git+https://github.com/dberthault/qoqo.git?branch=Pyo3_0.12_update#3d78d70194c4c7a07c99459ab2f6bcf102ea6067"
 dependencies = [
  "bincode",
  "ndarray",
@@ -934,6 +935,7 @@ dependencies = [
 [[package]]
 name = "qoqo-macros"
 version = "1.12.0"
+source = "git+https://github.com/dberthault/qoqo.git?branch=Pyo3_0.12_update#3d78d70194c4c7a07c99459ab2f6bcf102ea6067"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -961,6 +963,7 @@ dependencies = [
 [[package]]
 name = "qoqo_calculator"
 version = "1.2.0"
+source = "git+https://github.com/dberthault/qoqo_calculator.git#b8b770bf9c8391e8e5a9217d92481564415fad18"
 dependencies = [
  "num-complex",
  "schemars",
@@ -971,6 +974,7 @@ dependencies = [
 [[package]]
 name = "qoqo_calculator_pyo3"
 version = "1.2.0"
+source = "git+https://github.com/dberthault/qoqo_calculator.git#b8b770bf9c8391e8e5a9217d92481564415fad18"
 dependencies = [
  "num-complex",
  "pyo3",
@@ -1105,6 +1109,7 @@ checksum = "adad44e29e4c806119491a7f06f03de4d1af22c3a680dd47f1e6e179439d1f56"
 [[package]]
 name = "roqoqo"
 version = "1.12.0"
+source = "git+https://github.com/dberthault/qoqo.git?branch=Pyo3_0.12_update#3d78d70194c4c7a07c99459ab2f6bcf102ea6067"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1128,6 +1133,7 @@ dependencies = [
 [[package]]
 name = "roqoqo-derive"
 version = "1.12.0"
+source = "git+https://github.com/dberthault/qoqo.git?branch=Pyo3_0.12_update#3d78d70194c4c7a07c99459ab2f6bcf102ea6067"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1304,6 +1310,7 @@ checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
 [[package]]
 name = "struqture"
 version = "1.7.0"
+source = "git+https://github.com/dberthault/struqture.git#5aea3ddbf7e34b3a527839365f9bbe490b9d23bb"
 dependencies = [
  "itertools 0.12.1",
  "ndarray",
@@ -1319,6 +1326,7 @@ dependencies = [
 [[package]]
 name = "struqture-py"
 version = "1.7.0"
+source = "git+https://github.com/dberthault/struqture.git#5aea3ddbf7e34b3a527839365f9bbe490b9d23bb"
 dependencies = [
  "bincode",
  "num-complex",
@@ -1341,6 +1349,7 @@ dependencies = [
 [[package]]
 name = "struqture-py-macros"
 version = "1.7.0"
+source = "git+https://github.com/dberthault/struqture.git#5aea3ddbf7e34b3a527839365f9bbe490b9d23bb"
 dependencies = [
  "num-complex",
  "proc-macro2",
