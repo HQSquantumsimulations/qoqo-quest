@@ -1,9 +1,5 @@
 [workspace]
-members = [
-    "qoqo-quest",
-    "roqoqo-quest",
-    "quest-sys",
-]
+members = ["qoqo-quest", "roqoqo-quest", "quest-sys"]
 
 resolver = "2"
 

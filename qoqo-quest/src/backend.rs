@@ -81,7 +81,7 @@ impl BackendWrapper {
         let serialized = serialize(&self.internal)
             .map_err(|_| PyValueError::new_err("Cannot serialize Backend to bytes"))?;
         let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-            PyByteArray::new(py, &serialized[..]).into()
+            PyByteArray::new_bound(py, &serialized[..]).into()
         });
         Ok(b)
     }
@@ -98,7 +98,7 @@ impl BackendWrapper {
     ///     TypeError: Input cannot be converted to byte array.
     ///     ValueError: Input cannot be deserialized to Backend.
     #[classmethod]
-    pub fn from_bincode(_cls: &PyType, input: &PyAny) -> PyResult<BackendWrapper> {
+    pub fn from_bincode(_cls: &Bound<PyType>, input: &Bound<PyAny>) -> PyResult<BackendWrapper> {
         let bytes = input
             .extract::<Vec<u8>>()
             .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
@@ -133,7 +133,7 @@ impl BackendWrapper {
     /// Raises:
     ///     ValueError: Input cannot be deserialized to Backend.
     #[classmethod]
-    fn from_json(_cls: &PyType, input: &str) -> PyResult<BackendWrapper> {
+    fn from_json(_cls: &Bound<PyType>, input: &str) -> PyResult<BackendWrapper> {
         Ok(BackendWrapper {
             internal: serde_json::from_str(input)
                 .map_err(|_| PyValueError::new_err("Input cannot be deserialized to Backend"))?,
@@ -162,7 +162,7 @@ impl BackendWrapper {
     /// Raises:
     ///     TypeError: Circuit argument cannot be converted to qoqo Circuit
     ///     RuntimeError: Running Circuit failed
-    pub fn run_circuit(&self, circuit: &PyAny) -> PyResult<Registers> {
+    pub fn run_circuit(&self, circuit: &Bound<PyAny>) -> PyResult<Registers> {
         let circuit = convert_into_circuit(circuit).map_err(|err| {
             PyTypeError::new_err(format!(
                 "Circuit argument cannot be converted to qoqo Circuit {:?}",
@@ -195,7 +195,7 @@ impl BackendWrapper {
     /// Raises:
     ///     TypeError: Cannot extract constant circuit from measurement
     ///     RuntimeError: Running Circuit failed
-    pub fn run_measurement_registers(&self, measurement: &PyAny) -> PyResult<Registers> {
+    pub fn run_measurement_registers(&self, measurement: &Bound<PyAny>) -> PyResult<Registers> {
         let mut run_circuits: Vec<Circuit> = Vec::new();
 
         let get_constant_circuit = measurement
@@ -216,7 +216,7 @@ impl BackendWrapper {
             })?;
 
         let constant_circuit = match const_circuit {
-            Some(x) => convert_into_circuit(x).map_err(|err| {
+            Some(x) => convert_into_circuit(&x.as_borrowed()).map_err(|err| {
                 PyTypeError::new_err(format!(
                     "Cannot extract constant circuit from measurement {:?}",
                     err
@@ -241,7 +241,7 @@ impl BackendWrapper {
         for c in circuit_list {
             run_circuits.push(
                 constant_circuit.clone()
-                    + convert_into_circuit(c).map_err(|err| {
+                    + convert_into_circuit(&c.as_borrowed()).map_err(|err| {
                         PyTypeError::new_err(format!(
                             "Cannot extract circuit of circuit list from measurement {:?}",
                             err
@@ -299,7 +299,10 @@ impl BackendWrapper {
     /// Raises:
     ///     TypeError: Measurement evaluate function could not be used
     ///     RuntimeError: Internal error measurement.evaluation returned unknown type
-    pub fn run_measurement(&self, measurement: &PyAny) -> PyResult<Option<HashMap<String, f64>>> {
+    pub fn run_measurement(
+        &self,
+        measurement: &Bound<PyAny>,
+    ) -> PyResult<Option<HashMap<String, f64>>> {
         let (bit_registers, float_registers, complex_registers) =
             self.run_measurement_registers(measurement)?;
         let get_expectation_values = measurement
@@ -336,7 +339,7 @@ impl BackendWrapper {
     ///     RuntimeError: Internal error measurement.evaluation returned unknown type
     pub fn run_program(
         &self,
-        program: &PyAny,
+        program: &Bound<PyAny>,
         parameters: Vec<f64>,
     ) -> PyResult<Option<HashMap<String, f64>>> {
         let program = qoqo::convert_into_quantum_program(program)

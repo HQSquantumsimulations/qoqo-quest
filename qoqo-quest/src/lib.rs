@@ -33,7 +33,7 @@ pub use backend::{convert_into_backend, BackendWrapper};
 ///     Backend
 ///
 #[pymodule]
-fn qoqo_quest(_py: Python, module: &PyModule) -> PyResult<()> {
+fn qoqo_quest(_py: Python, module: &Bound<PyModule>) -> PyResult<()> {
     module.add_class::<BackendWrapper>()?;
     // Adding nice imports corresponding to maturin example
     Ok(())
