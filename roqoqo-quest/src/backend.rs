@@ -203,7 +203,7 @@ impl Backend {
             get_number_used_qubits_and_registers(&circuit_vec)?;
 
         if number_used_qubits > self.number_qubits {
-            return Err(RoqoqoBackendError::GenericError { msg: format!(" Insufficient qubits in backend. Available qubits:`{}`. Number of qubits used in circuit:`{}` ", self.number_qubits, number_used_qubits) });
+            return Err(RoqoqoBackendError::GenericError { msg: format!(" Insufficient qubits in backend. Available qubits:`{}`. Use of qubits with index: `{}`. ", self.number_qubits, number_used_qubits) });
         }
 
         let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
@@ -243,13 +243,13 @@ impl Backend {
                 Operation::PragmaRepeatedMeasurement(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=Some(0);}
+                        None => { number_measurements = Some(*o.number_measurements()); repeated_measurement_readout.clone_from(o.readout()); replace_measurements=Some(0);}
                         }
                 }
                 Operation::PragmaSetNumberOfMeasurements(o) => {
                     match number_measurements{
                         Some(_) => return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )}),
-                        None => {number_measurements = Some(*o.number_measurements()); repeated_measurement_readout = o.readout().clone(); replace_measurements=Some(0);}
+                        None => {number_measurements = Some(*o.number_measurements()); repeated_measurement_readout.clone_from(o.readout()); replace_measurements=Some(0);}
                     }
                 }
                 _ => ()

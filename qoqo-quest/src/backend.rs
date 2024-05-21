@@ -66,7 +66,7 @@ impl BackendWrapper {
     ///
     /// Returns:
     ///     Backend: A deep copy of self.
-    pub fn __deepcopy__(&self, _memodict: Py<PyAny>) -> BackendWrapper {
+    pub fn __deepcopy__(&self, _memodict: &Bound<PyAny>) -> BackendWrapper {
         self.clone()
     }
 
