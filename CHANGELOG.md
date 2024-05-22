@@ -4,6 +4,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+* Fixed dependencies issues caused by Pyo3 0.21 support release
+
 ## 0.13.1
 
 * Fixing out-of-index bug when using MeasureQubit together with PragmaSetNumberOfMeasurements when measuring fewer qubits than are used in a circuit 
