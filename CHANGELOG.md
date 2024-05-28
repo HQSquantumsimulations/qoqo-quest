@@ -9,6 +9,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 * Updated to qoqo 1.12.0 and pyo3 0.21.
 * Clearer error message for qubits index out of range.
 
+## 0.13.2
+
+* Fixed dependencies issues caused by Pyo3 0.21 support release
+
 ## 0.13.1
 
 * Fixing out-of-index bug when using MeasureQubit together with PragmaSetNumberOfMeasurements when measuring fewer qubits than are used in a circuit 

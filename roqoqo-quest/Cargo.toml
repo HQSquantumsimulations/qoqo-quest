@@ -20,10 +20,10 @@ doctest = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-quest-sys = { version = "0.14.0", path = "../quest-sys", default-features = false }
-roqoqo = { version = "1.12", features = ["serialize"] }
+quest-sys = { version = "~0.14", path = "../quest-sys", default-features = false }
+roqoqo = { version = "~1.13", features = ["serialize"] }
 
-qoqo_calculator = { version = "1.2" }
+qoqo_calculator = { version = "~1.2" }
 num-complex = { version = "0.4" }
 serde = { version = "1.0", features = ["derive"] }
 rand = "0.8"
