@@ -625,7 +625,7 @@ fn test_insufficient_qubit_error1() {
     let e = res.unwrap_err();
     assert_eq!(
         e,
-        RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`4`. Number of qubits used in circuit:`6` ".to_string() }
+        RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`4`. Number of qubits used in circuit:`6`. ".to_string() }
     )
 }
 
@@ -641,7 +641,7 @@ fn test_insufficient_qubit_error2() {
     let e = res.unwrap_err();
     assert_eq!(
         e,
-        RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`1`. Number of qubits used in circuit:`4` ".to_string() }
+        RoqoqoBackendError::GenericError { msg: " Insufficient qubits in backend. Available qubits:`1`. Number of qubits used in circuit:`4`. ".to_string() }
     )
 }
 

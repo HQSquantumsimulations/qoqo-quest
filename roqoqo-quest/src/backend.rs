@@ -203,7 +203,7 @@ impl Backend {
             get_number_used_qubits_and_registers(&circuit_vec)?;
 
         if number_used_qubits > self.number_qubits {
-            return Err(RoqoqoBackendError::GenericError { msg: format!(" Insufficient qubits in backend. Available qubits:`{}`. Number of qubits used in circuit:`{}` ", self.number_qubits, number_used_qubits) });
+            return Err(RoqoqoBackendError::GenericError { msg: format!(" Insufficient qubits in backend. Available qubits:`{}`. Number of qubits used in circuit:`{}`. ", self.number_qubits, number_used_qubits) });
         }
 
         let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
