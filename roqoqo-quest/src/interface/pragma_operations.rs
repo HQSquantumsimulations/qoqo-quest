@@ -380,6 +380,13 @@ pub fn execute_pragma_get_density_matrix(
 ) -> Result<(), RoqoqoBackendError> {
     let readout = operation.readout();
     let density_matrix_flattened_row_major = qureg.density_matrix_flattened_row_major()?;
+    let reg_length = complex_registers.get(&readout.clone()).unwrap().len();
+    let density_matrix_length = density_matrix_flattened_row_major.len();
+    if reg_length != density_matrix_length {
+        return Err(RoqoqoBackendError::GenericError {
+            msg: format!("Incorrect density matrix dimensions: {} elements, but the DefinitionComplex register is {} elements long.", reg_length, density_matrix_length),
+        });
+    }
     complex_registers.insert(readout.clone(), density_matrix_flattened_row_major);
     Ok(())
 }
