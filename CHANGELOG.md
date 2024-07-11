@@ -6,6 +6,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## 0.14.2
 
+* Neglected to update quest-sys to the correct version. This aims to correct that oversight.
+
+## 0.14.1
+
 * Updated to qoqo 1.15 and struqture to 1.8
 
 ## 0.14.0
