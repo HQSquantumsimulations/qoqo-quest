@@ -1,6 +1,6 @@
 [package]
 name = "qoqo-quest"
-version = "0.14.1"
+version = "0.14.2"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
