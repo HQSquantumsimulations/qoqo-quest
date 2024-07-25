@@ -133,14 +133,10 @@ mod tests {
         c += PauliX::new(4);
         c += PauliX::new(5);
 
-        let (n, reg) =
-            get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
+        let (n, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(6, n);
 
-        let cmp_register = HashMap::from([
-            ("ro".to_string(), 3),
-            ("ro3".to_string(), 4),
-        ]);
+        let cmp_register = HashMap::from([("ro".to_string(), 3), ("ro3".to_string(), 4)]);
         assert_eq!(cmp_register, reg);
     }
 
@@ -271,8 +267,7 @@ mod tests {
 
         c += PragmaGetDensityMatrix::new("rc".to_string(), None);
 
-        let (_, reg) =
-            get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::from([("ro".to_string(), 2)]);
         assert_eq!(cmp_register, reg);
@@ -281,8 +276,7 @@ mod tests {
         c += DefinitionFloat::new("ro".to_string(), 2, true);
         c += DefinitionFloat::new("ri".to_string(), 2, false);
 
-        let (_, reg) =
-            get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::new();
         assert_eq!(cmp_register, reg);
@@ -291,8 +285,7 @@ mod tests {
         c += DefinitionComplex::new("ro".to_string(), 64, true);
         c += DefinitionComplex::new("ri".to_string(), 2, false);
 
-        let (used, reg) =
-            get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
+        let (used, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::new();
         assert_eq!(cmp_register, reg);
@@ -302,8 +295,7 @@ mod tests {
         c += DefinitionBit::new("ro".to_string(), 2, true);
         c += DefinitionComplex::new("ri".to_string(), 10, true);
 
-        let (used, reg) =
-            get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
+        let (used, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::from([("ro".to_string(), 2)]);
         assert_eq!(cmp_register, reg);
