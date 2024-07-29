@@ -1,6 +1,6 @@
 [project]
 name = "qoqo-quest"
-version = "0.14.3"
+version = "0.14.4-alpha.0"
 dependencies = ["numpy", "qoqo>=1.15", "qoqo_calculator_pyo3>=1.2"]
 license = { text = "Apache-2.0 AND Apache-2.0 with LLVM-exception AND MIT AND Unicode-DFS-2016 AND BSD-2-Clause AND BSD-3-CLause" }
 maintainers = [
@@ -9,7 +9,7 @@ maintainers = [
 requires-python = ">=3.8"
 
 [build-system]
-requires = ["maturin>=0.14,<0.15"]
+requires = ["maturin>=1.4"]
 build-backend = "maturin"
 
 [tool.maturin]
