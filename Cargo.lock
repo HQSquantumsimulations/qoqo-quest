@@ -19,9 +19,9 @@ checksum = "4b46cbb362ab8752921c97e041f5e366ee6297bd428a31275b9fcf1e380f7299"
 
 [[package]]
 name = "anstyle"
-version = "1.0.7"
+version = "1.0.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "038dfcf04a5feb68e9c60b21c9625a54c2c0616e79b72b0fd87075a056ae1d1b"
+checksum = "1bec1de6f59aedf83baf9ff929c98f2ad654b97c9510f4e70cf6f661d49fd5b1"
 
 [[package]]
 name = "approx"
@@ -95,9 +95,15 @@ checksum = "79296716171880943b8470b5f8d03aa55eb2e645a4874bdbb28adb49162e012c"
 
 [[package]]
 name = "bytemuck"
-version = "1.16.1"
+version = "1.16.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b236fc92302c97ed75b38da1f4917b5cdda4984745740f153a5d3059e48d725e"
+checksum = "102087e286b4677862ea56cf8fc58bb2cdfa8725c40ffb80fe3a008eb7f2fc83"
+
+[[package]]
+name = "byteorder"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "cast"
@@ -107,9 +113,9 @@ checksum = "37b2a672a2cb129a2e41c10b1224bb368f9f37a2b16b612598138befd7b37eb5"
 
 [[package]]
 name = "cc"
-version = "1.1.6"
+version = "1.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2aba8f4e9906c7ce3c73463f62a7f0c65183ada1a2d47e397cc8810827f9694f"
+checksum = "26a5c3fd7bfa1ce3897a3a3501d362b2d87b7f2583ebcb4a949ec25911025cbc"
 
 [[package]]
 name = "cexpr"
@@ -166,18 +172,18 @@ dependencies = [
 
 [[package]]
 name = "clap"
-version = "4.5.10"
+version = "4.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f6b81fb3c84f5563d509c59b5a48d935f689e993afa90fe39047f05adef9142"
+checksum = "35723e6a11662c2afb578bcf0b88bf6ea8e21282a953428f240574fcc3a2b5b3"
 dependencies = [
  "clap_builder",
 ]
 
 [[package]]
 name = "clap_builder"
-version = "4.5.10"
+version = "4.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ca6706fd5224857d9ac5eb9355f6683563cc0541c7cd9d014043b57cbec78ac"
+checksum = "49eb96cbfa7cfa35017b7cd548c75b14c3118c98b423041d70562665e07fb0fa"
 dependencies = [
  "anstyle",
  "clap_lex",
@@ -185,9 +191,9 @@ dependencies = [
 
 [[package]]
 name = "clap_lex"
-version = "0.7.1"
+version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b82cf0babdbd58558212896d1a4272303a57bdb245c2bf1147185fb45640e70"
+checksum = "1462739cb27611015575c0c11df5df7601141071f07518d56fcc1be504cbec97"
 
 [[package]]
 name = "criterion"
@@ -566,9 +572,9 @@ checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
 
 [[package]]
 name = "matrixmultiply"
-version = "0.3.8"
+version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7574c1cf36da4798ab73da5b215bbf444f50718207754cb522201d78d1cd0ff2"
+checksum = "9380b911e3e96d10c1f415da0876389aaf1b56759054eeb0de7df940c456ba1a"
 dependencies = [
  "autocfg",
  "rawpointer",
@@ -810,9 +816,13 @@ checksum = "da544ee218f0d287a911e9c99a39a8c9bc8fcad3cb8db5959940044ecfc67265"
 
 [[package]]
 name = "ppv-lite86"
-version = "0.2.17"
+version = "0.2.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b40af805b3121feab8a3c29f04d8ad262fa8e0561883e7653e024ae4479e6de"
+checksum = "2288c0e17cc8d342c712bb43a257a80ebffce59cdb33d5000d8348f3ec02528b"
+dependencies = [
+ "zerocopy",
+ "zerocopy-derive",
+]
 
 [[package]]
 name = "prettyplease"
@@ -920,7 +930,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture 1.9.1",
+ "struqture 1.9.2",
  "struqture-py",
  "syn",
  "thiserror",
@@ -934,13 +944,13 @@ checksum = "0423a0df4b8211d526d6e3f77ded22dcebce04ea419026f5c2b53330df58568e"
 dependencies = [
  "proc-macro2",
  "quote",
- "struqture 1.9.1",
+ "struqture 1.9.2",
  "syn",
 ]
 
 [[package]]
 name = "qoqo-quest"
-version = "0.14.4-alpha.0"
+version = "0.14.4-alpha.1"
 dependencies = [
  "bincode",
  "pyo3",
@@ -983,7 +993,7 @@ dependencies = [
 
 [[package]]
 name = "quest-sys"
-version = "0.14.4-alpha.0"
+version = "0.14.4-alpha.1"
 dependencies = [
  "bindgen",
  "cc",
@@ -1123,7 +1133,7 @@ dependencies = [
  "rand_distr",
  "roqoqo-derive",
  "serde",
- "struqture 1.9.1",
+ "struqture 1.9.2",
  "syn",
  "thiserror",
 ]
@@ -1141,7 +1151,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-quest"
-version = "0.14.4-alpha.0"
+version = "0.14.4-alpha.1"
 dependencies = [
  "async-trait",
  "criterion",
@@ -1263,11 +1273,12 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.120"
+version = "1.0.121"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4e0d21c9a8cae1235ad58a00c11cb40d4b1e5c784f1ef2c537876ed6ffd8b7c5"
+checksum = "4ab380d7d9f22ef3f21ad3e6c1ebe8e4fc7a2000ccba2e4d71fc96f15b2cb609"
 dependencies = [
  "itoa",
+ "memchr",
  "ryu",
  "serde",
 ]
@@ -1308,9 +1319,9 @@ checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
 
 [[package]]
 name = "struqture"
-version = "1.9.1"
+version = "1.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06dcbf646241a3425eab2aa566b768f36951ad6512c6c8052d3c7d56df8c9f43"
+checksum = "7d2f2566561f41f3ea377bd6d952bdec12430fc9f322ee0fb291080e2a012f42"
 dependencies = [
  "itertools 0.13.0",
  "ndarray",
@@ -1335,7 +1346,7 @@ dependencies = [
  "num-complex",
  "qoqo_calculator",
  "serde",
- "struqture 1.9.1",
+ "struqture 1.9.2",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1343,9 +1354,9 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.9.1"
+version = "1.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf25c720dedf7d52a86d8aed9a73577d14e692a5ff8824ce7505879f54891770"
+checksum = "e0997e709a607cd7aaf3465b63a1a84eafa2919eeb21e7ee98ae883417c3e09d"
 dependencies = [
  "bincode",
  "num-complex",
@@ -1360,7 +1371,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture 1.9.1",
+ "struqture 1.9.2",
  "struqture 2.0.0-alpha.3",
  "struqture-py-macros",
  "syn",
@@ -1369,9 +1380,9 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.9.1"
+version = "1.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc9d0dfdc35daa9bc1e4f7e3a0435602258ab1016a9d855d4b53feb9f590e3ce"
+checksum = "d868323a28c24607112dbb2b047113d6f457579ddf6fa07eb909fc32be372a71"
 dependencies = [
  "num-complex",
  "proc-macro2",
@@ -1392,9 +1403,9 @@ dependencies = [
 
 [[package]]
 name = "target-lexicon"
-version = "0.12.15"
+version = "0.12.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4873307b7c257eddcb50c9bedf158eb669578359fb28428bef438fec8e6ba7c2"
+checksum = "61c41af27dd6d1e27b1b16b489db798443478cef1f06a660c96db617ba5de3b1"
 
 [[package]]
 name = "test-case"
@@ -1676,3 +1687,24 @@ name = "windows_x86_64_msvc"
 version = "0.52.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
+
+[[package]]
+name = "zerocopy"
+version = "0.7.35"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1b9b4fd18abc82b8136838da5d50bae7bdea537c574d8dc1a34ed098d6c166f0"
+dependencies = [
+ "byteorder",
+ "zerocopy-derive",
+]
+
+[[package]]
+name = "zerocopy-derive"
+version = "0.7.35"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fa4f8080344d4671fb4e831a13ad1e68092748387dfc4f55e356242fae12ce3e"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
