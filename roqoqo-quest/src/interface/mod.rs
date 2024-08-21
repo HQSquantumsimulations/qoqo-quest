@@ -375,6 +375,30 @@ pub fn call_operation_with_device(
             }
             Ok(())
         }
+        Operation::SqrtPauliY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
+            check_single_qubit_availability(op, device)?;
+            unsafe {
+                quest_sys::rotateY(
+                    qureg.quest_qureg,
+                    *op.qubit() as ::std::os::raw::c_int,
+                    std::f64::consts::FRAC_PI_2,
+                )
+            }
+            Ok(())
+        }
+        Operation::InvSqrtPauliY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
+            check_single_qubit_availability(op, device)?;
+            unsafe {
+                quest_sys::rotateY(
+                    qureg.quest_qureg,
+                    *op.qubit() as ::std::os::raw::c_int,
+                    std::f64::consts::FRAC_PI_2 * -1.0,
+                )
+            }
+            Ok(())
+        }
         Operation::RotateAroundSphericalAxis(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
