@@ -257,32 +257,16 @@ pub fn call_operation_with_device(
             }
             Ok(())
         }
-        Operation::PragmaConditional(op) => {
-            match bit_registers.get(op.condition_register()) {
-                None => {
-                    return Err(RoqoqoBackendError::GenericError {
-                        msg: format!(
-                            "Conditional register {:?} not found in classical bit registers.",
-                            op.condition_register()
-                        ),
-                    });
-                }
-                Some(x) => {
-                    if x[*op.condition_index()] {
-                        call_circuit_with_device(
-                            op.circuit(),
-                            qureg,
-                            bit_registers,
-                            float_registers,
-                            complex_registers,
-                            bit_registers_output,
-                            device,
-                        )?;
-                    }
-                }
-            }
-            Ok(())
-        }
+        Operation::PragmaConditional(op) => execute_pragma_conditional(
+            op,
+            qureg,
+            float_registers,
+            bit_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+            call_circuit_with_device,
+        ),
         Operation::RotateX(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;

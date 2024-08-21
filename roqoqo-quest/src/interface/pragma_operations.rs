@@ -553,10 +553,46 @@ pub fn execute_get_occupation_probability(
     Ok(())
 }
 
+pub fn execute_pragma_conditional(
+    op: &PragmaConditional,
+    qureg: &mut Qureg,
+    float_registers: &mut HashMap<String, Vec<f64>>,
+    bit_registers: &mut HashMap<String, Vec<bool>>,
+    complex_registers: &mut HashMap<String, Vec<num_complex::Complex<f64>>>,
+    bit_registers_output: &mut HashMap<String, Vec<Vec<bool>>>,
+    device: &mut Option<Box<dyn Device>>,
+    circuit_handler: CallCircuitWithDevice,
+) -> Result<(), RoqoqoBackendError> {
+    match bit_registers.get(op.condition_register()) {
+        None => {
+            return Err(RoqoqoBackendError::GenericError {
+                msg: format!(
+                    "Conditional register {:?} not found in classical bit registers.",
+                    op.condition_register()
+                ),
+            });
+        }
+        Some(x) => {
+            if x[*op.condition_index()] {
+                circuit_handler(
+                    op.circuit(),
+                    qureg,
+                    bit_registers,
+                    float_registers,
+                    complex_registers,
+                    bit_registers_output,
+                    device,
+                )?;
+            }
+        }
+    }
+    Ok(())
+}
+
 #[inline]
 /// Sanitizes negative occupation probabilities
 ///
-/// Setting negative probablilites with an absolute value less than a threshold to 0
+/// Setting negative probabilites with an absolute value less than a threshold to 0
 fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBackendError> {
     for val in probabilities.iter_mut() {
         if *val < NEGATIVE_PROBABILITIES_CUTOFF {
