@@ -149,25 +149,32 @@ pub fn call_operation(
     )
 }
 
-/// Simulates a single available operation ([roqoqo::operations::Operation]) acting on a quantum register
+/// Simulates a single available operation ([roqoqo::operations::Operation]) acting on a quantum
+/// register.
 ///
-/// When the optional device parameter is not None availability checks will be performed.
-/// The availability of the operation on a specific device is checked first.
-/// The function returns an error if the operation is not available on the device
-/// even if it can be simulated with the QuEST simulator.
+/// When the optional device parameter is not None availability checks will be performed. The
+/// availability of the operation on a specific device is checked first. The function returns an
+/// error if the operation is not available on the device even if it can be simulated with the QuEST
+/// simulator.
 ///
 ///
 /// # Arguments
 ///
-/// `operations` - The [roqoqo::operations::Operation] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution to
-/// `device` - The optional [roqoqo::devices::Device] that determines the availability of operations
+/// * `operation` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
+///   to write complex values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
+///   to write measurements of simulated repetitions of circuit execution to
+/// * `device` - The optional [roqoqo::devices::Device] that determines the availability of
+///   operations
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_operation_with_device(
     operation: &Operation,
     qureg: &mut Qureg,
@@ -225,61 +232,23 @@ pub fn call_operation_with_device(
         }
         Operation::PragmaGetPauliProduct(op) => execute_get_pauli_prod(
             op,
-            float_registers,
             qureg,
+            float_registers,
             bit_registers,
             complex_registers,
             bit_registers_output,
             device,
         ),
-        Operation::PragmaGetOccupationProbability(op) => {
-            unsafe {
-                let mut workspace = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
-                match op.circuit() {
-                    Some(x) => {
-                        call_circuit_with_device(
-                            x,
-                            qureg,
-                            bit_registers,
-                            float_registers,
-                            complex_registers,
-                            bit_registers_output,
-                            device,
-                        )?;
-                    }
-                    None => {}
-                }
-                quest_sys::cloneQureg(workspace.quest_qureg, qureg.quest_qureg);
-                let probas: Vec<f64>;
-                if qureg.is_density_matrix {
-                    let op = PragmaGetDensityMatrix::new(op.readout().clone(), None);
-                    let mut register: HashMap<String, ComplexRegister> = HashMap::new();
-                    execute_pragma_get_density_matrix(&op, &mut workspace, &mut register)?;
-                    match register.get(op.readout()) {
-                        Some(p) => probas = p.iter().map(|x| x.re).collect(),
-                        None => {
-                            return Err(RoqoqoBackendError::GenericError {
-                                msg: "Issue in get_density_matrix".to_string(),
-                            });
-                        }
-                    }
-                } else {
-                    let op = PragmaGetStateVector::new(op.readout().clone(), None);
-                    let mut register: HashMap<String, ComplexRegister> = HashMap::new();
-                    execute_pragma_get_state_vector(&op, &mut workspace, &mut register)?;
-                    match register.get(op.readout()) {
-                        Some(p) => probas = p.iter().map(|x| x.re).collect(),
-                        None => {
-                            return Err(RoqoqoBackendError::GenericError {
-                                msg: "Issue in get_state_vector".to_string(),
-                            });
-                        }
-                    }
-                }
-                float_registers.insert(op.readout().clone(), probas);
-            }
-            Ok(())
-        }
+        Operation::PragmaGetOccupationProbability(op) => execute_get_occupation_probability(
+            op,
+            qureg,
+            float_registers,
+            bit_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+            call_circuit_with_device,
+        ),
         Operation::PragmaActiveReset(op) => {
             unsafe {
                 if quest_sys::measure(qureg.quest_qureg, *op.qubit() as i32) == 1 {
@@ -720,7 +689,13 @@ fn check_acts_on_qubits_in_qureg(
     if let InvolvedQubits::Set(involved_qubits) = operation.involved_qubits() {
         for q in involved_qubits.iter() {
             if *q >= number_qubits {
-                return Err(RoqoqoBackendError::GenericError { msg: format!("Not enough qubits reserved. QuEST simulator used {} qubits but operation acting on {}" ,number_qubits, q) });
+                return Err(RoqoqoBackendError::GenericError {
+                    msg: format!(
+                        "Not enough qubits reserved. QuEST simulator used {} qubits but operation \
+                         acting on {}",
+                        number_qubits, q
+                    ),
+                });
             }
         }
     }
