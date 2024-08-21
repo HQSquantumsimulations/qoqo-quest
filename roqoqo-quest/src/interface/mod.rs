@@ -49,14 +49,19 @@ const ALLOWED_OPERATIONS: &[&str; 11] = &[
 ///
 /// # Arguments
 ///
-/// `circuit` - The [roqoqo::Circuit] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution to
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_circuit(
     circuit: &Circuit,
     qureg: &mut Qureg,
@@ -87,15 +92,21 @@ pub fn call_circuit(
 ///
 /// # Arguments
 ///
-/// `circuit` - The [roqoqo::Circuit] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution
-/// `device` - The optional [roqoqo::devices::Device] that determines the availability of operations
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
+/// * `device` - The optional [roqoqo::devices::Device] that determines the availability of
+///   operations
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_circuit_with_device(
     circuit: &Circuit,
     qureg: &mut Qureg,
@@ -119,18 +130,23 @@ pub fn call_circuit_with_device(
     Ok(())
 }
 
-/// Simulates a single operation ([roqoqo::operations::Operation]) acting on a quantum register
+/// Simulates a single operation ([roqoqo::operations::Operation]) acting on a quantum register.
 ///
 /// # Arguments
 ///
-/// `operations` - The [roqoqo::operations::Operation] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution to
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_operation(
     operation: &Operation,
     qureg: &mut Qureg,
@@ -161,15 +177,15 @@ pub fn call_operation(
 ///
 /// # Arguments
 ///
-/// * `operation` - The [roqoqo::operations::Operation] that is simulated
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
 /// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
 /// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
 /// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
 ///   from the simulator to
-/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///   to write complex values extracted from the simulator to
-/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///   to write measurements of simulated repetitions of circuit execution to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
 /// * `device` - The optional [roqoqo::devices::Device] that determines the availability of
 ///   operations
 ///
