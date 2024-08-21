@@ -28,6 +28,7 @@ pub(crate) use pragma_operations::{
     execute_pragma_repeated_measurement, execute_replaced_repeated_measurement,
 };
 pub use preprocessing::get_number_used_qubits_and_registers;
+use std::os::raw::c_int;
 
 // Pragma operations that are ignored by backend and do not throw an error
 const ALLOWED_OPERATIONS: &[&str; 11] = &[
@@ -252,7 +253,7 @@ pub fn call_operation_with_device(
         Operation::PragmaActiveReset(op) => {
             unsafe {
                 if quest_sys::measure(qureg.quest_qureg, *op.qubit() as i32) == 1 {
-                    quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int)
+                    quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as c_int)
                 }
             }
             Ok(())
@@ -273,7 +274,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateX(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -285,7 +286,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateY(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -297,7 +298,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateZ(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -309,7 +310,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::phaseShift(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -318,37 +319,37 @@ pub fn call_operation_with_device(
         Operation::PauliX(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::PauliY(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::pauliY(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::pauliY(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::PauliZ(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::pauliZ(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::pauliZ(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::Hadamard(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::hadamard(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::hadamard(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::SGate(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::sGate(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::sGate(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::TGate(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::tGate(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::tGate(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::SqrtPauliX(op) => {
@@ -357,7 +358,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateX(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     std::f64::consts::FRAC_PI_2,
                 )
             }
@@ -369,7 +370,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateX(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     std::f64::consts::FRAC_PI_2 * -1.0,
                 )
             }
@@ -381,7 +382,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateY(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     std::f64::consts::FRAC_PI_2,
                 )
             }
@@ -393,7 +394,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateY(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     std::f64::consts::FRAC_PI_2 * -1.0,
                 )
             }
@@ -410,7 +411,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateAroundAxis(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                     vector.vector,
                 )
@@ -423,8 +424,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledNot(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -435,8 +436,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledPhaseShift(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -448,8 +449,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledPauliY(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -460,8 +461,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledPhaseFlip(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -472,8 +473,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledRotateX(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -498,8 +499,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledUnitary(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                     complex_matrix,
                 )
             }
@@ -511,8 +512,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::swapGate(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -522,7 +523,7 @@ pub fn call_operation_with_device(
                 unsafe {
                     quest_sys::mixDamping(
                         qureg.quest_qureg,
-                        *op.qubit() as ::std::os::raw::c_int,
+                        *op.qubit() as c_int,
                         f64::try_from(op.probability())?,
                     )
                 }
@@ -534,7 +535,7 @@ pub fn call_operation_with_device(
                 unsafe {
                     quest_sys::mixDephasing(
                         qureg.quest_qureg,
-                        *op.qubit() as ::std::os::raw::c_int,
+                        *op.qubit() as c_int,
                         f64::try_from(op.probability())?,
                     )
                 }
@@ -546,7 +547,7 @@ pub fn call_operation_with_device(
                 unsafe {
                     quest_sys::mixDepolarising(
                         qureg.quest_qureg,
-                        *op.qubit() as ::std::os::raw::c_int,
+                        *op.qubit() as c_int,
                         f64::try_from(op.probability())?,
                     )
                 }
