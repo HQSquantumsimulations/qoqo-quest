@@ -195,36 +195,25 @@ impl Backend {
     ///
     /// # Returns
     ///
-    /// `RegisterResult` - The output registers written by the evaluated circuits.
+    /// * `RegisterResult` - The output registers written by the evaluated circuits.
     pub fn run_circuit_iterator_with_device<'a>(
         &self,
         circuit: impl Iterator<Item = &'a Operation>,
         device: &mut Option<Box<dyn roqoqo::devices::Device>>,
     ) -> RegisterResult {
+        let circuit_vec: Vec<&'a Operation> = circuit.into_iter().collect();
+        self.validate_circuit(&circuit_vec)?;
+
         // Set up output registers
         let mut bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
         let mut float_registers_output: HashMap<String, FloatOutputRegister> = HashMap::new();
         let mut complex_registers_output: HashMap<String, ComplexOutputRegister> = HashMap::new();
 
-        let circuit_vec: Vec<&'a Operation> = circuit.into_iter().collect();
-
         let (number_used_qubits, register_lengths) =
             get_number_used_qubits_and_registers(&circuit_vec)?;
 
-        if number_used_qubits > self.number_qubits {
-            return Err(RoqoqoBackendError::GenericError {
-                msg: format!(
-                    "Insufficient qubits in backend. \
-                     Available qubits: {} \
-                     Number of qubits used in circuit: {}",
-                    self.number_qubits, number_used_qubits
-                ),
-            });
-        }
-
         // Automatically switch to density matrix mode if operations are present in the
         // circuit that require density matrix mode
-        // TODO does ANY pragma need to trigger density matrix mode?
         let is_density_matrix = circuit_vec.iter().any(find_pragma_op);
 
         // Calculate total global phase of the circuit
@@ -308,13 +297,12 @@ impl Backend {
         let mut measured_qubits: Vec<usize> = Vec::new();
         let mut measured_qubits_in_repeated_measurement: Vec<usize> = Vec::new();
         let mut temporary_repetitions = self.repetitions;
+
         for op in circuit_vec.iter() {
             match op {
                 Operation::MeasureQubit(o) => {
+                    // If we have a repeated measurement (number_measurements not None)
                     if let Some(nm) = number_measurements {
-                        // If we have a repeated measurement (number_measurements not None)
-                        // Check that
-
                         if o.readout() != &repeated_measurement_readout
                             || measured_qubits_in_repeated_measurement.contains(o.qubit())
                         {
@@ -341,12 +329,19 @@ impl Backend {
                             }
 
                             None => {
-                                return Err(RoqoqoBackendError::GenericError{msg: "No register corresponding to PragmaRepeatedMeasurement readout found".to_string()});
+                                return Err(RoqoqoBackendError::GenericError{
+                                    msg:
+                                    "No register corresponding to PragmaRepeatedMeasurement readout \
+                                     found"
+                                        .to_string()
+                                });
                             }
                         };
 
                         if o.readout() != &repeated_measurement_readout {
-                            return Err(RoqoqoBackendError::GenericError{msg: format!("Only one repeated measurement allowed, trying to run repeated measurement for {} but already used for  {:?}", o.readout(), repeated_measurement_readout )});
+                            return Err(RoqoqoBackendError::GenericError {
+                                msg: REPEATED_MEAS_ERROR.to_string(),
+                            })
                         } else if measured_qubits.iter().any(|q| involved_qubits.contains(q)) {
                             replace_measurements = None;
                             temporary_repetitions = nm * repetitions;
@@ -410,6 +405,7 @@ impl Backend {
                 None
             };
 
+        let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
         for _ in 0..repetitions {
             qureg.reset();
             let mut bit_registers_internal: HashMap<String, BitRegister> = HashMap::new();
@@ -456,8 +452,29 @@ impl Backend {
             complex_registers_output,
         ))
     }
+
+    #[inline]
+    fn validate_circuit(&self, circuit_vec: &Vec<&Operation>) -> Result<(), RoqoqoBackendError> {
+        let (number_used_qubits, _) =
+            get_number_used_qubits_and_registers(&circuit_vec)?;
+
+        if number_used_qubits > self.number_qubits {
+            return Err(RoqoqoBackendError::GenericError {
+                msg: format!(
+                    "Insufficient qubits in backend. \
+                     Available qubits: {} \
+                     Number of qubits used in circuit: {}",
+                    self.number_qubits, number_used_qubits
+                ),
+            });
+        }
+        Ok(())
+    }
 }
 
+/// Handler for repeated measurements.
+///
+/// TODO write docstring after deciding on desired behavior
 #[inline]
 fn handle_repeated_measurements(
     circuit_vec: &Vec<&Operation>,
@@ -465,6 +482,13 @@ fn handle_repeated_measurements(
     repeated_measurement_readout: &mut String,
     replace_measurements: &mut Option<usize>,
 ) -> Result<(), RoqoqoBackendError> {
+    // TODO At the moment this function allows to have both MeasureQubit and
+    // PragmaRepeatedMeasurement. If we want to change this behavior, I would set the value of this
+    // boolean inside the first match statement directly, add a match arm for MeasureQubit, and
+    // remove the second match. 
+
+    // let mut found_fitting_measurement = false;
+
     for op in circuit_vec.iter() {
         match op {
             Operation::PragmaRepeatedMeasurement(o) => match number_measurements {
@@ -504,6 +528,7 @@ fn handle_repeated_measurements(
         }
         _ => false,
     });
+
     if number_measurements.is_some() && !found_fitting_measurement {
         return Err(RoqoqoBackendError::GenericError {
             msg: format!(
@@ -541,7 +566,12 @@ fn run_inner_circuit_loop(
                             n - 1
                         }
                         None => {
-                            return Err(RoqoqoBackendError::GenericError{msg: "No register corresponding to PragmaRepeatedMeasurement readout found".to_string()});
+                            return Err(RoqoqoBackendError::GenericError{
+                                msg:
+                                "No register corresponding to PragmaRepeatedMeasurement readout \
+                                 found"
+                                    .to_string()
+                            });
                         }
                     };
                     for qb in 0..number_qubits {
