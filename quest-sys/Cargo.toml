@@ -1,11 +1,11 @@
 
 [package]
 name = "quest-sys"
-version = "0.14.0"
+version = "0.14.4-alpha.3"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0 AND MIT AND BSD-3-Clause"
 edition = "2021"
-rust-version = "1.67"
+rust-version = "1.70"
 categories = ["science", "simulation"]
 readme = "../README.md"
 repository = "https://github.com/HQSquantumsimulations/qoqo-quest"
@@ -31,7 +31,7 @@ path = "src/lib.rs"
 doctest = false
 
 [dependencies]
-openmp-sys = { version = "1.2.0", features = ["static"], optional = true }
+openmp-sys = { version = "~1.2.0", features = ["static"], optional = true }
 
 [build-dependencies]
 # cmake = {version ="0.1", features=[]}

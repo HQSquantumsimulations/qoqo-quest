@@ -14,6 +14,15 @@ use roqoqo::operations::*;
 use roqoqo::RoqoqoBackendError;
 use std::collections::HashMap;
 use std::collections::HashSet;
+
+#[inline]
+fn format_error_msg(reg_type: &str, reg_name: &str, op: &str, missing_op: &str) -> String {
+    format!(
+        "No {} readout register {} defined for {} operation. Did you forget to add a {} operation?",
+        reg_type, reg_name, op, missing_op
+    )
+}
+
 pub fn get_number_used_qubits_and_registers(
     circuit: &Vec<&Operation>,
 ) -> Result<(usize, HashMap<String, usize>), RoqoqoBackendError> {
@@ -48,7 +57,14 @@ pub fn get_number_used_qubits_and_registers(
                     let number_qubits = (*length).ilog(4) as usize;
                     used_qubits.extend(0..number_qubits);
                 } else {
-                    return Err(RoqoqoBackendError::GenericError{msg: format!("No Complex readout register {} defined for PragmaGetDensityMatrix operation. Did you forget to add a DefinitionComplex operation?", get_op.readout())});
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: format_error_msg(
+                            "Complex",
+                            get_op.readout(),
+                            "PragmaGetDensiryMatrix",
+                            "DefinitionComplex",
+                        ),
+                    });
                 }
             }
             Operation::PragmaGetStateVector(get_op) => {
@@ -56,7 +72,14 @@ pub fn get_number_used_qubits_and_registers(
                     let number_qubits = (*length).ilog2() as usize;
                     used_qubits.extend(0..number_qubits);
                 } else {
-                    return Err(RoqoqoBackendError::GenericError{msg: format!("No Complex readout register {} defined for PragmaGetStateVector operation. Did you forget to add a DefinitionComplex operation?", get_op.readout())});
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: format_error_msg(
+                            "Complex",
+                            get_op.readout(),
+                            "PragmaGetStateVector",
+                            "DefinitionComplex",
+                        ),
+                    });
                 }
             }
             Operation::PragmaRepeatedMeasurement(rep_measure) => {
@@ -64,7 +87,14 @@ pub fn get_number_used_qubits_and_registers(
                     if let Some(mapping) = rep_measure.qubit_mapping() {
                         for x in mapping.values() {
                             if x >= length {
-                                return Err(RoqoqoBackendError::GenericError{msg: format!("Trying to write a qubit measurement in index {} or a bit register of length {}. Did you define a large enough register with the DefinitionBit operation?", x, length)});
+                                return Err(RoqoqoBackendError::GenericError {
+                                    msg: format!(
+                                        "Trying to write a qubit measurement in index {} or a bit \
+                                         register of length {}. Did you define a large enough \
+                                         register with the DefinitionBit operation?",
+                                        x, length
+                                    ),
+                                });
                             }
                         }
                         used_qubits.extend(mapping.keys());
@@ -72,33 +102,65 @@ pub fn get_number_used_qubits_and_registers(
                         used_qubits.extend(0..*length);
                     }
                 } else {
-                    return Err(RoqoqoBackendError::GenericError{msg: format!("No Bit readout register {} defined for PragmaRepeatedMeasurement operation. Did you forget to add a DefinitionBit operation?", rep_measure.readout())});
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: format_error_msg(
+                            "Bit",
+                            rep_measure.readout(),
+                            "PragmaRepeatedMeasurement",
+                            "DefinitionBit",
+                        ),
+                    });
                 }
             }
             Operation::PragmaGetOccupationProbability(get_op) => {
                 if let Some(length) = float_registers.get(get_op.readout()) {
                     used_qubits.extend(0..*length);
                 } else {
-                    return Err(RoqoqoBackendError::GenericError{msg: format!("No Float readout register {} defined for PragmaGetOccupationProbability operation. Did you forget to add a DefinitionFloat operation?", get_op.readout())});
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: format_error_msg(
+                            "Float",
+                            get_op.readout(),
+                            "PragmaGetOccupationProbability",
+                            "DefinitionFloat",
+                        ),
+                    });
                 }
             }
             Operation::PragmaGetPauliProduct(get_op) => {
                 used_qubits.extend(get_op.qubit_paulis().keys());
-                if let Some(length) = float_registers.get(get_op.readout()) {
-                    if length < &get_op.qubit_paulis().len() {
-                        return Err(RoqoqoBackendError::GenericError{msg: format!("Float readout register {} too small for number of readouts in PragmaGetPauliProduct operation. Register length {} number of readouts {}",get_op.readout(), length, get_op.qubit_paulis().len() )});
-                    }
-                } else {
-                    return Err(RoqoqoBackendError::GenericError{msg: format!("No Float readout register {} defined for PragmaGetPauliProduct operation. Did you forget to add a DefinitionFloat operation?",get_op.readout() )});
+                if !float_registers.contains_key(get_op.readout()) {
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: format_error_msg(
+                            "Float",
+                            get_op.readout(),
+                            "PragmaGetPauliProduct",
+                            "DefinitionFloat",
+                        ),
+                    });
                 }
             }
             Operation::MeasureQubit(measure_op) => {
                 if let Some(length) = bit_registers.get(measure_op.readout()) {
                     if measure_op.readout_index() >= length {
-                        return Err(RoqoqoBackendError::GenericError{msg: format!("Trying to write a qubit measurement in index {} or a bit register of length {}. Did you define a large enough register with the DefinitionBit operation?", measure_op.readout_index(), length)});
+                        return Err(RoqoqoBackendError::GenericError {
+                            msg: format!(
+                                "Trying to write a qubit measurement in index {} or a bit register \
+                                 of length {}. Did you define a large enough register with the \
+                                 DefinitionBit operation?",
+                                measure_op.readout_index(),
+                                length
+                            ),
+                        });
                     }
                 } else {
-                    return Err(RoqoqoBackendError::GenericError{msg: format!("No Bit readout register {} defined for MeasureQubit operation. Did you forget to add a DefinitionBit operation?", measure_op.readout())});
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: format_error_msg(
+                            "Bit",
+                            measure_op.readout(),
+                            "MeasureQubit",
+                            "DefinitionBit",
+                        ),
+                    });
                 }
             }
             _ => (),
@@ -133,14 +195,10 @@ mod tests {
         c += PauliX::new(4);
         c += PauliX::new(5);
 
-        let (n, reg) =
-            get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (n, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(6, n);
 
-        let cmp_register = HashMap::from([
-            ("ro".to_string(), 3 as usize),
-            ("ro3".to_string(), 4 as usize),
-        ]);
+        let cmp_register = HashMap::from([("ro".to_string(), 3), ("ro3".to_string(), 4)]);
         assert_eq!(cmp_register, reg);
     }
 
@@ -161,7 +219,7 @@ mod tests {
         c += PauliX::new(5);
         c += PragmaGetStateVector::new("ro".to_string(), None);
 
-        let res = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let res = get_number_used_qubits_and_registers(&c.iter().collect());
         assert!(res.is_err());
 
         let mut c = Circuit::new();
@@ -170,7 +228,7 @@ mod tests {
 
         c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let res = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let res = get_number_used_qubits_and_registers(&c.iter().collect());
         assert!(res.is_err());
     }
 
@@ -181,7 +239,7 @@ mod tests {
         c += DefinitionBit::new("ro1".to_string(), 4, true);
         c += PragmaGetOccupationProbability::new("ro".to_string(), None);
 
-        let res = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let res = get_number_used_qubits_and_registers(&c.iter().collect());
         assert!(res.is_err());
     }
 
@@ -192,7 +250,7 @@ mod tests {
         c += DefinitionBit::new("ro1".to_string(), 4, true);
         c += PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
 
-        let res = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let res = get_number_used_qubits_and_registers(&c.iter().collect());
         assert!(res.is_err());
 
         let mut c = Circuit::new();
@@ -200,14 +258,14 @@ mod tests {
         c += DefinitionBit::new("ro1".to_string(), 4, true);
         c += MeasureQubit::new(0, "ro".to_string(), 20);
 
-        let res = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let res = get_number_used_qubits_and_registers(&c.iter().collect());
         assert!(res.is_err());
 
         let mut c = Circuit::new();
         c += DefinitionBit::new("ro".to_string(), 3, true);
         c += MeasureQubit::new(0, "ro".to_string(), 20);
 
-        let res = get_number_used_qubits_and_registers(&c.iter().into_iter().collect());
+        let res = get_number_used_qubits_and_registers(&c.iter().collect());
         assert!(res.is_err());
     }
 
@@ -218,7 +276,7 @@ mod tests {
         c += RotateX::new(0, 0.0.into());
         c += CNOT::new(0, 1);
 
-        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(2, n);
 
         let mut c = Circuit::new();
@@ -227,7 +285,7 @@ mod tests {
         c += CNOT::new(0, 1);
         c += PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
 
-        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(10, n);
 
         let mut c = Circuit::new();
@@ -236,7 +294,7 @@ mod tests {
         c += CNOT::new(0, 1);
         c += PragmaGetDensityMatrix::new("ro".to_string(), None);
 
-        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(2, n);
 
         let mut c = Circuit::new();
@@ -245,20 +303,20 @@ mod tests {
         c += CNOT::new(0, 1);
         c += PragmaGetStateVector::new("ro".to_string(), None);
 
-        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(4, n);
 
         let mut c = Circuit::new();
         c += RotateX::new(0, 0.0.into());
 
-        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(1, n);
 
         let mut c = Circuit::new();
         c += RotateX::new(0, 0.0.into());
         c += RotateX::new(12, 0.0.into());
 
-        let (n, _) = get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (n, _) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
         assert_eq!(13, n);
     }
 
@@ -271,18 +329,16 @@ mod tests {
 
         c += PragmaGetDensityMatrix::new("rc".to_string(), None);
 
-        let (_, reg) =
-            get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
-        let cmp_register = HashMap::from([("ro".to_string(), 2 as usize)]);
+        let cmp_register = HashMap::from([("ro".to_string(), 2)]);
         assert_eq!(cmp_register, reg);
 
         let mut c = Circuit::new();
         c += DefinitionFloat::new("ro".to_string(), 2, true);
         c += DefinitionFloat::new("ri".to_string(), 2, false);
 
-        let (_, reg) =
-            get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (_, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::new();
         assert_eq!(cmp_register, reg);
@@ -291,8 +347,7 @@ mod tests {
         c += DefinitionComplex::new("ro".to_string(), 64, true);
         c += DefinitionComplex::new("ri".to_string(), 2, false);
 
-        let (used, reg) =
-            get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (used, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::new();
         assert_eq!(cmp_register, reg);
@@ -302,10 +357,9 @@ mod tests {
         c += DefinitionBit::new("ro".to_string(), 2, true);
         c += DefinitionComplex::new("ri".to_string(), 10, true);
 
-        let (used, reg) =
-            get_number_used_qubits_and_registers(&c.iter().into_iter().collect()).unwrap();
+        let (used, reg) = get_number_used_qubits_and_registers(&c.iter().collect()).unwrap();
 
-        let cmp_register = HashMap::from([("ro".to_string(), 2 as usize)]);
+        let cmp_register = HashMap::from([("ro".to_string(), 2)]);
         assert_eq!(cmp_register, reg);
         assert_eq!(used, 1);
     }
