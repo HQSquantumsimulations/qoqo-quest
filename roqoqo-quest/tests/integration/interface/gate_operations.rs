@@ -57,6 +57,8 @@ fn create_empty_registers() -> Registers {
 #[test_case(operations::SingleQubitGateOperation::from(operations::TGate::new(0)); "TGate")]
 #[test_case(operations::SingleQubitGateOperation::from(operations::SqrtPauliX::new(0)); "SqrtPauliX")]
 #[test_case(operations::SingleQubitGateOperation::from(operations::InvSqrtPauliX::new(0)); "InvSqrtPauliX")]
+#[test_case(operations::SingleQubitGateOperation::from(operations::SqrtPauliY::new(0)); "SqrtPauliY")]
+#[test_case(operations::SingleQubitGateOperation::from(operations::InvSqrtPauliY::new(0)); "InvSqrtPauliY")]
 #[test_case(operations::SingleQubitGateOperation::from(operations::RotateAroundSphericalAxis::new(0, 1.0.into(), 0.5.into(), 1.0.into())); "RotateAroundSphericalAxis")]
 #[test_case(operations::SingleQubitGateOperation::from(operations::SingleQubitGate::new(0,0.5.into(),  0.5.into(), 0.5.into(), 0.5.into(), 0.5.into()));"SingleQubitGate")]
 #[test_case(operations::SingleQubitGateOperation::from(operations::GPi::new(0,0.5.into(),));"GPi")]

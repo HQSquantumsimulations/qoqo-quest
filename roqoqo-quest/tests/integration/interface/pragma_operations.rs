@@ -983,7 +983,7 @@ fn test_set_density_matrix_error_1() {
     assert_eq!(
         error,
         Err(RoqoqoBackendError::GenericError {
-            msg: "Can not set state vector number of qubits of statevector 1 differs from number of qubits in qubit register 1".to_string()
+            msg: "Can not set density matrix: number of qubits of density matrix (1) differs from number of qubits in qubit register (1).".to_string()
         })
     );
 }
@@ -1011,7 +1011,7 @@ fn test_set_density_matrix_error_2() {
     assert_eq!(
         error,
         Err(RoqoqoBackendError::GenericError {
-            msg: "Density matrix can not be set on state vector quantum register".to_string()
+            msg: "Density matrix can not be set on statevector quantum register".to_string()
         })
     );
 }
@@ -1036,7 +1036,7 @@ fn test_set_state_vector_error() {
     assert_eq!(
         error,
         Err(RoqoqoBackendError::GenericError {
-            msg: "Can not set state vector number of qubits of statevector 1 differs from number of qubits in qubit register 1".to_string()
+            msg: "Can not set statevector: number of qubits of statevector (1) differs from number of qubits in qubit register (1).".to_string()
         })
     );
 }
@@ -1116,6 +1116,45 @@ fn test_change_device() {
     let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
         create_empty_registers();
     let res = call_operation_with_device(
+        &op.into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+        &mut Some(Box::new(device)),
+    );
+    assert!(res.is_err());
+}
+
+#[test]
+fn test_check_availability_device() {
+    let mut generic_device = devices::GenericDevice::new(4);
+    generic_device
+        .set_single_qubit_gate_time("PauliX", 0, 0.01)
+        .unwrap();
+    generic_device
+        .set_three_qubit_gate_time("Toffoli", 0, 1, 2, 0.05)
+        .unwrap();
+    let device = devices::AllToAllDevice::new(4, &[], &[], 0.04);
+    let mut qureg = Qureg::new(5, true);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    let op = operations::PauliX::new(0);
+    let _ = call_operation_with_device(
+        &op.into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+        &mut Some(Box::new(generic_device.clone())),
+    )
+    .unwrap();
+
+    let op = operations::CNOT::new(0, 1);
+    let res = call_operation_with_device(
         &op.clone().into(),
         &mut qureg,
         &mut bit_registers,
@@ -1125,6 +1164,18 @@ fn test_change_device() {
         &mut Some(Box::new(device)),
     );
     assert!(res.is_err());
+
+    let op = operations::Toffoli::new(0, 1, 2);
+    let _ = call_operation_with_device(
+        &op.into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+        &mut Some(Box::new(generic_device.clone())),
+    )
+    .unwrap();
 }
 
 fn is_close(a: Complex64, b: Complex64) -> bool {
