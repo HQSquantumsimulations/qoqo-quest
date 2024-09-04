@@ -13,55 +13,23 @@ pub struct QASMLogger {
 fn bindgen_test_layout_QASMLogger() {
     const UNINIT: ::std::mem::MaybeUninit<QASMLogger> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<QASMLogger>(),
-        24usize,
-        concat!("Size of: ", stringify!(QASMLogger))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<QASMLogger>(),
-        8usize,
-        concat!("Alignment of ", stringify!(QASMLogger))
-    );
+    assert_eq!(::std::mem::size_of::<QASMLogger>(), 24usize,);
+    assert_eq!(::std::mem::align_of::<QASMLogger>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).buffer) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QASMLogger),
-            "::",
-            stringify!(buffer)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).bufferSize) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QASMLogger),
-            "::",
-            stringify!(bufferSize)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).bufferFill) as usize - ptr as usize },
         12usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QASMLogger),
-            "::",
-            stringify!(bufferFill)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).isLogging) as usize - ptr as usize },
         16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QASMLogger),
-            "::",
-            stringify!(isLogging)
-        )
     );
 }
 #[doc = " Represents an array of complex numbers grouped into an array of\n real components and an array of coressponding complex components.\n\n @ingroup type\n @author Ania Brown"]
@@ -75,35 +43,15 @@ pub struct ComplexArray {
 fn bindgen_test_layout_ComplexArray() {
     const UNINIT: ::std::mem::MaybeUninit<ComplexArray> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<ComplexArray>(),
-        16usize,
-        concat!("Size of: ", stringify!(ComplexArray))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<ComplexArray>(),
-        8usize,
-        concat!("Alignment of ", stringify!(ComplexArray))
-    );
+    assert_eq!(::std::mem::size_of::<ComplexArray>(), 16usize,);
+    assert_eq!(::std::mem::align_of::<ComplexArray>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).real) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexArray),
-            "::",
-            stringify!(real)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).imag) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexArray),
-            "::",
-            stringify!(imag)
-        )
     );
 }
 pub const pauliOpType_PAULI_I: pauliOpType = 0;
@@ -123,35 +71,15 @@ pub struct Complex {
 fn bindgen_test_layout_Complex() {
     const UNINIT: ::std::mem::MaybeUninit<Complex> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<Complex>(),
-        16usize,
-        concat!("Size of: ", stringify!(Complex))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<Complex>(),
-        8usize,
-        concat!("Alignment of ", stringify!(Complex))
-    );
+    assert_eq!(::std::mem::size_of::<Complex>(), 16usize,);
+    assert_eq!(::std::mem::align_of::<Complex>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).real) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Complex),
-            "::",
-            stringify!(real)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).imag) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Complex),
-            "::",
-            stringify!(imag)
-        )
     );
 }
 #[doc = " Represents a 2x2 matrix of complex numbers.\n\n In C, a ::ComplexMatrix2 can be initialised by separately specifying\n the real and imaginary components as nested arrays. \\n\n For example,\n ```\n ComplexMatrix2 m = {\n     .real = {{1,2},\n              {3,4}},\n     .imag = {{5,6},\n              {7, 8}}};\n ```\n specifies matrix\n \\f[\n   m = \\begin{pmatrix}\n      1 + 5\\,i & 2+6\\,i \\\\\n      3 + 7\\,i & 4+ 8\\,i\n   \\end{pmatrix}\n \\f]\n\n @see\n - ::ComplexMatrix4\n - createComplexMatrixN()\n\n @ingroup type\n @author Balint Koczor\n @author Tyson Jones (doc)"]
@@ -165,35 +93,15 @@ pub struct ComplexMatrix2 {
 fn bindgen_test_layout_ComplexMatrix2() {
     const UNINIT: ::std::mem::MaybeUninit<ComplexMatrix2> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<ComplexMatrix2>(),
-        64usize,
-        concat!("Size of: ", stringify!(ComplexMatrix2))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<ComplexMatrix2>(),
-        8usize,
-        concat!("Alignment of ", stringify!(ComplexMatrix2))
-    );
+    assert_eq!(::std::mem::size_of::<ComplexMatrix2>(), 64usize,);
+    assert_eq!(::std::mem::align_of::<ComplexMatrix2>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).real) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexMatrix2),
-            "::",
-            stringify!(real)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).imag) as usize - ptr as usize },
         32usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexMatrix2),
-            "::",
-            stringify!(imag)
-        )
     );
 }
 #[doc = " Represents a 4x4 matrix of complex numbers\n\n In C, a ::ComplexMatrix4 can be initialised by separately specifying\n the real and imaginary components as nested arrays. Note that in C99, a short row\n that ends with a 0 with be padded with 0. \\n\n For example,\n ```\n ComplexMatrix4 m = {\n      .real = {{1,2, 3, 4},\n               {0},\n               {5,6,7,8},\n               {0}},\n      .imag = {{0},{0},{0},{1,1,1,1}}};\n ```\n specifies matrix\n \\f[\n   m = \\begin{pmatrix}\n      1 & 2 & 3 & 4 \\\\\n      0 & 0 & 0 & 0 \\\\\n      5 & 6 & 7 & 8 \\\\\n      i & i & i & i\n   \\end{pmatrix}\n \\f]\n\n @see\n - ::ComplexMatrix2\n - createComplexMatrixN()\n\n @ingroup type\n @author Balint Koczor\n @author Tyson Jones (doc)"]
@@ -207,35 +115,15 @@ pub struct ComplexMatrix4 {
 fn bindgen_test_layout_ComplexMatrix4() {
     const UNINIT: ::std::mem::MaybeUninit<ComplexMatrix4> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<ComplexMatrix4>(),
-        256usize,
-        concat!("Size of: ", stringify!(ComplexMatrix4))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<ComplexMatrix4>(),
-        8usize,
-        concat!("Alignment of ", stringify!(ComplexMatrix4))
-    );
+    assert_eq!(::std::mem::size_of::<ComplexMatrix4>(), 256usize,);
+    assert_eq!(::std::mem::align_of::<ComplexMatrix4>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).real) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexMatrix4),
-            "::",
-            stringify!(real)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).imag) as usize - ptr as usize },
         128usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexMatrix4),
-            "::",
-            stringify!(imag)
-        )
     );
 }
 #[doc = " Represents a general 2^N by 2^N matrix of complex numbers.\n\n @ingroup type\n @author Tyson Jones"]
@@ -250,45 +138,19 @@ pub struct ComplexMatrixN {
 fn bindgen_test_layout_ComplexMatrixN() {
     const UNINIT: ::std::mem::MaybeUninit<ComplexMatrixN> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<ComplexMatrixN>(),
-        24usize,
-        concat!("Size of: ", stringify!(ComplexMatrixN))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<ComplexMatrixN>(),
-        8usize,
-        concat!("Alignment of ", stringify!(ComplexMatrixN))
-    );
+    assert_eq!(::std::mem::size_of::<ComplexMatrixN>(), 24usize,);
+    assert_eq!(::std::mem::align_of::<ComplexMatrixN>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numQubits) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexMatrixN),
-            "::",
-            stringify!(numQubits)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).real) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexMatrixN),
-            "::",
-            stringify!(real)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).imag) as usize - ptr as usize },
         16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(ComplexMatrixN),
-            "::",
-            stringify!(imag)
-        )
     );
 }
 #[doc = " Represents a 3-vector of real numbers\n\n @ingroup type\n @author Ania Brown"]
@@ -303,30 +165,19 @@ pub struct Vector {
 fn bindgen_test_layout_Vector() {
     const UNINIT: ::std::mem::MaybeUninit<Vector> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<Vector>(),
-        24usize,
-        concat!("Size of: ", stringify!(Vector))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<Vector>(),
-        8usize,
-        concat!("Alignment of ", stringify!(Vector))
-    );
+    assert_eq!(::std::mem::size_of::<Vector>(), 24usize,);
+    assert_eq!(::std::mem::align_of::<Vector>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).x) as usize - ptr as usize },
         0usize,
-        concat!("Offset of field: ", stringify!(Vector), "::", stringify!(x))
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).y) as usize - ptr as usize },
         8usize,
-        concat!("Offset of field: ", stringify!(Vector), "::", stringify!(y))
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).z) as usize - ptr as usize },
         16usize,
-        concat!("Offset of field: ", stringify!(Vector), "::", stringify!(z))
     );
 }
 pub const phaseFunc_NORM: phaseFunc = 0;
@@ -367,55 +218,23 @@ pub struct PauliHamil {
 fn bindgen_test_layout_PauliHamil() {
     const UNINIT: ::std::mem::MaybeUninit<PauliHamil> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<PauliHamil>(),
-        24usize,
-        concat!("Size of: ", stringify!(PauliHamil))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<PauliHamil>(),
-        8usize,
-        concat!("Alignment of ", stringify!(PauliHamil))
-    );
+    assert_eq!(::std::mem::size_of::<PauliHamil>(), 24usize,);
+    assert_eq!(::std::mem::align_of::<PauliHamil>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).pauliCodes) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(PauliHamil),
-            "::",
-            stringify!(pauliCodes)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).termCoeffs) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(PauliHamil),
-            "::",
-            stringify!(termCoeffs)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numSumTerms) as usize - ptr as usize },
         16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(PauliHamil),
-            "::",
-            stringify!(numSumTerms)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numQubits) as usize - ptr as usize },
         20usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(PauliHamil),
-            "::",
-            stringify!(numQubits)
-        )
     );
 }
 #[doc = " Represents a diagonal complex operator on the full Hilbert state of a \\p Qureg.\n The operator need not be unitary nor Hermitian (which would constrain it to\n real values)\n\n @ingroup type\n @author Tyson Jones"]
@@ -441,85 +260,35 @@ pub struct DiagonalOp {
 fn bindgen_test_layout_DiagonalOp() {
     const UNINIT: ::std::mem::MaybeUninit<DiagonalOp> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<DiagonalOp>(),
-        56usize,
-        concat!("Size of: ", stringify!(DiagonalOp))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<DiagonalOp>(),
-        8usize,
-        concat!("Alignment of ", stringify!(DiagonalOp))
-    );
+    assert_eq!(::std::mem::size_of::<DiagonalOp>(), 56usize,);
+    assert_eq!(::std::mem::align_of::<DiagonalOp>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numQubits) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(DiagonalOp),
-            "::",
-            stringify!(numQubits)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numElemsPerChunk) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(DiagonalOp),
-            "::",
-            stringify!(numElemsPerChunk)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numChunks) as usize - ptr as usize },
         16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(DiagonalOp),
-            "::",
-            stringify!(numChunks)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).chunkId) as usize - ptr as usize },
         20usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(DiagonalOp),
-            "::",
-            stringify!(chunkId)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).real) as usize - ptr as usize },
         24usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(DiagonalOp),
-            "::",
-            stringify!(real)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).imag) as usize - ptr as usize },
         32usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(DiagonalOp),
-            "::",
-            stringify!(imag)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).deviceOperator) as usize - ptr as usize },
         40usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(DiagonalOp),
-            "::",
-            stringify!(deviceOperator)
-        )
     );
 }
 #[doc = " Represents a diagonal complex operator of a smaller dimension than the full\n Hilbert state of a \\p Qureg.\n\n @ingroup type\n @author Tyson Jones"]
@@ -539,55 +308,23 @@ pub struct SubDiagonalOp {
 fn bindgen_test_layout_SubDiagonalOp() {
     const UNINIT: ::std::mem::MaybeUninit<SubDiagonalOp> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<SubDiagonalOp>(),
-        32usize,
-        concat!("Size of: ", stringify!(SubDiagonalOp))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<SubDiagonalOp>(),
-        8usize,
-        concat!("Alignment of ", stringify!(SubDiagonalOp))
-    );
+    assert_eq!(::std::mem::size_of::<SubDiagonalOp>(), 32usize,);
+    assert_eq!(::std::mem::align_of::<SubDiagonalOp>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numQubits) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(SubDiagonalOp),
-            "::",
-            stringify!(numQubits)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numElems) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(SubDiagonalOp),
-            "::",
-            stringify!(numElems)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).real) as usize - ptr as usize },
         16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(SubDiagonalOp),
-            "::",
-            stringify!(real)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).imag) as usize - ptr as usize },
         24usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(SubDiagonalOp),
-            "::",
-            stringify!(imag)
-        )
     );
 }
 #[doc = " Represents a system of qubits.\n Qubits are zero-based\n\n @ingroup type\n @author Ania Brown\n @author Tyson Jones (density matrix)"]
@@ -629,175 +366,71 @@ pub struct Qureg {
 fn bindgen_test_layout_Qureg() {
     const UNINIT: ::std::mem::MaybeUninit<Qureg> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<Qureg>(),
-        136usize,
-        concat!("Size of: ", stringify!(Qureg))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<Qureg>(),
-        8usize,
-        concat!("Alignment of ", stringify!(Qureg))
-    );
+    assert_eq!(::std::mem::size_of::<Qureg>(), 136usize,);
+    assert_eq!(::std::mem::align_of::<Qureg>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).isDensityMatrix) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(isDensityMatrix)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numQubitsRepresented) as usize - ptr as usize },
         4usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(numQubitsRepresented)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numQubitsInStateVec) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(numQubitsInStateVec)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numAmpsPerChunk) as usize - ptr as usize },
         16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(numAmpsPerChunk)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numAmpsTotal) as usize - ptr as usize },
         24usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(numAmpsTotal)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).chunkId) as usize - ptr as usize },
         32usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(chunkId)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numChunks) as usize - ptr as usize },
         36usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(numChunks)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).stateVec) as usize - ptr as usize },
         40usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(stateVec)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).pairStateVec) as usize - ptr as usize },
         56usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(pairStateVec)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).deviceStateVec) as usize - ptr as usize },
         72usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(deviceStateVec)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).firstLevelReduction) as usize - ptr as usize },
         88usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(firstLevelReduction)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).secondLevelReduction) as usize - ptr as usize },
         96usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(secondLevelReduction)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).cuStateVec) as usize - ptr as usize },
         104usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(cuStateVec)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).deviceCuStateVec) as usize - ptr as usize },
         112usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(deviceCuStateVec)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).cuConfig) as usize - ptr as usize },
         120usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(cuConfig)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).qasmLog) as usize - ptr as usize },
         128usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(Qureg),
-            "::",
-            stringify!(qasmLog)
-        )
     );
 }
 #[doc = " Information about the environment the program is running in.\n In practice, this holds info about MPI ranks and helps to hide MPI initialization code\n\n @ingroup type\n @author Ania Brown\n @author Tyson Jones (seeding)"]
@@ -814,65 +447,27 @@ pub struct QuESTEnv {
 fn bindgen_test_layout_QuESTEnv() {
     const UNINIT: ::std::mem::MaybeUninit<QuESTEnv> = ::std::mem::MaybeUninit::uninit();
     let ptr = UNINIT.as_ptr();
-    assert_eq!(
-        ::std::mem::size_of::<QuESTEnv>(),
-        32usize,
-        concat!("Size of: ", stringify!(QuESTEnv))
-    );
-    assert_eq!(
-        ::std::mem::align_of::<QuESTEnv>(),
-        8usize,
-        concat!("Alignment of ", stringify!(QuESTEnv))
-    );
+    assert_eq!(::std::mem::size_of::<QuESTEnv>(), 32usize,);
+    assert_eq!(::std::mem::align_of::<QuESTEnv>(), 8usize,);
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).rank) as usize - ptr as usize },
         0usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QuESTEnv),
-            "::",
-            stringify!(rank)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numRanks) as usize - ptr as usize },
         4usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QuESTEnv),
-            "::",
-            stringify!(numRanks)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).seeds) as usize - ptr as usize },
         8usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QuESTEnv),
-            "::",
-            stringify!(seeds)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).numSeeds) as usize - ptr as usize },
         16usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QuESTEnv),
-            "::",
-            stringify!(numSeeds)
-        )
     );
     assert_eq!(
         unsafe { ::std::ptr::addr_of!((*ptr).cuConfig) as usize - ptr as usize },
         24usize,
-        concat!(
-            "Offset of field: ",
-            stringify!(QuESTEnv),
-            "::",
-            stringify!(cuConfig)
-        )
     );
 }
 extern "C" {
