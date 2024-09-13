@@ -665,7 +665,8 @@ fn test_replaced_repeated_measurement_fewer_qubits() {
 }
 
 rusty_fork_test! {
-
+    /// Tests in this scope will be run in new processes.
+    /// That way their rng can't be influenced by an other test running in parallel.
     #[test]
     fn test_random_seed_measure_qubit() {
         let mut circuit = Circuit::new();

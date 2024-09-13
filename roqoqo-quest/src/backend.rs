@@ -41,6 +41,8 @@ use std::collections::HashMap;
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
+/// If different instances of the backend are running in parallel, the results won't be deterministic,
+/// even with a random_seed set.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Backend {
     /// Number of qubits supported by the backend
@@ -66,6 +68,8 @@ impl Backend {
     }
 
     /// Sets the random random seed for the backend.
+    /// If different instances of the backend are running in parallel, the results won't be deterministic,
+    /// even with a random_seed set.
     ///
     /// # Arguments
     ///

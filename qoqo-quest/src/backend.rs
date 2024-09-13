@@ -24,6 +24,9 @@ use std::collections::HashMap;
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
+///
+/// If different instances of the backend are running in parallel, the results won't be deterministic,
+/// even with a random_seed set.
 #[pyclass(name = "Backend", module = "qoqo_quest")]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BackendWrapper {
@@ -55,6 +58,8 @@ impl BackendWrapper {
     }
 
     /// Set the random seed used by the backend.
+    /// If different instances of the backend are running in parallel, the results won't be deterministic,
+    /// even with a random_seed set.
     ///
     /// Args:
     ///     random_seed (List[int]): The random seed to use
