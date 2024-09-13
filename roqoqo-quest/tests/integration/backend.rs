@@ -19,6 +19,7 @@ use roqoqo::devices::Device;
 use roqoqo::measurements::ClassicalRegister;
 use roqoqo::measurements::PauliProductsToExpVal;
 use roqoqo::operations;
+use rusty_fork::rusty_fork_test;
 
 use roqoqo::operations::*;
 use roqoqo::prelude::Measure;
@@ -663,8 +664,26 @@ fn test_replaced_repeated_measurement_fewer_qubits() {
     assert!(res.is_ok());
 }
 
+rusty_fork_test! {
 #[test]
-fn test_random_seed() {
+fn test_random_seed_measure_qubit() {
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 3, true);
+    circuit += operations::Hadamard::new(0);
+    circuit += operations::Hadamard::new(1);
+    circuit += operations::Hadamard::new(2);
+    circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+    circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+    circuit += operations::MeasureQubit::new(2, "ro".to_string(), 2);
+
+    let backend = Backend::new(3, Some(vec![666, 777]));
+    let res = backend.run_circuit_iterator(circuit.iter()).unwrap();
+    let ro = res.0.get("ro").unwrap();
+    assert_eq!(ro, &vec![vec![true, false, false],]);
+    }
+
+    #[test]
+    fn test_random_seed_set_number_measurement() {
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("ro".to_string(), 3, true);
     circuit += operations::Hadamard::new(0);
@@ -688,4 +707,32 @@ fn test_random_seed() {
             vec![true, false, true]
         ]
     );
+    }
+
+    #[test]
+    fn test_random_seed_repeated_measurements() {
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 3, true);
+    circuit += operations::Hadamard::new(0);
+    circuit += operations::Hadamard::new(1);
+    circuit += operations::Hadamard::new(2);
+    circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+    circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+    circuit += operations::MeasureQubit::new(2, "ro".to_string(), 2);
+
+    circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 5, None);
+    let backend = Backend::new(3, Some(vec![5554234234, 666456]));
+    let res = backend.run_circuit_iterator(circuit.iter()).unwrap();
+    let ro = res.0.get("ro").unwrap();
+    assert_eq!(
+        ro,
+        &vec![
+            vec![true, false, false],
+            vec![false, false, false],
+            vec![false, false, true],
+            vec![false, true, false],
+            vec![false, true, false]
+        ]
+    );
+}
 }
