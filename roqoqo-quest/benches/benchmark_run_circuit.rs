@@ -24,7 +24,7 @@ fn bench_run_long_circuit(c: &mut Criterion) {
                             circuit += operations::CNOT::new(i, i + 1);
                         }
                     }
-                    let backend = Backend::new(number);
+                    let backend = Backend::new(number, None);
                     let _res = backend.run_circuit(&circuit);
                 });
             },

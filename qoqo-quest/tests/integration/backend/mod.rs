@@ -71,6 +71,28 @@ fn test_running_circuit() {
 }
 
 #[test]
+fn test_backend_seed() {
+    pyo3::prepare_freethreaded_python();
+    let seeds = vec![555, 555, 555, 555, 555, 555];
+    Python::with_gil(|py| {
+        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend = backend_type.call1((3,)).unwrap();
+        let _ = backend
+            .downcast::<BackendWrapper>()
+            .unwrap()
+            .call_method1("set_random_seed", (seeds.clone(),))
+            .unwrap();
+        let seeds_type = backend
+            .downcast::<BackendWrapper>()
+            .unwrap()
+            .call_method0("get_random_seed")
+            .unwrap();
+        let python_seed = seeds_type.extract::<Vec<u64>>().unwrap();
+        assert_eq!(python_seed, seeds);
+    })
+}
+
+#[test]
 fn test_running_measurement() {
     pyo3::prepare_freethreaded_python();
     let mut circuit = Circuit::new();

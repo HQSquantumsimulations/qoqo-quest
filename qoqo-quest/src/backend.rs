@@ -50,8 +50,24 @@ impl BackendWrapper {
     #[new]
     pub fn new(number_qubits: usize) -> PyResult<Self> {
         Ok(Self {
-            internal: roqoqo_quest::Backend::new(number_qubits),
+            internal: roqoqo_quest::Backend::new(number_qubits, None),
         })
+    }
+
+    /// Set the random seed used by the backend.
+    ///
+    /// Args:
+    ///     random_seed (List[int]): The random seed to use
+    pub fn set_random_seed(&mut self, random_seed: Vec<u64>) {
+        self.internal.set_random_seed(random_seed);
+    }
+
+    /// Get the current random seed set for the backend.
+    ///
+    /// Returns:
+    ///     List[int]: The current random seed
+    pub fn get_random_seed(&self) -> Option<Vec<u64>> {
+        self.internal.random_seed.clone()
     }
 
     /// Return a copy of the Backend (copy here produces a deepcopy).

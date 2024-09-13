@@ -55,7 +55,8 @@ fn main() {
         .allowlist_function("multiQubitUnitary")
         .allowlist_function("measure")
         .allowlist_function("statevec_twoQubitUnitary")
-        .allowlist_function("calc.*");
+        .allowlist_function("calc.*")
+        .allowlist_function("seedQuEST");
 
     #[cfg(feature = "rebuild")]
     let bindings = builder.generate().expect("Unable to generate bindings");
