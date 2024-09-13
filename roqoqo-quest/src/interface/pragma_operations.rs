@@ -552,6 +552,7 @@ pub fn execute_get_occupation_probability(
     Ok(())
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn execute_pragma_conditional(
     op: &PragmaConditional,
     qureg: &mut Qureg,

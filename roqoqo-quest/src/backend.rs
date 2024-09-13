@@ -569,7 +569,7 @@ fn test_find_pragma_op() {
         .into_iter()
         .collect(),
     ));
-    assert_eq!(true, find_pragma_op(&&op));
+    assert!(find_pragma_op(&&op));
 
     let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaLoop::new(
         CalculatorFloat::from(5),
@@ -581,7 +581,7 @@ fn test_find_pragma_op() {
         .into_iter()
         .collect(),
     ));
-    assert_eq!(true, find_pragma_op(&&op));
+    assert!(find_pragma_op(&&op));
 
     let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetPauliProduct::new(
         HashMap::new(),
@@ -596,7 +596,7 @@ fn test_find_pragma_op() {
         .into_iter()
         .collect(),
     ));
-    assert_eq!(true, find_pragma_op(&&op));
+    assert!(find_pragma_op(&&op));
 
     let op = roqoqo::operations::Operation::from(
         roqoqo::operations::PragmaGetOccupationProbability::new(
@@ -614,7 +614,7 @@ fn test_find_pragma_op() {
             ),
         ),
     );
-    assert_eq!(true, find_pragma_op(&&op));
+    assert!(find_pragma_op(&&op));
 
     let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetDensityMatrix::new(
         "complex_register".to_owned(),
@@ -629,13 +629,13 @@ fn test_find_pragma_op() {
             .collect(),
         ),
     ));
-    assert_eq!(true, find_pragma_op(&&op));
+    assert!(find_pragma_op(&&op));
 
     let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetDensityMatrix::new(
         "complex_register".to_owned(),
         None,
     ));
-    assert_eq!(false, find_pragma_op(&&op));
+    assert!(!find_pragma_op(&&op));
 }
 
 #[cfg(feature = "async")]

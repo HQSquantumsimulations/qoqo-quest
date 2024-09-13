@@ -1142,7 +1142,7 @@ fn test_check_availability_device() {
     let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
         create_empty_registers();
     let op = operations::PauliX::new(0);
-    let _ = call_operation_with_device(
+    call_operation_with_device(
         &op.into(),
         &mut qureg,
         &mut bit_registers,
@@ -1166,7 +1166,7 @@ fn test_check_availability_device() {
     assert!(res.is_err());
 
     let op = operations::Toffoli::new(0, 1, 2);
-    let _ = call_operation_with_device(
+    call_operation_with_device(
         &op.into(),
         &mut qureg,
         &mut bit_registers,
