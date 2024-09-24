@@ -19,6 +19,7 @@ use roqoqo::devices::Device;
 use roqoqo::measurements::ClassicalRegister;
 use roqoqo::measurements::PauliProductsToExpVal;
 use roqoqo::operations;
+use rusty_fork::rusty_fork_test;
 
 use roqoqo::operations::*;
 use roqoqo::prelude::Measure;
@@ -49,7 +50,7 @@ fn test_measurement_with_repeated_measurement() {
         constant_circuit: Some(constant_circuit),
         circuits: vec![circuit, circuit1, circuit2],
     };
-    let backend = Backend::new(4);
+    let backend = Backend::new(4, None);
     let (bit_result, float_result, complex_result) =
         backend.run_measurement_registers(&measurement).unwrap();
     assert!(float_result.is_empty());
@@ -71,7 +72,7 @@ fn test_failing_set_number_of_measurments() {
     circuit += DefinitionBit::new("ro".to_string(), 1, true);
     circuit += MeasureQubit::new(0, "ro".to_string(), 0);
     circuit += PragmaSetNumberOfMeasurements::new(10, "ro_misspelled".to_string());
-    let backend = Backend::new(1);
+    let backend = Backend::new(1, None);
     let res = backend.run_circuit(&circuit);
     assert!(res.is_err());
 }
@@ -83,14 +84,14 @@ fn test_failing_two_set_measurments() {
     circuit += MeasureQubit::new(0, "ro".to_string(), 0);
     circuit += PragmaSetNumberOfMeasurements::new(10, "ro".to_string());
     circuit += PragmaSetNumberOfMeasurements::new(20, "ro".to_string());
-    let backend = Backend::new(1);
+    let backend = Backend::new(1, None);
     let res = backend.run_circuit(&circuit);
     assert!(res.is_err());
 }
 
 #[test]
 fn test_set_repetitions() {
-    let backend = Backend::new(2);
+    let backend = Backend::new(2, None);
     assert_eq!(backend.repetitions, 1);
     let backend = backend.set_repetitions(10);
     assert_eq!(backend.repetitions, 10);
@@ -104,7 +105,7 @@ fn test_set_repetitions() {
 
 #[test]
 fn test_readout_into_partial_register() {
-    let backend = Backend::new(6);
+    let backend = Backend::new(6, None);
     let mut circuit = Circuit::new();
     circuit += DefinitionBit::new("ro_0".to_string(), 6, true);
     circuit += Hadamard::new(0);
@@ -125,7 +126,7 @@ fn test_readout_into_partial_register() {
 
 #[test]
 fn test_readout_into_partial_register_set_number_measurements() {
-    let backend = Backend::new(6);
+    let backend = Backend::new(6, None);
     let mut circuit = Circuit::new();
     circuit += DefinitionBit::new("ro_0".to_string(), 6, true);
     circuit += PauliX::new(0);
@@ -147,7 +148,7 @@ fn test_readout_into_partial_register_set_number_measurements() {
 
 #[test]
 fn test_failing_set_number_measurements() {
-    let backend = Backend::new(6);
+    let backend = Backend::new(6, None);
     let mut circuit = Circuit::new();
     circuit += DefinitionBit::new("ro_0".to_string(), 6, true);
     circuit += Hadamard::new(0);
@@ -161,7 +162,7 @@ fn test_failing_set_number_measurements() {
 
 #[test]
 fn test_float_registry() {
-    let backend = Backend::new(1);
+    let backend = Backend::new(1, None);
     let mut circuit = Circuit::new();
     circuit += DefinitionFloat::new("ro_f".to_string(), 1, true);
 
@@ -172,7 +173,7 @@ fn test_float_registry() {
 
 #[test]
 fn test_running_with_device() {
-    let backend = Backend::new(3);
+    let backend = Backend::new(3, None);
     let device = AllToAllDevice::new(3, &["RotateZ".to_string()], &["CNOT".to_string()], 1.0);
     let mut circuit = Circuit::new();
     circuit += RotateX::new(0, 0.1.into());
@@ -207,7 +208,7 @@ fn test_global_phase() {
     circuit += DefinitionComplex::new("ro".to_string(), 4, true);
     circuit += PragmaGlobalPhase::new(0.1.into());
     circuit += PragmaGetStateVector::new("ro".to_string(), None);
-    let backend = Backend::new(2);
+    let backend = Backend::new(2, None);
     let (_, _, complex_res) = backend.run_circuit(&circuit).unwrap();
     assert_eq!(
         complex_res.get("ro").unwrap()[0][0],
@@ -222,7 +223,7 @@ fn test_failing_two_repeated_measurments() {
     circuit += MeasureQubit::new(0, "ro".to_string(), 0);
     circuit += PragmaSetNumberOfMeasurements::new(10, "ro".to_string());
     circuit += PragmaRepeatedMeasurement::new("ro".to_string(), 20, None);
-    let backend = Backend::new(1);
+    let backend = Backend::new(1, None);
     let res = backend.run_circuit(&circuit);
     assert!(res.is_err());
 }
@@ -239,7 +240,7 @@ fn test_measurement_with_repeated_measurement_async() {
         constant_circuit: Some(constant_circuit),
         circuits: vec![circuit],
     };
-    let backend = Backend::new(4);
+    let backend = Backend::new(4, None);
     let (bit_result, float_result, complex_result) =
         block_on(backend.async_run_measurement_registers(&measurement)).unwrap();
     assert!(float_result.is_empty());
@@ -261,7 +262,7 @@ fn test_circuit_with_repeated_measurement() {
     circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
     circuit += operations::PauliX::new(1);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let backend = Backend::new(4);
+    let backend = Backend::new(4, None);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
     assert!(float_result.is_empty());
@@ -285,7 +286,7 @@ fn test_circuit_with_repeated_measurement_and_previous_measurement() {
     circuit += operations::MeasureQubit::new(0, "ro".to_string(), 1);
     circuit += operations::PauliX::new(0);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let backend = Backend::new(2);
+    let backend = Backend::new(2, None);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
     assert!(float_result.is_empty());
@@ -307,7 +308,7 @@ fn test_circuit_with_repeated_measurement_and_input() {
     circuit += operations::DefinitionBit::new("ro1".to_string(), 2, true);
     circuit += operations::InputBit::new("ro1".to_string(), 1, true);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let backend = Backend::new(2);
+    let backend = Backend::new(2, None);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
     assert!(float_result.is_empty());
@@ -339,7 +340,7 @@ fn test_circuit_with_set_measurement_number() {
     circuit += operations::PauliX::new(2);
     circuit += operations::MeasureQubit::new(2, "ro".to_string(), 2);
     circuit += operations::PragmaSetNumberOfMeasurements::new(2, "ro".to_string());
-    let backend = Backend::new(6);
+    let backend = Backend::new(6, None);
     let (bit_result, float_result, complex_result) =
         backend.run_circuit_iterator(circuit.iter()).unwrap();
     assert!(float_result.is_empty());
@@ -363,7 +364,7 @@ fn test_circuit_with_repeated_measurement_async() {
     circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
     circuit += operations::PauliX::new(1);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let backend = Backend::new(4);
+    let backend = Backend::new(4, None);
     let (bit_result, float_result, complex_result) =
         block_on(backend.async_run_circuit_iterator(circuit.iter())).unwrap();
     assert!(float_result.is_empty());
@@ -585,7 +586,7 @@ fn test_pragma_stop_parallel_block_slow() {
         input,
     };
     let number_trottersteps = 500;
-    let backend = roqoqo_quest::Backend::new(2);
+    let backend = roqoqo_quest::Backend::new(2, None);
 
     for i in 0..number_trottersteps {
         let substituted = measurement
@@ -619,7 +620,7 @@ fn test_insufficient_qubit_error1() {
     circuit += operations::PauliX::new(5);
     circuit += operations::MeasureQubit::new(0, "ro0".to_string(), 0);
     circuit += operations::MeasureQubit::new(3, "ro3".to_string(), 3);
-    let backend = Backend::new(4);
+    let backend = Backend::new(4, None);
     let res = backend.run_circuit_iterator(circuit.iter());
     assert!(res.is_err());
     let e = res.unwrap_err();
@@ -635,7 +636,7 @@ fn test_insufficient_qubit_error2() {
     circuit += operations::DefinitionBit::new("ro".to_string(), 4, true);
     circuit += operations::PauliX::new(1);
     circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, None);
-    let backend = Backend::new(1);
+    let backend = Backend::new(1, None);
     let res = backend.run_circuit_iterator(circuit.iter());
     assert!(res.is_err());
     let e = res.unwrap_err();
@@ -658,7 +659,82 @@ fn test_replaced_repeated_measurement_fewer_qubits() {
     circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
 
     circuit += operations::PragmaSetNumberOfMeasurements::new(10, "ro".to_string());
-    let backend = Backend::new(3);
+    let backend = Backend::new(3, None);
     let res = backend.run_circuit_iterator(circuit.iter());
     assert!(res.is_ok());
+}
+
+rusty_fork_test! {
+    /// Tests in this scope will be run in new processes.
+    /// That way their rng can't be influenced by an other test running in parallel.
+    #[test]
+    fn test_random_seed_measure_qubit() {
+        let mut circuit = Circuit::new();
+        circuit += operations::DefinitionBit::new("ro".to_string(), 3, true);
+        circuit += operations::Hadamard::new(0);
+        circuit += operations::Hadamard::new(1);
+        circuit += operations::Hadamard::new(2);
+        circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+        circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+        circuit += operations::MeasureQubit::new(2, "ro".to_string(), 2);
+
+        let backend = Backend::new(3, Some(vec![666, 777]));
+        let res = backend.run_circuit_iterator(circuit.iter()).unwrap();
+        let ro = res.0.get("ro").unwrap();
+        assert_eq!(ro, &vec![vec![true, false, false],]);
+    }
+
+    #[test]
+    fn test_random_seed_set_number_measurement() {
+        let mut circuit = Circuit::new();
+        circuit += operations::DefinitionBit::new("ro".to_string(), 3, true);
+        circuit += operations::Hadamard::new(0);
+        circuit += operations::Hadamard::new(1);
+        circuit += operations::Hadamard::new(2);
+        circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+        circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+        circuit += operations::MeasureQubit::new(2, "ro".to_string(), 2);
+
+        circuit += operations::PragmaSetNumberOfMeasurements::new(5, "ro".to_string());
+        let backend = Backend::new(3, Some(vec![555, 666, 777]));
+        let res = backend.run_circuit_iterator(circuit.iter()).unwrap();
+        let ro = res.0.get("ro").unwrap();
+        assert_eq!(
+            ro,
+            &vec![
+                vec![true, true, false],
+                vec![true, true, true],
+                vec![true, false, true],
+                vec![false, true, true],
+                vec![true, false, true]
+            ]
+        );
+    }
+
+    #[test]
+    fn test_random_seed_repeated_measurements() {
+        let mut circuit = Circuit::new();
+        circuit += operations::DefinitionBit::new("ro".to_string(), 3, true);
+        circuit += operations::Hadamard::new(0);
+        circuit += operations::Hadamard::new(1);
+        circuit += operations::Hadamard::new(2);
+        circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+        circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+        circuit += operations::MeasureQubit::new(2, "ro".to_string(), 2);
+
+        circuit += operations::PragmaRepeatedMeasurement::new("ro".to_string(), 5, None);
+        let backend = Backend::new(3, Some(vec![5554234234, 666456]));
+        let res = backend.run_circuit_iterator(circuit.iter()).unwrap();
+        let ro = res.0.get("ro").unwrap();
+        assert_eq!(
+            ro,
+            &vec![
+                vec![true, false, false],
+                vec![false, false, false],
+                vec![false, false, true],
+                vec![false, true, false],
+                vec![false, true, false]
+            ]
+        );
+    }
 }

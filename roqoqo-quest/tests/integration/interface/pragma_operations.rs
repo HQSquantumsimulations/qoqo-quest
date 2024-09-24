@@ -960,7 +960,7 @@ fn test_set_density_matrix_error_1() {
     assert_eq!(
         error,
         Err(RoqoqoBackendError::GenericError {
-            msg: "Can not set state vector number of qubits of statevector 1 differs from number of qubits in qubit register 1".to_string()
+            msg: "Can not set density matrix: number of qubits of density matrix (1) differs from number of qubits in qubit register (1).".to_string()
         })
     );
 }
@@ -988,7 +988,7 @@ fn test_set_density_matrix_error_2() {
     assert_eq!(
         error,
         Err(RoqoqoBackendError::GenericError {
-            msg: "Density matrix can not be set on state vector quantum register".to_string()
+            msg: "Density matrix can not be set on statevector quantum register".to_string()
         })
     );
 }
@@ -1013,7 +1013,7 @@ fn test_set_state_vector_error() {
     assert_eq!(
         error,
         Err(RoqoqoBackendError::GenericError {
-            msg: "Can not set state vector number of qubits of statevector 1 differs from number of qubits in qubit register 1".to_string()
+            msg: "Can not set state vector: number of qubits of statevector (1) differs from number of qubits in qubit register (1).".to_string()
         })
     );
 }
