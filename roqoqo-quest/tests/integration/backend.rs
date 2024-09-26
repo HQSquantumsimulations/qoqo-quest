@@ -765,7 +765,7 @@ rusty_fork_test! {
                     vec![true, true, false],
                     vec![true, false, false],
                     vec![false, false, false],
-                ];
+                ]
             );
         }
 
