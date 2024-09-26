@@ -66,6 +66,19 @@ fn repeated_measurement() {
             assert_eq!(j, &false)
         }
     }
+    let mut mapping = HashMap::new();
+    mapping.insert(0, 0);
+    let operation: operations::Operation =
+        operations::PragmaRepeatedMeasurement::new("ro".to_string(), 10, Some(mapping)).into();
+    let a = call_operation(
+        &operation,
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(a.is_ok());
 }
 
 #[test]

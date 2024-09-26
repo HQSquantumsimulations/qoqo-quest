@@ -24,7 +24,7 @@
 //! roqoqo-quest provides a backend to simulate roqoqo quantum circuits with the QuEST simulator
 
 mod interface;
-pub use interface::{call_circuit, call_operation};
+pub use interface::{call_circuit, call_operation, call_operation_with_device};
 mod backend;
 pub use backend::Backend;
 mod quest_bindings;

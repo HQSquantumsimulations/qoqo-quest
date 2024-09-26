@@ -15,7 +15,8 @@ use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 use roqoqo::devices::Device;
 use roqoqo::operations::*;
-use roqoqo::registers::{BitOutputRegister, BitRegister, ComplexRegister};
+use roqoqo::registers::{BitOutputRegister, BitRegister, ComplexRegister, FloatRegister};
+use roqoqo::Circuit;
 use roqoqo::RoqoqoBackendError;
 use std::collections::HashMap;
 
@@ -24,6 +25,18 @@ use std::collections::HashMap;
 /// Negative probabilities with a smaller absolute value will be interpreted as 0.
 /// Negative probabilities with a larger absolute value will cause an error.
 const NEGATIVE_PROBABILITIES_CUTOFF: f64 = -1.0e-14;
+
+// type alias for the signature of call_circuit_with_device, to decouple this module from mod.rs and
+// avoid circular imports
+type CallCircuitWithDevice = fn(
+    &Circuit,
+    &mut Qureg,
+    &mut HashMap<String, BitRegister>,
+    &mut HashMap<String, FloatRegister>,
+    &mut HashMap<String, ComplexRegister>,
+    &mut HashMap<String, BitOutputRegister>,
+    &mut Option<Box<dyn roqoqo::devices::Device>>,
+) -> Result<(), RoqoqoBackendError>;
 
 pub fn execute_pragma_repeated_measurement(
     operation: &PragmaRepeatedMeasurement,
@@ -40,7 +53,7 @@ pub fn execute_pragma_repeated_measurement(
         WeightedIndex::new(&probabilities).map_err(|err| RoqoqoBackendError::GenericError {
             msg: format!("Probabilites from quantum register {:?}", err),
         })?;
-    let mut rng = thread_rng();
+    let mut rng = create_rng(qureg)?;
     let existing_register = bit_registers
         .get(operation.readout())
         .map(|x| x.to_owned())
@@ -102,7 +115,7 @@ pub fn execute_replaced_repeated_measurement(
         WeightedIndex::new(&probabilities).map_err(|err| RoqoqoBackendError::GenericError {
             msg: format!("Probabilites from quantum register {:?}", err),
         })?;
-    let mut rng = thread_rng();
+    let mut rng = create_rng(qureg)?;
     let existing_register = bit_registers
         .get(operation.readout())
         .map(|x| x.to_owned())
@@ -150,7 +163,13 @@ pub fn execute_pragma_set_state_vector(
     let statevec = operation.statevector();
     let num_amps: i64 = statevec.len() as i64;
     if num_amps != 2_i64.pow(qureg.number_qubits()) {
-        return Err(RoqoqoBackendError::GenericError{msg: format!("Can not set state vector number of qubits of statevector {} differs from number of qubits in qubit register {}", num_amps, qureg.number_qubits())});
+        return Err(RoqoqoBackendError::GenericError{
+            msg: format!(
+                "Can not set statevector: number of qubits of statevector ({}) differs from number of qubits in qubit register ({}).",
+                num_amps,
+                qureg.number_qubits()
+            )
+        });
     }
     if qureg.is_density_matrix {
         let mut reals: Vec<f64> = Vec::new();
@@ -213,7 +232,14 @@ pub fn execute_pragma_set_density_matrix(
     let density_matrix = operation.density_matrix();
     let (num_amps, _) = density_matrix.dim();
     if num_amps != 2_i64.pow(qureg.number_qubits()) as usize {
-        return Err(RoqoqoBackendError::GenericError{msg: format!("Can not set state vector number of qubits of statevector {} differs from number of qubits in qubit register {}", num_amps, qureg.number_qubits())});
+        return Err(RoqoqoBackendError::GenericError {
+            msg: format!(
+                "Can not set density matrix: number of qubits of density matrix ({}) differs from \
+                 number of qubits in qubit register ({}).",
+                num_amps,
+                qureg.number_qubits()
+            ),
+        });
     }
     if qureg.is_density_matrix {
         // Variant for row major order (ndarray default row major)
@@ -240,7 +266,7 @@ pub fn execute_pragma_set_density_matrix(
         Ok(())
     } else {
         Err(RoqoqoBackendError::GenericError {
-            msg: "Density matrix can not be set on state vector quantum register".to_string(),
+            msg: "Density matrix can not be set on statevector quantum register".to_string(),
         })
     }
 }
@@ -274,7 +300,7 @@ pub fn execute_pragma_random_noise(
     operation: &PragmaRandomNoise,
     qureg: &mut Qureg,
 ) -> Result<(), RoqoqoBackendError> {
-    let mut rng = thread_rng();
+    let mut rng = create_rng(qureg)?;
     let r0 = rng.gen_range(0.0..1.0);
     let rates = [
         operation.depolarising_rate().float()? / 4.0,
@@ -397,8 +423,8 @@ fn index_to_qubits(index: usize, number_qubits: u32) -> Vec<bool> {
 
 pub fn execute_get_pauli_prod(
     op: &PragmaGetPauliProduct,
-    float_registers: &mut HashMap<String, Vec<f64>>,
     qureg: &mut Qureg,
+    float_registers: &mut HashMap<String, Vec<f64>>,
     bit_registers: &mut HashMap<String, Vec<bool>>,
     complex_registers: &mut HashMap<String, Vec<num_complex::Complex<f64>>>,
     bit_registers_output: &mut HashMap<String, Vec<Vec<bool>>>,
@@ -438,7 +464,7 @@ pub fn execute_get_pauli_prod(
             device,
         )?;
         unsafe {
-            let pauliprod = quest_sys::calcExpecPauliProd(
+            let pp = quest_sys::calcExpecPauliProd(
                 workspace.quest_qureg,
                 qubits.as_mut_ptr(),
                 paulis.as_mut_ptr(),
@@ -447,7 +473,7 @@ pub fn execute_get_pauli_prod(
             );
             drop(workspace);
             drop(workspace_pp);
-            pauliprod
+            pp
         }
     } else {
         unsafe {
@@ -464,14 +490,109 @@ pub fn execute_get_pauli_prod(
     };
 
     float_registers.insert(op.readout().clone(), vec![pp]);
+    Ok(())
+}
 
+#[allow(clippy::too_many_arguments)]
+pub fn execute_get_occupation_probability(
+    op: &PragmaGetOccupationProbability,
+    qureg: &mut Qureg,
+    float_registers: &mut HashMap<String, Vec<f64>>,
+    bit_registers: &mut HashMap<String, Vec<bool>>,
+    complex_registers: &mut HashMap<String, Vec<num_complex::Complex<f64>>>,
+    bit_registers_output: &mut HashMap<String, Vec<Vec<bool>>>,
+    device: &mut Option<Box<dyn Device>>,
+    circuit_handler: CallCircuitWithDevice,
+) -> Result<(), RoqoqoBackendError> {
+    unsafe {
+        let mut workspace = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
+        match op.circuit() {
+            Some(x) => {
+                circuit_handler(
+                    x,
+                    qureg,
+                    bit_registers,
+                    float_registers,
+                    complex_registers,
+                    bit_registers_output,
+                    device,
+                )?;
+            }
+            None => {}
+        }
+        quest_sys::cloneQureg(workspace.quest_qureg, qureg.quest_qureg);
+        let probas: Vec<f64>;
+        if qureg.is_density_matrix {
+            let op = PragmaGetDensityMatrix::new(op.readout().clone(), None);
+            let mut register: HashMap<String, ComplexRegister> = HashMap::new();
+            execute_pragma_get_density_matrix(&op, &mut workspace, &mut register)?;
+            match register.get(op.readout()) {
+                Some(p) => probas = p.iter().map(|x| x.re).collect(),
+                None => {
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: "Issue in get_density_matrix".to_string(),
+                    });
+                }
+            }
+        } else {
+            let op = PragmaGetStateVector::new(op.readout().clone(), None);
+            let mut register: HashMap<String, ComplexRegister> = HashMap::new();
+            execute_pragma_get_state_vector(&op, &mut workspace, &mut register)?;
+            match register.get(op.readout()) {
+                Some(p) => probas = p.iter().map(|x| x.re).collect(),
+                None => {
+                    return Err(RoqoqoBackendError::GenericError {
+                        msg: "Issue in get_state_vector".to_string(),
+                    });
+                }
+            }
+        }
+        float_registers.insert(op.readout().clone(), probas);
+    }
+    Ok(())
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn execute_pragma_conditional(
+    op: &PragmaConditional,
+    qureg: &mut Qureg,
+    float_registers: &mut HashMap<String, Vec<f64>>,
+    bit_registers: &mut HashMap<String, Vec<bool>>,
+    complex_registers: &mut HashMap<String, Vec<num_complex::Complex<f64>>>,
+    bit_registers_output: &mut HashMap<String, Vec<Vec<bool>>>,
+    device: &mut Option<Box<dyn Device>>,
+    circuit_handler: CallCircuitWithDevice,
+) -> Result<(), RoqoqoBackendError> {
+    match bit_registers.get(op.condition_register()) {
+        None => {
+            return Err(RoqoqoBackendError::GenericError {
+                msg: format!(
+                    "Conditional register {:?} not found in classical bit registers.",
+                    op.condition_register()
+                ),
+            });
+        }
+        Some(x) => {
+            if x[*op.condition_index()] {
+                circuit_handler(
+                    op.circuit(),
+                    qureg,
+                    bit_registers,
+                    float_registers,
+                    complex_registers,
+                    bit_registers_output,
+                    device,
+                )?;
+            }
+        }
+    }
     Ok(())
 }
 
 #[inline]
 /// Sanitizes negative occupation probabilities
 ///
-/// Setting negative probablilites with an absolute value less than a threshold to 0
+/// Setting negative probabilites with an absolute value less than a threshold to 0
 fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBackendError> {
     for val in probabilities.iter_mut() {
         if *val < NEGATIVE_PROBABILITIES_CUTOFF {
@@ -488,6 +609,34 @@ fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBack
     Ok(())
 }
 
+fn create_rng(qureg: &mut Qureg) -> Result<StdRng, RoqoqoBackendError> {
+    if qureg.quest_env.numSeeds != 0 {
+        let seeds = unsafe {
+            std::slice::from_raw_parts_mut(
+                qureg.quest_env.seeds as *mut std::os::raw::c_ulong,
+                qureg.quest_env.numSeeds as usize,
+            )
+        };
+
+        let mut bytes: Vec<u8> = seeds.iter().flat_map(|seed| seed.to_le_bytes()).collect();
+        match bytes.len() {
+            l if l < 32 => bytes.resize(32, 0),
+            l if l > 32 => bytes.truncate(32),
+            _ => {} // No need to resize, it's already the correct size.
+        }
+        Ok(StdRng::from_seed(bytes.try_into().map_err(|_| {
+            RoqoqoBackendError::GenericError {
+                msg: "Failed to extract the seed from the quest environment.".to_owned(),
+            }
+        })?))
+    } else {
+        Ok(
+            StdRng::from_rng(thread_rng()).map_err(|err| RoqoqoBackendError::GenericError {
+                msg: format!("Unable to create the rng: {err}"),
+            })?,
+        )
+    }
+}
 #[cfg(test)]
 mod test {
 
