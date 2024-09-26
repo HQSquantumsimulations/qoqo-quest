@@ -589,6 +589,88 @@ fn find_pragma_op(op: &&Operation) -> bool {
     }
 }
 
+#[test]
+fn test_find_pragma_op() {
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaConditional::new(
+        "bits".to_owned(),
+        0,
+        vec![Operation::from(roqoqo::operations::PragmaDamping::new(
+            0,
+            CalculatorFloat::PI,
+            CalculatorFloat::ZERO,
+        ))]
+        .into_iter()
+        .collect(),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaLoop::new(
+        CalculatorFloat::from(5),
+        vec![Operation::from(roqoqo::operations::PragmaDephasing::new(
+            1,
+            CalculatorFloat::PI,
+            CalculatorFloat::ZERO,
+        ))]
+        .into_iter()
+        .collect(),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetPauliProduct::new(
+        HashMap::new(),
+        "pauli".to_owned(),
+        vec![Operation::from(
+            roqoqo::operations::PragmaDepolarising::new(
+                1,
+                CalculatorFloat::PI,
+                CalculatorFloat::ZERO,
+            ),
+        )]
+        .into_iter()
+        .collect(),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(
+        roqoqo::operations::PragmaGetOccupationProbability::new(
+            "float_register".to_owned(),
+            Some(
+                vec![Operation::from(
+                    roqoqo::operations::PragmaGeneralNoise::new(
+                        1,
+                        CalculatorFloat::PI,
+                        ndarray::array![[0.], [1.]],
+                    ),
+                )]
+                .into_iter()
+                .collect(),
+            ),
+        ),
+    );
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetDensityMatrix::new(
+        "complex_register".to_owned(),
+        Some(
+            vec![Operation::from(
+                roqoqo::operations::PragmaSetDensityMatrix::new(ndarray::array![
+                    [num_complex::Complex::new(1., 0.)],
+                    [num_complex::Complex::new(0., 1.)]
+                ]),
+            )]
+            .into_iter()
+            .collect(),
+        ),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetDensityMatrix::new(
+        "complex_register".to_owned(),
+        None,
+    ));
+    assert!(!find_pragma_op(&&op));
+}
+
 #[cfg(feature = "async")]
 #[async_trait]
 impl AsyncEvaluatingBackend for Backend {

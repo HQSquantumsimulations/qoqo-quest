@@ -165,7 +165,7 @@ pub fn execute_pragma_set_state_vector(
     if num_amps != 2_i64.pow(qureg.number_qubits()) {
         return Err(RoqoqoBackendError::GenericError{
             msg: format!(
-                "Can not set state vector: number of qubits of statevector ({}) differs from number of qubits in qubit register ({}).",
+                "Can not set statevector: number of qubits of statevector ({}) differs from number of qubits in qubit register ({}).",
                 num_amps,
                 qureg.number_qubits()
             )

@@ -16,6 +16,7 @@ const TOLERANCE: f64 = 1e-8;
 use ndarray::{array, Array1, Array2};
 use num_complex::{Complex, Complex64};
 use qoqo_calculator::CalculatorFloat;
+use roqoqo::devices::{self};
 use roqoqo::operations::{
     self, Operation, PragmaGetDensityMatrix, PragmaGetStateVector, PragmaNoiseOperation,
     PragmaSetDensityMatrix, PragmaSetStateVector,
@@ -25,7 +26,7 @@ use roqoqo::{
     registers::{BitOutputRegister, BitRegister, ComplexRegister, FloatRegister},
     Circuit,
 };
-use roqoqo_quest::{call_operation, Qureg};
+use roqoqo_quest::{call_operation, call_operation_with_device, Qureg};
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use test_case::test_case;
@@ -735,6 +736,28 @@ fn test_pragma_get_pauli_product(pauli: usize, circ: Vec<Operation>, exp_val: f6
     assert!((float_registers.get("ro").unwrap()[0] - exp_val).abs() < TOLERANCE)
 }
 
+#[test]
+fn test_pragma_get_pauli_product_empty() {
+    let pragma =
+        operations::PragmaGetPauliProduct::new(HashMap::new(), "ro".into(), Circuit::new());
+    let mut qureg = Qureg::new(1, true);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    // Apply tested operation to output
+    let _error = call_operation(
+        &pragma.into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+    );
+    assert!(float_registers.contains_key("ro"));
+    assert_eq!(float_registers.get("ro").unwrap().len(), 1);
+    assert!((float_registers.get("ro").unwrap()[0] - 1.0).abs() < TOLERANCE)
+}
+
 #[test_case(2.0.into(), 1.0; "two")]
 #[test_case(2.1.into(), 1.0; "two and a bit")]
 #[test_case(3.0.into(), 0.0; "three")]
@@ -1013,7 +1036,7 @@ fn test_set_state_vector_error() {
     assert_eq!(
         error,
         Err(RoqoqoBackendError::GenericError {
-            msg: "Can not set state vector: number of qubits of statevector (1) differs from number of qubits in qubit register (1).".to_string()
+            msg: "Can not set statevector: number of qubits of statevector (1) differs from number of qubits in qubit register (1).".to_string()
         })
     );
 }
@@ -1081,6 +1104,78 @@ fn test_input_bit() {
     assert!(res.is_ok());
     let test = bit_registers.get("ro").unwrap();
     assert_eq!(test, &vec![false, true])
+}
+
+#[test]
+fn test_change_device() {
+    let device = devices::GenericDevice::new(1);
+    let wrapped_pragma = operations::InputBit::new("ro".to_string(), 1, true);
+    let op = operations::PragmaChangeDevice::new(&wrapped_pragma).unwrap();
+    let mut qureg = Qureg::new(1, true);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    let res = call_operation_with_device(
+        &op.into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+        &mut Some(Box::new(device)),
+    );
+    assert!(res.is_err());
+}
+
+#[test]
+fn test_check_availability_device() {
+    let mut generic_device = devices::GenericDevice::new(4);
+    generic_device
+        .set_single_qubit_gate_time("PauliX", 0, 0.01)
+        .unwrap();
+    generic_device
+        .set_three_qubit_gate_time("Toffoli", 0, 1, 2, 0.05)
+        .unwrap();
+    let device = devices::AllToAllDevice::new(4, &[], &[], 0.04);
+    let mut qureg = Qureg::new(5, true);
+    // Create the readout registers
+    let (mut bit_registers, mut float_registers, mut complex_registers, mut bit_registers_output) =
+        create_empty_registers();
+    let op = operations::PauliX::new(0);
+    call_operation_with_device(
+        &op.into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+        &mut Some(Box::new(generic_device.clone())),
+    )
+    .unwrap();
+
+    let op = operations::CNOT::new(0, 1);
+    let res = call_operation_with_device(
+        &op.clone().into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+        &mut Some(Box::new(device)),
+    );
+    assert!(res.is_err());
+
+    let op = operations::Toffoli::new(0, 1, 2);
+    call_operation_with_device(
+        &op.into(),
+        &mut qureg,
+        &mut bit_registers,
+        &mut float_registers,
+        &mut complex_registers,
+        &mut bit_registers_output,
+        &mut Some(Box::new(generic_device.clone())),
+    )
+    .unwrap();
 }
 
 fn is_close(a: Complex64, b: Complex64) -> bool {
