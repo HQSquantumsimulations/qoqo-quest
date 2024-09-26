@@ -969,11 +969,12 @@ dependencies = [
 
 [[package]]
 name = "qoqo"
-version = "1.15.2-alpha.3"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f82e0ed406ece0c80e73b5d22e3426c48a1122be1839948b2b4a311c8d0861e5"
+checksum = "b17c1020aeb4ca5208ed9c351b5e251f63777d44e159a09a76963ac66fb73b22"
 dependencies = [
  "bincode",
+ "clap",
  "ndarray",
  "num-complex",
  "numpy",
@@ -997,9 +998,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo-macros"
-version = "1.15.2-alpha.3"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "490f842096e0eeac4a35e040eac3af6a002fe0f6b95893448fa1b9389ed32e64"
+checksum = "9ef77776bbadf7ec00640ae104b96d872a40254c3a880b68ce12bc8ef4758bdc"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1009,7 +1010,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo-quest"
-version = "0.14.4-alpha.3"
+version = "0.14.4"
 dependencies = [
  "bincode",
  "clap",
@@ -1053,7 +1054,7 @@ dependencies = [
 
 [[package]]
 name = "quest-sys"
-version = "0.14.4-alpha.3"
+version = "0.14.4"
 dependencies = [
  "bindgen",
  "cc",
@@ -1175,9 +1176,9 @@ checksum = "7a66a03ae7c801facd77a29370b4faec201768915ac14a721ba36f20bc9c209b"
 
 [[package]]
 name = "roqoqo"
-version = "1.15.2-alpha.3"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "be76f0eb61de1e5f7ed9d77c94c7de8cf3b3d13534584322aedf0de67933ed27"
+checksum = "1f84906016a7e4001f4176f787980ccf057b34df51af6e3c62912e61968a723f"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1200,9 +1201,9 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-derive"
-version = "1.15.2-alpha.3"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86483cf880973fb234ad781002a1f367f63cd0f52c76007822cbf4decf35df87"
+checksum = "424481b26f82c1b5c78e0d2b7457ad77d3bbd281f4e724882829160364733c1f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1211,7 +1212,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-quest"
-version = "0.14.4-alpha.3"
+version = "0.14.4"
 dependencies = [
  "async-trait",
  "criterion",
