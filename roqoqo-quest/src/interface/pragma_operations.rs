@@ -53,7 +53,7 @@ pub fn execute_pragma_repeated_measurement(
         WeightedIndex::new(&probabilities).map_err(|err| RoqoqoBackendError::GenericError {
             msg: format!("Probabilites from quantum register {:?}", err),
         })?;
-    let mut rng = thread_rng();
+    let mut rng = create_rng(qureg)?;
     let existing_register = bit_registers
         .get(operation.readout())
         .map(|x| x.to_owned())
@@ -115,7 +115,7 @@ pub fn execute_replaced_repeated_measurement(
         WeightedIndex::new(&probabilities).map_err(|err| RoqoqoBackendError::GenericError {
             msg: format!("Probabilites from quantum register {:?}", err),
         })?;
-    let mut rng = thread_rng();
+    let mut rng = create_rng(qureg)?;
     let existing_register = bit_registers
         .get(operation.readout())
         .map(|x| x.to_owned())
@@ -300,7 +300,7 @@ pub fn execute_pragma_random_noise(
     operation: &PragmaRandomNoise,
     qureg: &mut Qureg,
 ) -> Result<(), RoqoqoBackendError> {
-    let mut rng = thread_rng();
+    let mut rng = create_rng(qureg)?;
     let r0 = rng.gen_range(0.0..1.0);
     let rates = [
         operation.depolarising_rate().float()? / 4.0,
@@ -609,6 +609,25 @@ fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBack
     Ok(())
 }
 
+fn create_rng(qureg: &mut Qureg) -> Result<StdRng, RoqoqoBackendError> {
+    if qureg.quest_env.numSeeds != 0 {
+        let seeds = unsafe {
+            std::slice::from_raw_parts_mut(qureg.quest_env.seeds, qureg.quest_env.numSeeds as usize)
+        };
+        let mut seed_bytes = [0u8; 32]; // StdRng requires a 32-byte seed
+        for (i, &seed) in seeds.iter().enumerate().take(seed_bytes.len() / 8) {
+            let bytes = seed.to_le_bytes(); // Convert u64 to bytes
+            seed_bytes[i * 8..(i + 1) * 8].copy_from_slice(&bytes);
+        }
+        Ok(StdRng::from_seed(seed_bytes))
+    } else {
+        Ok(
+            StdRng::from_rng(thread_rng()).map_err(|err| RoqoqoBackendError::GenericError {
+                msg: format!("Unable to create the rng: {err}"),
+            })?,
+        )
+    }
+}
 #[cfg(test)]
 mod test {
 
