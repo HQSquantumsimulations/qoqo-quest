@@ -77,9 +77,9 @@ dependencies = [
 
 [[package]]
 name = "async-trait"
-version = "0.1.82"
+version = "0.1.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a27b8a3a6e1a44fa4c8baf1f653e4172e81486d4941f2237e20dc2d0cf4ddff1"
+checksum = "721cae7de5c34fbb2acd27e21e6d2cf7b886dce0c27388d46c4e6c47ea4318dd"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -156,9 +156,9 @@ checksum = "37b2a672a2cb129a2e41c10b1224bb368f9f37a2b16b612598138befd7b37eb5"
 
 [[package]]
 name = "cc"
-version = "1.1.18"
+version = "1.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b62ac837cdb5cb22e10a256099b4fc502b1dfe560cb282963a974d7abd80e476"
+checksum = "07b1695e2c7e8fc85310cde85aeaab7e3097f593c91d209d3f9df76c928100f0"
 dependencies = [
  "shlex",
 ]
@@ -600,9 +600,9 @@ checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
 
 [[package]]
 name = "libc"
-version = "0.2.158"
+version = "0.2.159"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d8adc4bb1803a324070e64a98ae98f38934d91957a99cfb3a43dcbc01bc56439"
+checksum = "561d97a539a36e26a9a5fad1ea11a3039a67714694aaa379433e580854bc3dc5"
 
 [[package]]
 name = "libloading"
@@ -882,9 +882,9 @@ dependencies = [
 
 [[package]]
 name = "portable-atomic"
-version = "1.7.0"
+version = "1.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "da544ee218f0d287a911e9c99a39a8c9bc8fcad3cb8db5959940044ecfc67265"
+checksum = "d30538d42559de6b034bc76fd6dd4c38961b1ee5c6c56e3808c50128fdbc22ce"
 
 [[package]]
 name = "ppv-lite86"
@@ -981,9 +981,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo"
-version = "1.15.2-alpha.5"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "df5cba6b20daa24da6447c53dc983e15e44dba8acab569623c8683d66e3dfaa2"
+checksum = "b17c1020aeb4ca5208ed9c351b5e251f63777d44e159a09a76963ac66fb73b22"
 dependencies = [
  "bincode",
  "clap",
@@ -1010,9 +1010,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo-macros"
-version = "1.15.2-alpha.5"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38d599c3b580161dd05039813784c519e45e64ee10fd07f49a9b2873b74b4302"
+checksum = "9ef77776bbadf7ec00640ae104b96d872a40254c3a880b68ce12bc8ef4758bdc"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1022,7 +1022,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo-quest"
-version = "0.14.4-alpha.4"
+version = "0.14.4"
 dependencies = [
  "bincode",
  "clap",
@@ -1066,7 +1066,7 @@ dependencies = [
 
 [[package]]
 name = "quest-sys"
-version = "0.14.4-alpha.4"
+version = "0.14.4"
 dependencies = [
  "bindgen",
  "cc",
@@ -1156,9 +1156,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.5.4"
+version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0884ad60e090bf1345b93da0a5de8923c93884cd03f40dfcfddd3b4bee661853"
+checksum = "355ae415ccd3a04315d3f8246e86d67689ea74d88d915576e1589a351062a13b"
 dependencies = [
  "bitflags",
 ]
@@ -1194,9 +1194,9 @@ checksum = "7a66a03ae7c801facd77a29370b4faec201768915ac14a721ba36f20bc9c209b"
 
 [[package]]
 name = "roqoqo"
-version = "1.15.2-alpha.5"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ccdc54266656c3af4f50b58c4542950f36289b4679ad37b51528e99a0c941519"
+checksum = "1f84906016a7e4001f4176f787980ccf057b34df51af6e3c62912e61968a723f"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1219,9 +1219,9 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-derive"
-version = "1.15.2-alpha.5"
+version = "1.15.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b65696bb728cc4b297d6422c72d2565634a177e20be1212fe1d7591b555f9262"
+checksum = "424481b26f82c1b5c78e0d2b7457ad77d3bbd281f4e724882829160364733c1f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1230,7 +1230,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-quest"
-version = "0.14.4-alpha.4"
+version = "0.14.4"
 dependencies = [
  "async-trait",
  "criterion",
@@ -1553,18 +1553,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.63"
+version = "1.0.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c0342370b38b6a11b6cc11d6a805569958d54cfa061a29969c3b5ce2ea405724"
+checksum = "d50af8abc119fb8bb6dbabcfa89656f46f84aa0ac7688088608076ad2b459a84"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.63"
+version = "1.0.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a4558b58466b9ad7ca0f102865eccc95938dca1a74a856f2b57b6629050da261"
+checksum = "08904e7672f5eb876eaaf87e0ce17857500934f4981c4a0ab2b4aa98baac7fc3"
 dependencies = [
  "proc-macro2",
  "quote",

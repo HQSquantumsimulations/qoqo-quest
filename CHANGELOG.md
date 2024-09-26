@@ -4,24 +4,12 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
-## 0.14.4-alpha.4
+## 0.14.4
 
 * Added the `set_random_seed` and `get_random_seed` methods to the `Backend`
-
-## 0.14.4-alpha.3
-
 * Set clap version to "=4.4" for it to use rust-version 1.70.0
-
-## 0.14.4-alpha.2
-
 * Updated to qoqo 1.15.2-alpha.3 and qoqo-calculator 1.2.3
-
-## 0.14.4-alpha.1
-
 * Removed faulty check for number of qubits in PragmaGetPauliProduct
-
-## 0.14.4-alpha.0
-
 * Updated to qoqo 1.15.2-alpha.1, rust 1.70 and maturin 1.4
 
 ## 0.14.3
