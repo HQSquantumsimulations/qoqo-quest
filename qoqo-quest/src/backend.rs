@@ -24,6 +24,9 @@ use std::collections::HashMap;
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
+///
+/// If different instances of the backend are running in parallel, the results won't be deterministic,
+/// even with a random_seed set.
 #[pyclass(name = "Backend", module = "qoqo_quest")]
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BackendWrapper {
@@ -50,8 +53,26 @@ impl BackendWrapper {
     #[new]
     pub fn new(number_qubits: usize) -> PyResult<Self> {
         Ok(Self {
-            internal: roqoqo_quest::Backend::new(number_qubits),
+            internal: roqoqo_quest::Backend::new(number_qubits, None),
         })
+    }
+
+    /// Set the random seed used by the backend.
+    /// If different instances of the backend are running in parallel, the results won't be deterministic,
+    /// even with a random_seed set.
+    ///
+    /// Args:
+    ///     random_seed (List[int]): The random seed to use
+    pub fn set_random_seed(&mut self, random_seed: Vec<u64>) {
+        self.internal.set_random_seed(random_seed);
+    }
+
+    /// Get the current random seed set for the backend.
+    ///
+    /// Returns:
+    ///     List[int]: The current random seed
+    pub fn get_random_seed(&self) -> Option<Vec<u64>> {
+        self.internal.random_seed.clone()
     }
 
     /// Return a copy of the Backend (copy here produces a deepcopy).

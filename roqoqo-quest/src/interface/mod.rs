@@ -28,6 +28,7 @@ pub(crate) use pragma_operations::{
     execute_pragma_repeated_measurement, execute_replaced_repeated_measurement,
 };
 pub use preprocessing::get_number_used_qubits_and_registers;
+use std::os::raw::c_int;
 
 // Pragma operations that are ignored by backend and do not throw an error
 const ALLOWED_OPERATIONS: &[&str; 11] = &[
@@ -48,14 +49,19 @@ const ALLOWED_OPERATIONS: &[&str; 11] = &[
 ///
 /// # Arguments
 ///
-/// `circuit` - The [roqoqo::Circuit] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution to
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_circuit(
     circuit: &Circuit,
     qureg: &mut Qureg,
@@ -86,15 +92,21 @@ pub fn call_circuit(
 ///
 /// # Arguments
 ///
-/// `circuit` - The [roqoqo::Circuit] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution
-/// `device` - The optional [roqoqo::devices::Device] that determines the availability of operations
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
+/// * `device` - The optional [roqoqo::devices::Device] that determines the availability of
+///   operations
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_circuit_with_device(
     circuit: &Circuit,
     qureg: &mut Qureg,
@@ -118,18 +130,23 @@ pub fn call_circuit_with_device(
     Ok(())
 }
 
-/// Simulates a single operation ([roqoqo::operations::Operation]) acting on a quantum register
+/// Simulates a single operation ([roqoqo::operations::Operation]) acting on a quantum register.
 ///
 /// # Arguments
 ///
-/// `operations` - The [roqoqo::operations::Operation] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution to
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_operation(
     operation: &Operation,
     qureg: &mut Qureg,
@@ -149,25 +166,32 @@ pub fn call_operation(
     )
 }
 
-/// Simulates a single available operation ([roqoqo::operations::Operation]) acting on a quantum register
+/// Simulates a single available operation ([roqoqo::operations::Operation]) acting on a quantum
+/// register.
 ///
-/// When the optional device parameter is not None availability checks will be performed.
-/// The availability of the operation on a specific device is checked first.
-/// The function returns an error if the operation is not available on the device
-/// even if it can be simulated with the QuEST simulator.
+/// When the optional device parameter is not None availability checks will be performed. The
+/// availability of the operation on a specific device is checked first. The function returns an
+/// error if the operation is not available on the device even if it can be simulated with the QuEST
+/// simulator.
 ///
 ///
 /// # Arguments
 ///
-/// `operations` - The [roqoqo::operations::Operation] that is simulated
-/// `qureg` - The wrapper around a QuEST quantum register on which the operations act
-/// `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
-/// `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted from the simulator to
-/// `complex_registers` - The HashMap of complex registers ([Vec<Complex64>])
-///                     to write complex values extracted from the simulator to
-/// `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>])
-///                          to write measurements of simulated repetitions of circuit execution to
-/// `device` - The optional [roqoqo::devices::Device] that determines the availability of operations
+/// * `operations` - The [roqoqo::operations::Operation] that is simulated
+/// * `qureg` - The wrapper around a QuEST quantum register on which the operations act
+/// * `bit_registers` - The HashMap of bit registers ([Vec<bool>]) to write measurement results to
+/// * `float_registers` - The HashMap of float registers ([Vec<f64>]) to write real values extracted
+///   from the simulator to
+/// * `complex_registers` - The HashMap of complex registers ([Vec<Complex64>]) to write complex
+///   values extracted from the simulator to
+/// * `bit_registers_output` - The HashMap of bit output registers ([Vec<Vec<bool>>]) to write
+///   measurements of simulated repetitions of circuit execution to
+/// * `device` - The optional [roqoqo::devices::Device] that determines the availability of
+///   operations
+///
+/// # Returns
+///
+/// * `Err(RoqoqoBackendError)` - Something went wrong while processing the operation.
 pub fn call_operation_with_device(
     operation: &Operation,
     qureg: &mut Qureg,
@@ -225,102 +249,48 @@ pub fn call_operation_with_device(
         }
         Operation::PragmaGetPauliProduct(op) => execute_get_pauli_prod(
             op,
-            float_registers,
             qureg,
+            float_registers,
             bit_registers,
             complex_registers,
             bit_registers_output,
             device,
         ),
-        Operation::PragmaGetOccupationProbability(op) => {
-            unsafe {
-                let mut workspace = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
-                match op.circuit() {
-                    Some(x) => {
-                        call_circuit_with_device(
-                            x,
-                            qureg,
-                            bit_registers,
-                            float_registers,
-                            complex_registers,
-                            bit_registers_output,
-                            device,
-                        )?;
-                    }
-                    None => {}
-                }
-                quest_sys::cloneQureg(workspace.quest_qureg, qureg.quest_qureg);
-                let probas: Vec<f64>;
-                if qureg.is_density_matrix {
-                    let op = PragmaGetDensityMatrix::new(op.readout().clone(), None);
-                    let mut register: HashMap<String, ComplexRegister> = HashMap::new();
-                    execute_pragma_get_density_matrix(&op, &mut workspace, &mut register)?;
-                    match register.get(op.readout()) {
-                        Some(p) => probas = p.iter().map(|x| x.re).collect(),
-                        None => {
-                            return Err(RoqoqoBackendError::GenericError {
-                                msg: "Issue in get_density_matrix".to_string(),
-                            });
-                        }
-                    }
-                } else {
-                    let op = PragmaGetStateVector::new(op.readout().clone(), None);
-                    let mut register: HashMap<String, ComplexRegister> = HashMap::new();
-                    execute_pragma_get_state_vector(&op, &mut workspace, &mut register)?;
-                    match register.get(op.readout()) {
-                        Some(p) => probas = p.iter().map(|x| x.re).collect(),
-                        None => {
-                            return Err(RoqoqoBackendError::GenericError {
-                                msg: "Issue in get_state_vector".to_string(),
-                            });
-                        }
-                    }
-                }
-                float_registers.insert(op.readout().clone(), probas);
-            }
-            Ok(())
-        }
+        Operation::PragmaGetOccupationProbability(op) => execute_get_occupation_probability(
+            op,
+            qureg,
+            float_registers,
+            bit_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+            call_circuit_with_device,
+        ),
         Operation::PragmaActiveReset(op) => {
             unsafe {
                 if quest_sys::measure(qureg.quest_qureg, *op.qubit() as i32) == 1 {
-                    quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int)
+                    quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as c_int)
                 }
             }
             Ok(())
         }
-        Operation::PragmaConditional(op) => {
-            match bit_registers.get(op.condition_register()) {
-                None => {
-                    return Err(RoqoqoBackendError::GenericError {
-                        msg: format!(
-                            "Conditional register {:?} not found in classical bit registers.",
-                            op.condition_register()
-                        ),
-                    });
-                }
-                Some(x) => {
-                    if x[*op.condition_index()] {
-                        call_circuit_with_device(
-                            op.circuit(),
-                            qureg,
-                            bit_registers,
-                            float_registers,
-                            complex_registers,
-                            bit_registers_output,
-                            device,
-                        )?;
-                    }
-                }
-            }
-            Ok(())
-        }
+        Operation::PragmaConditional(op) => execute_pragma_conditional(
+            op,
+            qureg,
+            float_registers,
+            bit_registers,
+            complex_registers,
+            bit_registers_output,
+            device,
+            call_circuit_with_device,
+        ),
         Operation::RotateX(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
             unsafe {
                 quest_sys::rotateX(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -332,7 +302,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateY(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -344,7 +314,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateZ(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -356,7 +326,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::phaseShift(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -365,37 +335,37 @@ pub fn call_operation_with_device(
         Operation::PauliX(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::pauliX(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::PauliY(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::pauliY(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::pauliY(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::PauliZ(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::pauliZ(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::pauliZ(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::Hadamard(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::hadamard(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::hadamard(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::SGate(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::sGate(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::sGate(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::TGate(op) => {
             check_acts_on_qubits_in_qureg(operation, qureg)?;
             check_single_qubit_availability(op, device)?;
-            unsafe { quest_sys::tGate(qureg.quest_qureg, *op.qubit() as ::std::os::raw::c_int) }
+            unsafe { quest_sys::tGate(qureg.quest_qureg, *op.qubit() as c_int) }
             Ok(())
         }
         Operation::SqrtPauliX(op) => {
@@ -404,7 +374,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateX(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     std::f64::consts::FRAC_PI_2,
                 )
             }
@@ -416,7 +386,31 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateX(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
+                    std::f64::consts::FRAC_PI_2 * -1.0,
+                )
+            }
+            Ok(())
+        }
+        Operation::SqrtPauliY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
+            check_single_qubit_availability(op, device)?;
+            unsafe {
+                quest_sys::rotateY(
+                    qureg.quest_qureg,
+                    *op.qubit() as c_int,
+                    std::f64::consts::FRAC_PI_2,
+                )
+            }
+            Ok(())
+        }
+        Operation::InvSqrtPauliY(op) => {
+            check_acts_on_qubits_in_qureg(operation, qureg)?;
+            check_single_qubit_availability(op, device)?;
+            unsafe {
+                quest_sys::rotateY(
+                    qureg.quest_qureg,
+                    *op.qubit() as c_int,
                     std::f64::consts::FRAC_PI_2 * -1.0,
                 )
             }
@@ -433,7 +427,7 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::rotateAroundAxis(
                     qureg.quest_qureg,
-                    *op.qubit() as ::std::os::raw::c_int,
+                    *op.qubit() as c_int,
                     *op.theta().float()?,
                     vector.vector,
                 )
@@ -446,8 +440,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledNot(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -458,8 +452,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledPhaseShift(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -471,8 +465,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledPauliY(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -483,8 +477,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledPhaseFlip(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -495,8 +489,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledRotateX(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                     *op.theta().float()?,
                 )
             }
@@ -521,8 +515,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::controlledUnitary(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                     complex_matrix,
                 )
             }
@@ -534,8 +528,8 @@ pub fn call_operation_with_device(
             unsafe {
                 quest_sys::swapGate(
                     qureg.quest_qureg,
-                    *op.control() as ::std::os::raw::c_int,
-                    *op.target() as ::std::os::raw::c_int,
+                    *op.control() as c_int,
+                    *op.target() as c_int,
                 )
             }
             Ok(())
@@ -545,7 +539,7 @@ pub fn call_operation_with_device(
                 unsafe {
                     quest_sys::mixDamping(
                         qureg.quest_qureg,
-                        *op.qubit() as ::std::os::raw::c_int,
+                        *op.qubit() as c_int,
                         f64::try_from(op.probability())?,
                     )
                 }
@@ -557,7 +551,7 @@ pub fn call_operation_with_device(
                 unsafe {
                     quest_sys::mixDephasing(
                         qureg.quest_qureg,
-                        *op.qubit() as ::std::os::raw::c_int,
+                        *op.qubit() as c_int,
                         f64::try_from(op.probability())?,
                     )
                 }
@@ -569,7 +563,7 @@ pub fn call_operation_with_device(
                 unsafe {
                     quest_sys::mixDepolarising(
                         qureg.quest_qureg,
-                        *op.qubit() as ::std::os::raw::c_int,
+                        *op.qubit() as c_int,
                         f64::try_from(op.probability())?,
                     )
                 }
@@ -720,7 +714,13 @@ fn check_acts_on_qubits_in_qureg(
     if let InvolvedQubits::Set(involved_qubits) = operation.involved_qubits() {
         for q in involved_qubits.iter() {
             if *q >= number_qubits {
-                return Err(RoqoqoBackendError::GenericError { msg: format!("Not enough qubits reserved. QuEST simulator used {} qubits but operation acting on {}" ,number_qubits, q) });
+                return Err(RoqoqoBackendError::GenericError {
+                    msg: format!(
+                        "Not enough qubits reserved. QuEST simulator used {} qubits but operation \
+                         acting on {}",
+                        number_qubits, q
+                    ),
+                });
             }
         }
     }

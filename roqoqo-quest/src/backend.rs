@@ -41,12 +41,16 @@ use std::collections::HashMap;
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
+/// If different instances of the backend are running in parallel, the results won't be deterministic,
+/// even with a random_seed set.
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct Backend {
     /// Number of qubits supported by the backend
     pub number_qubits: usize,
     /// Number of repetitions
     pub repetitions: usize,
+    /// Random seed
+    pub random_seed: Option<Vec<u64>>,
 }
 
 impl Backend {
@@ -55,11 +59,32 @@ impl Backend {
     /// # Arguments
     ///
     /// `number_qubits` - The number of qubits supported by the backend
-    pub fn new(number_qubits: usize) -> Self {
+    pub fn new(number_qubits: usize, random_seed: Option<Vec<u64>>) -> Self {
         Self {
             number_qubits,
             repetitions: 1,
+            random_seed,
         }
+    }
+
+    /// Sets the random random seed for the backend.
+    /// If different instances of the backend are running in parallel, the results won't be deterministic,
+    /// even with a random_seed set.
+    ///
+    /// # Arguments
+    ///
+    /// `random_seed` - The random seed to use for the backend
+    pub fn set_random_seed(&mut self, random_seed: Vec<u64>) {
+        self.random_seed = Some(random_seed);
+    }
+
+    /// Gets the current random seed set for the backend.
+    ///
+    /// # Returns
+    ///
+    /// `Option<Vec<u64>>` - The current random seed
+    pub fn get_random_seed(&self) -> Option<Vec<u64>> {
+        self.random_seed.clone()
     }
 
     /// Sets the number of repetitions used for stochastic circuit simulations
@@ -207,7 +232,15 @@ impl Backend {
         }
 
         let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
-
+        if let Some(mut random_seed) = self.random_seed.clone() {
+            unsafe {
+                quest_sys::seedQuEST(
+                    &mut qureg.quest_env,
+                    random_seed.as_mut_ptr(),
+                    random_seed.len() as i32,
+                );
+            };
+        }
         // Set up output registers
         let mut bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
         let mut float_registers_output: HashMap<String, FloatOutputRegister> = HashMap::new();
@@ -554,6 +587,88 @@ fn find_pragma_op(op: &&Operation) -> bool {
         Operation::PragmaSetDensityMatrix(_) => true,
         _ => false,
     }
+}
+
+#[test]
+fn test_find_pragma_op() {
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaConditional::new(
+        "bits".to_owned(),
+        0,
+        vec![Operation::from(roqoqo::operations::PragmaDamping::new(
+            0,
+            CalculatorFloat::PI,
+            CalculatorFloat::ZERO,
+        ))]
+        .into_iter()
+        .collect(),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaLoop::new(
+        CalculatorFloat::from(5),
+        vec![Operation::from(roqoqo::operations::PragmaDephasing::new(
+            1,
+            CalculatorFloat::PI,
+            CalculatorFloat::ZERO,
+        ))]
+        .into_iter()
+        .collect(),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetPauliProduct::new(
+        HashMap::new(),
+        "pauli".to_owned(),
+        vec![Operation::from(
+            roqoqo::operations::PragmaDepolarising::new(
+                1,
+                CalculatorFloat::PI,
+                CalculatorFloat::ZERO,
+            ),
+        )]
+        .into_iter()
+        .collect(),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(
+        roqoqo::operations::PragmaGetOccupationProbability::new(
+            "float_register".to_owned(),
+            Some(
+                vec![Operation::from(
+                    roqoqo::operations::PragmaGeneralNoise::new(
+                        1,
+                        CalculatorFloat::PI,
+                        ndarray::array![[0.], [1.]],
+                    ),
+                )]
+                .into_iter()
+                .collect(),
+            ),
+        ),
+    );
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetDensityMatrix::new(
+        "complex_register".to_owned(),
+        Some(
+            vec![Operation::from(
+                roqoqo::operations::PragmaSetDensityMatrix::new(ndarray::array![
+                    [num_complex::Complex::new(1., 0.)],
+                    [num_complex::Complex::new(0., 1.)]
+                ]),
+            )]
+            .into_iter()
+            .collect(),
+        ),
+    ));
+    assert!(find_pragma_op(&&op));
+
+    let op = roqoqo::operations::Operation::from(roqoqo::operations::PragmaGetDensityMatrix::new(
+        "complex_register".to_owned(),
+        None,
+    ));
+    assert!(!find_pragma_op(&&op));
 }
 
 #[cfg(feature = "async")]
