@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qoqo_quest &mdash; qoqo_quest 0.14.4-alpha.3 documentation</title>
+  <title>qoqo_quest &mdash; qoqo_quest 0.14.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../_static/documentation_options.js?v=7edec2b0"></script>
+        <script src="../_static/documentation_options.js?v=6ff71792"></script>
         <script src="../_static/doctools.js?v=9a2dae69"></script>
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -38,7 +38,7 @@
             qoqo_quest
           </a>
               <div class="version">
-                0.14.4-alpha.3
+                0.14.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,10 +56,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#qoqo_quest.Backend"><code class="docutils literal notranslate"><span class="pre">Backend</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.from_bincode"><code class="docutils literal notranslate"><span class="pre">Backend.from_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.from_json"><code class="docutils literal notranslate"><span class="pre">Backend.from_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.get_random_seed"><code class="docutils literal notranslate"><span class="pre">Backend.get_random_seed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_circuit"><code class="docutils literal notranslate"><span class="pre">Backend.run_circuit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_measurement"><code class="docutils literal notranslate"><span class="pre">Backend.run_measurement()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_measurement_registers"><code class="docutils literal notranslate"><span class="pre">Backend.run_measurement_registers()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.run_program"><code class="docutils literal notranslate"><span class="pre">Backend.run_program()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.set_random_seed"><code class="docutils literal notranslate"><span class="pre">Backend.set_random_seed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.to_bincode"><code class="docutils literal notranslate"><span class="pre">Backend.to_bincode()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#qoqo_quest.Backend.to_json"><code class="docutils literal notranslate"><span class="pre">Backend.to_json()</span></code></a></li>
 </ul>
@@ -119,6 +121,8 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qoqo_quest.</span></span><span class="sig-name descname"><span class="pre">Backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_qubits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend" title="Link to this definition"></a></dt>
 <dd><p>QuEST backend</p>
 <p>provides functions to run circuits and measurements on with the QuEST quantum simulator.</p>
+<p>If different instances of the backend are running in parallel, the results won't be deterministic,
+even with a random_seed set.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qoqo_quest.Backend.from_bincode">
 <span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.from_bincode" title="Link to this definition"></a></dt>
@@ -158,6 +162,20 @@
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> -- Input cannot be deserialized to Backend.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qoqo_quest.Backend.get_random_seed">
+<span class="sig-name descname"><span class="pre">get_random_seed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.get_random_seed" title="Link to this definition"></a></dt>
+<dd><p>Get the current random seed set for the backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current random seed</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>List[int]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -271,6 +289,19 @@ The results of each repetition are concatenated in OutputRegisters
 <li><p><strong>TypeError</strong> -- Measurement evaluate function could not be used</p></li>
 <li><p><strong>RuntimeError</strong> -- Internal error measurement.evaluation returned unknown type</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qoqo_quest.Backend.set_random_seed">
+<span class="sig-name descname"><span class="pre">set_random_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">random_seed</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.set_random_seed" title="Link to this definition"></a></dt>
+<dd><p>Set the random seed used by the backend.
+If different instances of the backend are running in parallel, the results won't be deterministic,
+even with a random_seed set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>random_seed</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) -- The random seed to use</p>
 </dd>
 </dl>
 </dd></dl>

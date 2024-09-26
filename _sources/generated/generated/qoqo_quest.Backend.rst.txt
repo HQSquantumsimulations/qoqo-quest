@@ -16,10 +16,12 @@ qoqo\_quest.Backend
       ~Backend.__init__
       ~Backend.from_bincode
       ~Backend.from_json
+      ~Backend.get_random_seed
       ~Backend.run_circuit
       ~Backend.run_measurement
       ~Backend.run_measurement_registers
       ~Backend.run_program
+      ~Backend.set_random_seed
       ~Backend.to_bincode
       ~Backend.to_json
    
