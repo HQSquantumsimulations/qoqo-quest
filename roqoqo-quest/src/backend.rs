@@ -236,7 +236,7 @@ impl Backend {
             unsafe {
                 quest_sys::seedQuEST(
                     &mut qureg.quest_env,
-                    random_seed.as_mut_ptr(),
+                    random_seed.as_mut_ptr() as *mut std::os::raw::c_ulong,
                     random_seed.len() as i32,
                 );
             };
