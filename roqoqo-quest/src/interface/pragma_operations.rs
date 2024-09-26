@@ -617,12 +617,18 @@ fn create_rng(qureg: &mut Qureg) -> Result<StdRng, RoqoqoBackendError> {
                 qureg.quest_env.numSeeds as usize,
             )
         };
-        let mut seed_bytes = [0u8; 32]; // StdRng requires a 32-byte seed
-        for (i, &seed) in seeds.iter().enumerate().take(seed_bytes.len() / 8) {
-            let bytes = seed.to_le_bytes(); // Convert u64 to bytes
-            seed_bytes[i * 8..(i + 1) * 8].copy_from_slice(&bytes);
+
+        let mut bytes: Vec<u8> = seeds.iter().flat_map(|seed| seed.to_le_bytes()).collect();
+        match bytes.len() {
+            l if l < 32 => bytes.resize(32, 0),
+            l if l > 32 => bytes.truncate(32),
+            _ => {} // No need to resize, it's already the correct size.
         }
-        Ok(StdRng::from_seed(seed_bytes))
+        Ok(StdRng::from_seed(bytes.try_into().map_err(|_| {
+            RoqoqoBackendError::GenericError {
+                msg: "Failed to extract the seed from the quest environment.".to_owned(),
+            }
+        })?))
     } else {
         Ok(
             StdRng::from_rng(thread_rng()).map_err(|err| RoqoqoBackendError::GenericError {
