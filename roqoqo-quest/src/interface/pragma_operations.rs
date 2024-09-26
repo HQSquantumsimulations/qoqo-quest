@@ -612,7 +612,10 @@ fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBack
 fn create_rng(qureg: &mut Qureg) -> Result<StdRng, RoqoqoBackendError> {
     if qureg.quest_env.numSeeds != 0 {
         let seeds = unsafe {
-            std::slice::from_raw_parts_mut(qureg.quest_env.seeds, qureg.quest_env.numSeeds as usize)
+            std::slice::from_raw_parts_mut(
+                qureg.quest_env.seeds as *mut std::os::raw::c_ulong,
+                qureg.quest_env.numSeeds as usize,
+            )
         };
         let mut seed_bytes = [0u8; 32]; // StdRng requires a 32-byte seed
         for (i, &seed) in seeds.iter().enumerate().take(seed_bytes.len() / 8) {
