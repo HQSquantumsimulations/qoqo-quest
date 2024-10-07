@@ -556,6 +556,7 @@ fn run_inner_circuit_loop(
     let (replace_measurements, repeated_measurement_pragma) = replaced_measurement_information;
     let (bit_registers_internal, float_registers_internal, complex_registers_internal) =
         registers_internal;
+
     for op in circuit_vec.iter() {
         match op {
             Operation::PragmaRepeatedMeasurement(rm) => match replace_measurements {
