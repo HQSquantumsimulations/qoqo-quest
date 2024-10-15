@@ -31,15 +31,6 @@ pub fn execute_generic_single_qubit_operation(
             [unitary_matrix[(0, 0)].im, unitary_matrix[(0, 1)].im],
             [unitary_matrix[(1, 0)].im, unitary_matrix[(1, 1)].im],
         ],
-        // column major version
-        // real: [
-        //     [unitary_matrix[(0, 0)].re, unitary_matrix[(1, 0)].re],
-        //     [unitary_matrix[(0, 1)].re, unitary_matrix[(1, 1)].re],
-        // ],
-        // imag: [
-        //     [unitary_matrix[(0, 0)].im, unitary_matrix[(1, 0)].im],
-        //     [unitary_matrix[(0, 1)].im, unitary_matrix[(1, 1)].im],
-        // ],
     };
     unsafe { quest_sys::unitary(qureg.quest_qureg, *operation.qubit() as i32, complex_matrix) };
     Ok(())
@@ -164,59 +155,6 @@ pub fn execute_generic_two_qubit_operation(
                 unitary_matrix[(3, 3)].im,
             ],
         ],
-        // column major version
-        // real: [
-        //     [
-        //         unitary_matrix[(0, 0)].re,
-        //         unitary_matrix[(1, 0)].re,
-        //         unitary_matrix[(2, 0)].re,
-        //         unitary_matrix[(3, 0)].re,
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 1)].re,
-        //         unitary_matrix[(1, 1)].re,
-        //         unitary_matrix[(2, 1)].re,
-        //         unitary_matrix[(3, 1)].re,
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 2)].re,
-        //         unitary_matrix[(1, 2)].re,
-        //         unitary_matrix[(2, 2)].re,
-        //         unitary_matrix[(3, 2)].re,
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 3)].re,
-        //         unitary_matrix[(1, 3)].re,
-        //         unitary_matrix[(2, 3)].re,
-        //         unitary_matrix[(3, 3)].re,
-        //     ],
-        // ],
-        // imag: [
-        //     [
-        //         unitary_matrix[(0, 0)].im,
-        //         unitary_matrix[(1, 0)].im,
-        //         unitary_matrix[(2, 0)].im,
-        //         unitary_matrix[(3, 0)].im,
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 1)].im,
-        //         unitary_matrix[(1, 1)].im,
-        //         unitary_matrix[(2, 1)].im,
-        //         unitary_matrix[(3, 1)].im,
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 2)].im,
-        //         unitary_matrix[(1, 2)].im,
-        //         unitary_matrix[(2, 2)].im,
-        //         unitary_matrix[(3, 2)].im,
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 3)].im,
-        //         unitary_matrix[(1, 3)].im,
-        //         unitary_matrix[(2, 3)].im,
-        //         unitary_matrix[(3, 3)].im,
-        //     ],
-        // ],
     };
     unsafe {
         quest_sys::twoQubitUnitary(
@@ -268,33 +206,6 @@ pub fn execute_generic_single_qubit_noise(
                 unitary_matrix[(3, 3)],
             ],
         ],
-        // Column major version
-        // real: [
-        //     [
-        //         unitary_matrix[(0, 0)],
-        //         unitary_matrix[(1, 0)],
-        //         unitary_matrix[(2, 0)],
-        //         unitary_matrix[(3, 0)],
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 1)],
-        //         unitary_matrix[(1, 1)],
-        //         unitary_matrix[(2, 1)],
-        //         unitary_matrix[(3, 1)],
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 2)],
-        //         unitary_matrix[(1, 2)],
-        //         unitary_matrix[(2, 2)],
-        //         unitary_matrix[(3, 2)],
-        //     ],
-        //     [
-        //         unitary_matrix[(0, 3)],
-        //         unitary_matrix[(1, 3)],
-        //         unitary_matrix[(2, 3)],
-        //         unitary_matrix[(3, 3)],
-        //     ],
-        // ],
         imag: [
             [0.0, 0.0, 0.0, 0.0],
             [0.0, 0.0, 0.0, 0.0],

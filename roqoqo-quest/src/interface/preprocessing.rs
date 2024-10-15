@@ -105,7 +105,7 @@ pub fn get_number_used_qubits_and_registers_lengths(
                         for x in mapping.values() {
                             if x >= length {
                                 return Err(RoqoqoBackendError::GenericError {
-                                    msg: index_out_of_range_msg(x, length)
+                                    msg: index_out_of_range_msg(x, length),
                                 });
                             }
                         }
@@ -155,7 +155,7 @@ pub fn get_number_used_qubits_and_registers_lengths(
                 if let Some(length) = bit_registers_lenghts.get(measure_op.readout()) {
                     if measure_op.readout_index() >= length {
                         return Err(RoqoqoBackendError::GenericError {
-                            msg: index_out_of_range_msg(measure_op.readout_index(), length)
+                            msg: index_out_of_range_msg(measure_op.readout_index(), length),
                         });
                     }
                 } else {
@@ -353,7 +353,8 @@ mod tests {
         c += DefinitionComplex::new("ro".to_string(), 64, true);
         c += DefinitionComplex::new("ri".to_string(), 2, false);
 
-        let (used, reg) = get_number_used_qubits_and_registers_lengths(&c.iter().collect()).unwrap();
+        let (used, reg) =
+            get_number_used_qubits_and_registers_lengths(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::new();
         assert_eq!(cmp_register, reg);
@@ -363,7 +364,8 @@ mod tests {
         c += DefinitionBit::new("ro".to_string(), 2, true);
         c += DefinitionComplex::new("ri".to_string(), 10, true);
 
-        let (used, reg) = get_number_used_qubits_and_registers_lengths(&c.iter().collect()).unwrap();
+        let (used, reg) =
+            get_number_used_qubits_and_registers_lengths(&c.iter().collect()).unwrap();
 
         let cmp_register = HashMap::from([("ro".to_string(), 2)]);
         assert_eq!(cmp_register, reg);

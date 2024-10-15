@@ -341,7 +341,7 @@ impl Backend {
                         if o.readout() != &repeated_measurement_readout {
                             return Err(RoqoqoBackendError::GenericError {
                                 msg: REPEATED_MEAS_ERROR.to_string(),
-                            })
+                            });
                         } else if measured_qubits.iter().any(|q| involved_qubits.contains(q)) {
                             replace_measurements = None;
                             temporary_repetitions = nm * repetitions;
@@ -455,8 +455,7 @@ impl Backend {
 
     #[inline]
     fn validate_circuit(&self, circuit_vec: &Vec<&Operation>) -> Result<(), RoqoqoBackendError> {
-        let (number_used_qubits, _) =
-            get_number_used_qubits_and_registers(&circuit_vec)?;
+        let (number_used_qubits, _) = get_number_used_qubits_and_registers(&circuit_vec)?;
 
         if number_used_qubits > self.number_qubits {
             return Err(RoqoqoBackendError::GenericError {
@@ -485,7 +484,7 @@ fn handle_repeated_measurements(
     // TODO At the moment this function allows to have both MeasureQubit and
     // PragmaRepeatedMeasurement. If we want to change this behavior, I would set the value of this
     // boolean inside the first match statement directly, add a match arm for MeasureQubit, and
-    // remove the second match. 
+    // remove the second match.
 
     // let mut found_fitting_measurement = false;
 
