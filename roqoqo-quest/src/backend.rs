@@ -12,11 +12,10 @@
 
 use crate::interface::{
     call_operation_with_device, execute_pragma_repeated_measurement,
-    execute_replaced_repeated_measurement, get_number_used_qubits_and_registers,
+    execute_replaced_repeated_measurement, get_number_used_qubits_and_registers_lengths,
 };
 #[cfg(feature = "async")]
 use async_trait::async_trait;
-use qoqo_calculator::CalculatorFloat;
 #[cfg(feature = "parallelization")]
 use rayon::prelude::*;
 #[cfg(feature = "async")]
@@ -55,7 +54,9 @@ pub struct Backend {
     /// Number of qubits supported by the backend
     pub number_qubits: usize,
     /// Number of repetitions for stochastic circuit simulations. Not to be confused with the number
-    /// of simulated measurements per simulation run.
+    /// of simulated measurements per simulation run. Note that this parameter will only be used if
+    /// PragmaRandomNoise or PragmaOverrotation are present in the circuit being simulated,
+    /// otherwise it will default to one.
     pub repetitions: usize,
     /// Random seed
     pub random_seed: Option<Vec<u64>>,
@@ -132,10 +133,8 @@ impl EvaluatingBackend for Backend {
         let mut complex_registers: HashMap<String, ComplexOutputRegister> = HashMap::new();
 
         let circuits: Vec<&Circuit> = measurement.circuits().collect();
-        let constant_circuit = match measurement.constant_circuit() {
-            Some(c) => Some(c),
-            None => None,
-        };
+        let constant_circuit = measurement.constant_circuit();
+
         let tmp_regs_res: Result<Vec<Registers>, RoqoqoBackendError> = circuits
             .par_iter()
             .map(|circuit| match constant_circuit {
@@ -210,7 +209,7 @@ impl Backend {
         let mut complex_registers_output: HashMap<String, ComplexOutputRegister> = HashMap::new();
 
         let (number_used_qubits, register_lengths) =
-            get_number_used_qubits_and_registers(&circuit_vec)?;
+            get_number_used_qubits_and_registers_lengths(&circuit_vec)?;
 
         // Automatically switch to density matrix mode if operations are present in the
         // circuit that require density matrix mode
@@ -218,16 +217,16 @@ impl Backend {
 
         // Calculate total global phase of the circuit
         // TODO not used at the moment??
-        let global_phase = circuit_vec
-            .iter()
-            .filter_map(|x| match x {
-                Operation::PragmaGlobalPhase(x) => Some(x.phase()),
-                _ => None,
-            })
-            .fold(CalculatorFloat::ZERO, |acc, x| acc + x);
+        // let global_phase = circuit_vec
+        //     .iter()
+        //     .filter_map(|x| match x {
+        //         Operation::PragmaGlobalPhase(x) => Some(x.phase()),
+        //         _ => None,
+        //     })
+        //     .fold(CalculatorFloat::ZERO, |acc, x| acc + x);
 
         // Determine repetition, how many times the numerical simulation is repeated (not to be
-        // confused with the number of measurements drawn from one sample) This is only necessary
+        // confused with the number of measurements drawn from one sample). This is only necessary
         // for stochastic unravelling where a stochastic trajectory of a single state is simulated
         // many times to reconstruct the density matrix (when PragmaRandomNoise is present in
         // circuit) or when allowing for stochastic overrotations where coherent gates are applied
@@ -241,21 +240,6 @@ impl Backend {
             Some(_) => self.repetitions,
             None => 1,
         };
-
-        let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
-        if let Some(mut random_seed) = self.random_seed.clone() {
-            unsafe {
-                quest_sys::seedQuEST(
-                    &mut qureg.quest_env,
-                    random_seed.as_mut_ptr() as *mut std::os::raw::c_ulong,
-                    random_seed.len() as i32,
-                );
-            };
-        }
-        // Set up output registers
-        let mut bit_registers_output: HashMap<String, BitOutputRegister> = HashMap::new();
-        let mut float_registers_output: HashMap<String, FloatOutputRegister> = HashMap::new();
-        let mut complex_registers_output: HashMap<String, ComplexOutputRegister> = HashMap::new();
 
         for op in circuit_vec.iter() {
             match op {
@@ -323,6 +307,8 @@ impl Backend {
                     if let Some(nm) = number_measurements {
                         // Construct involved qubits
                         let involved_qubits: Vec<usize> = match register_lengths.get(o.readout()) {
+                            // TODO is this right?? What if the repeated measurement involves a
+                            // qubit mapping?
                             Some(pragma_nm) => {
                                 let n = *pragma_nm;
                                 (0..(n - 1)).collect()
@@ -389,7 +375,8 @@ impl Backend {
             if replace_measurements.is_some() {
                 let name = repeated_measurement_readout.clone();
                 let mut reordering_map: HashMap<usize, usize> = HashMap::new();
-                // Go through operations to build up hash map when readout_index is not equal to measured qubit
+                // Go through operations to build up hash map when readout_index is not equal to
+                // measured qubit
                 for op in circuit_vec.iter() {
                     if let Operation::MeasureQubit(measure) = op {
                         reordering_map.insert(*measure.qubit(), *measure.readout_index());
@@ -406,6 +393,17 @@ impl Backend {
             };
 
         let mut qureg = Qureg::new((number_used_qubits) as u32, is_density_matrix);
+
+        if let Some(mut random_seed) = self.random_seed.clone() {
+            unsafe {
+                quest_sys::seedQuEST(
+                    &mut qureg.quest_env,
+                    random_seed.as_mut_ptr() as *mut std::os::raw::c_ulong,
+                    random_seed.len() as i32,
+                );
+            };
+        }
+
         for _ in 0..repetitions {
             qureg.reset();
             let mut bit_registers_internal: HashMap<String, BitRegister> = HashMap::new();
@@ -455,7 +453,7 @@ impl Backend {
 
     #[inline]
     fn validate_circuit(&self, circuit_vec: &Vec<&Operation>) -> Result<(), RoqoqoBackendError> {
-        let (number_used_qubits, _) = get_number_used_qubits_and_registers(&circuit_vec)?;
+        let (number_used_qubits, _) = get_number_used_qubits_and_registers_lengths(&circuit_vec)?;
 
         if number_used_qubits > self.number_qubits {
             return Err(RoqoqoBackendError::GenericError {
@@ -667,11 +665,11 @@ fn find_pragma_op(op: &&Operation) -> bool {
                 false
             }
         }
-        Operation::PragmaDamping(_) => true,
-        Operation::PragmaDephasing(_) => true,
-        Operation::PragmaDepolarising(_) => true,
-        Operation::PragmaGeneralNoise(_) => true,
-        Operation::PragmaSetDensityMatrix(_) => true,
+        Operation::PragmaDamping(_)
+        | Operation::PragmaDephasing(_)
+        | Operation::PragmaDepolarising(_)
+        | Operation::PragmaGeneralNoise(_)
+        | Operation::PragmaSetDensityMatrix(_) => true,
         _ => false,
     }
 }
