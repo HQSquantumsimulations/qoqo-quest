@@ -522,7 +522,7 @@ LICENSE:
 
 
 ====================================================
-autocfg 1.3.0
+autocfg 1.4.0
 https://github.com/cuviper/autocfg
 by Josh Stone <cuviper@gmail.com>
 Automatic cfg for Rust compiler features
@@ -1278,7 +1278,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-bytemuck 1.18.0
+bytemuck 1.19.0
 https://github.com/Lokathor/bytemuck
 by Lokathor <zefria@gmail.com>
 A crate for mucking around with piles of bytes.
@@ -1686,7 +1686,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-cc 1.1.21
+cc 1.1.30
 https://github.com/rust-lang/cc-rs
 by Alex Crichton <alex@alexcrichton.com>
 A build-time dependency for Cargo build scripts to assist in invoking the native
@@ -2810,7 +2810,7 @@ LICENSE:
 
 
 ====================================================
-clap 4.4.18
+clap 4.5.20
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -3046,7 +3046,7 @@ SOFTWARE.
 
 
 ====================================================
-clap_builder 4.4.18
+clap_builder 4.5.20
 https://github.com/clap-rs/clap
 by 
 A simple to use, efficient, and full-featured Command Line Argument Parser
@@ -3283,8 +3283,8 @@ SOFTWARE.
 
 
 ====================================================
-clap_lex 0.6.0
-https://github.com/clap-rs/clap/tree/master/clap_lex
+clap_lex 0.7.2
+https://github.com/clap-rs/clap
 by 
 Minimal, flexible command line parser
 License: MIT OR Apache-2.0
@@ -6646,7 +6646,7 @@ License: MIT OR Apache-2.0
 ----------------------------------------------------
 
 ====================================================
-hashbrown 0.14.5
+hashbrown 0.15.0
 https://github.com/rust-lang/hashbrown
 by Amanieu d'Antras <amanieu@gmail.com>
 A Rust port of Google's SwissTable hash map
@@ -7367,7 +7367,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-indexmap 2.5.0
+indexmap 2.6.0
 https://github.com/indexmap-rs/indexmap
 by 
 A hash table with consistent order and fast iteration.
@@ -9034,7 +9034,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-js-sys 0.3.70
+js-sys 0.3.72
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Bindings for all JS global objects and functions in all JS environments like
@@ -9277,7 +9277,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-libc 0.2.159
+libc 0.2.161
 https://github.com/rust-lang/libc
 by The Rust Project Developers
 Raw FFI bindings to platform libraries like libc.
@@ -12731,7 +12731,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 ====================================================
-once_cell 1.19.0
+once_cell 1.20.2
 https://github.com/matklad/once_cell
 by Aleksey Kladov <aleksey.kladov@gmail.com>
 Single assignment cells and lazy values.
@@ -13971,7 +13971,7 @@ LICENSE:
 ../LICENSE
 
 ====================================================
-portable-atomic 1.8.0
+portable-atomic 1.9.0
 https://github.com/taiki-e/portable-atomic
 by 
 Portable atomic types including support for 128-bit atomics, atomic float, etc.
@@ -14428,7 +14428,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-proc-macro2 1.0.86
+proc-macro2 1.0.88
 https://github.com/dtolnay/proc-macro2
 by David Tolnay <dtolnay@gmail.com>, Alex Crichton <alex@alexcrichton.com>
 A substitute implementation of the compiler's `proc_macro` API to decouple token-based libraries from the procedural macro use case.
@@ -19217,7 +19217,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-redox_syscall 0.5.6
+redox_syscall 0.5.7
 https://gitlab.redox-os.org/redox-os/syscall
 by Jeremy Soller <jackpot51@gmail.com>
 A Rust library to access raw Redox system calls
@@ -19250,7 +19250,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-regex 1.10.6
+regex 1.11.0
 https://github.com/rust-lang/regex
 by The Rust Project Developers, Andrew Gallant <jamslam@gmail.com>
 An implementation of regular expressions for Rust. This implementation uses
@@ -19493,7 +19493,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-regex-automata 0.4.7
+regex-automata 0.4.8
 https://github.com/rust-lang/regex/tree/master/regex-automata
 by The Rust Project Developers, Andrew Gallant <jamslam@gmail.com>
 Automata construction and matching using regular expressions.
@@ -19734,7 +19734,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-regex-syntax 0.8.4
+regex-syntax 0.8.5
 https://github.com/rust-lang/regex/tree/master/regex-syntax
 by The Rust Project Developers, Andrew Gallant <jamslam@gmail.com>
 A regular expression parser.
@@ -22889,7 +22889,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-serde_json 1.0.128
+serde_json 1.0.129
 https://github.com/serde-rs/json
 by Erick Tryzelaar <erick.tryzelaar@gmail.com>, David Tolnay <dtolnay@gmail.com>
 A JSON serialization file format
@@ -24244,7 +24244,7 @@ LICENSE:
 
 
 ====================================================
-syn 2.0.77
+syn 2.0.79
 https://github.com/dtolnay/syn
 by David Tolnay <dtolnay@gmail.com>
 Parser for Rust source code
@@ -24689,7 +24689,7 @@ Software.
 
 
 ====================================================
-tempfile 3.12.0
+tempfile 3.13.0
 https://stebalien.com/projects/tempfile-rs/
 by Steven Allen <steven@stebalien.com>, The Rust Project Developers, Ashley Mannix <ashleymannix@live.com.au>, Jason White <me@jasonwhite.io>
 A library for managing temporary files and directories.
@@ -27688,7 +27688,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen 0.2.93
+wasm-bindgen 0.2.95
 https://rustwasm.github.io/
 by The wasm-bindgen Developers
 Easy support for interacting between JS and Rust.
@@ -27930,7 +27930,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-backend 0.2.93
+wasm-bindgen-backend 0.2.95
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Backend code generation of the wasm-bindgen tool
@@ -28172,7 +28172,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-macro 0.2.93
+wasm-bindgen-macro 0.2.95
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Definition of the `#[wasm_bindgen]` attribute, an internal dependency
@@ -28414,7 +28414,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-macro-support 0.2.93
+wasm-bindgen-macro-support 0.2.95
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 The part of the implementation of the `#[wasm_bindgen]` attribute that is not in the shared backend crate
@@ -28656,7 +28656,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-wasm-bindgen-shared 0.2.93
+wasm-bindgen-shared 0.2.95
 https://rustwasm.github.io/wasm-bindgen/
 by The wasm-bindgen Developers
 Shared support between wasm-bindgen and wasm-bindgen cli, an internal
@@ -28899,7 +28899,7 @@ DEALINGS IN THE SOFTWARE.
 
 
 ====================================================
-web-sys 0.3.70
+web-sys 0.3.72
 https://rustwasm.github.io/wasm-bindgen/web-sys/index.html
 by The wasm-bindgen Developers
 Bindings for all Web APIs, a procedurally generated crate from WebIDL
