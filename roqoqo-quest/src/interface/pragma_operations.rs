@@ -506,19 +506,16 @@ pub fn execute_get_occupation_probability(
 ) -> Result<(), RoqoqoBackendError> {
     unsafe {
         let mut workspace = Qureg::new(qureg.number_qubits(), qureg.is_density_matrix);
-        match op.circuit() {
-            Some(x) => {
-                circuit_handler(
-                    x,
-                    qureg,
-                    bit_registers,
-                    float_registers,
-                    complex_registers,
-                    bit_registers_output,
-                    device,
-                )?;
-            }
-            None => {}
+        if let Some(x) = op.circuit() {
+            circuit_handler(
+                x,
+                qureg,
+                bit_registers,
+                float_registers,
+                complex_registers,
+                bit_registers_output,
+                device,
+            )?;
         }
         quest_sys::cloneQureg(workspace.quest_qureg, qureg.quest_qureg);
         let probas: Vec<f64>;
