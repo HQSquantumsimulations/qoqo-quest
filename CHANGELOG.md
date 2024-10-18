@@ -4,6 +4,11 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.14.5
+
+* Updated to qoqo 1.16.0
+* Removed unused dependencies
+
 ## 0.14.4
 
 * Added the `set_random_seed` and `get_random_seed` methods to the `Backend`
