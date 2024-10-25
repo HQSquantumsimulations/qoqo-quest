@@ -32,13 +32,6 @@ fn index_out_of_range_msg(index: &usize, length: &usize) -> String {
     )
 }
 
-// TODO this function computes the number of used qubits (used in the backend.rs to inizialize the
-// quest qureg) by looking at the lengths of the defined registers. This does not seem to be
-// accurate, because the length of a defined register is arbitrary and can be greater than
-// necessary. e.g. if PragmaGetStateVector saves the state to a register, the register only needs to
-// have length 2^N where N is the number of qubits, but can be arbitrarily large. If it is larger
-// than needed, the number of used qubits will be overestimated. Will this cause a slowdown because
-// quest needs to keep track of a larger density matrix than needed?
 /// TODO docstring
 pub fn get_number_used_qubits_and_registers_lengths(
     circuit: &Vec<&Operation>,
