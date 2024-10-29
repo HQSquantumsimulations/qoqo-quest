@@ -100,7 +100,7 @@ impl Backend {
     ///
     /// The number of repetitions of the actual simulation is set to one by default. The repetitions
     /// are not to be confused with the number of simulated measurements per simulation run, which
-    /// is set with PragmaRepeatedMeasurement or PragmaSetNumberMeasurements. Should only be
+    /// is set with PragmaRepeatedMeasurement or PragmaSetNumberMeasurements. It should only be
     /// different from one if a stochastic unravelling of a noisy simulation is used with
     /// PragmaRandomNoise or PragmaOverrotation. If the number of repetitions is set to a value
     /// different from one and no PragmaRandomNoise or PRagmaOverrotation are present in the
@@ -315,8 +315,6 @@ impl Backend {
                     if let Some(nm) = number_measurements {
                         // Construct involved qubits
                         let involved_qubits: Vec<usize> = match register_lengths.get(o.readout()) {
-                            // TODO what is this way of determining the involved qubits for a PRM?
-                            // The involved_qubits method for PRM returns All.
                             Some(output_reg_length) => {
                                 let n = *output_reg_length;
                                 (0..(n - 1)).collect()

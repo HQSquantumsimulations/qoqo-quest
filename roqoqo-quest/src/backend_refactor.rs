@@ -100,7 +100,7 @@ impl Backend {
     ///
     /// The number of repetitions of the actual simulation is set to one by default. The repetitions
     /// are not to be confused with the number of simulated measurements per simulation run, which
-    /// is set with PragmaRepeatedMeasurement or PragmaSetNumberMeasurements. Should only be
+    /// is set with PragmaRepeatedMeasurement or PragmaSetNumberMeasurements. It should only be
     /// different from one if a stochastic unravelling of a noisy simulation is used with
     /// PragmaRandomNoise or PragmaOverrotation. If the number of repetitions is set to a value
     /// different from one and no PragmaRandomNoise or PRagmaOverrotation are present in the
