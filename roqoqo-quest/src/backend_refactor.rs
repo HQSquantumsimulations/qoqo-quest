@@ -315,6 +315,8 @@ impl Backend {
                     if let Some(nm) = number_measurements {
                         // Construct involved qubits
                         let involved_qubits: Vec<usize> = match register_lengths.get(o.readout()) {
+                            // TODO what is this way of determining the involved qubits for a PRM?
+                            // The involved_qubits method for PRM returns All.
                             Some(output_reg_length) => {
                                 let n = *output_reg_length;
                                 (0..(n - 1)).collect()

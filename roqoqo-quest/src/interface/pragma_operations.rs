@@ -163,12 +163,13 @@ pub fn execute_pragma_set_state_vector(
     let statevec = operation.statevector();
     let num_amps: i64 = statevec.len() as i64;
     if num_amps != 2_i64.pow(qureg.number_qubits()) {
-        return Err(RoqoqoBackendError::GenericError{
+        return Err(RoqoqoBackendError::GenericError {
             msg: format!(
-                "Can not set statevector: number of qubits of statevector ({}) differs from number of qubits in qubit register ({}).",
+                "Cannot set statevector: number of qubits of statevector ({}) differs from number \
+                 of qubits in qubit register ({}).",
                 num_amps,
                 qureg.number_qubits()
-            )
+            ),
         });
     }
     if qureg.is_density_matrix {
@@ -176,21 +177,7 @@ pub fn execute_pragma_set_state_vector(
         let mut imags: Vec<f64> = Vec::new();
         // iterate over ket state vector to the left of the matrix product
         // to reconstruct density matrix
-        // Variant for row major order
-        // for value_left in statevec.iter() {
-        //     // create real and imaginary entries for `row` by multiplying with bra form of statevector
-        //     reals.extend(
-        //         statevec
-        //             .iter()
-        //             .map(|value_right| (value_left * value_right.conj()).re),
-        //     );
-        //     imags.extend(
-        //         statevec
-        //             .iter()
-        //             .map(|value_right| (value_left * value_right.conj()).im),
-        //     );
-        // }
-        // // Variant for column major order
+        // (column major order)
         for value_right in statevec.iter() {
             // create real and imaginary entries for `row` by multiplying with bra form of statevector
             reals.extend(
@@ -242,11 +229,7 @@ pub fn execute_pragma_set_density_matrix(
         });
     }
     if qureg.is_density_matrix {
-        // Variant for row major order (ndarray default row major)
-        // let mut reals: Vec<f64> = density_matrix.iter().map(|x| x.re).collect();
-        // let mut imags: Vec<f64> = density_matrix.iter().map(|x| x.im).collect();
-
-        // // Variant for column major order (transpose ndarray default row major)
+        // column major order (transpose ndarray default row major)
         let mut reals: Vec<f64> = density_matrix.t().iter().map(|x| x.re).collect();
         let mut imags: Vec<f64> = density_matrix.t().iter().map(|x| x.im).collect();
         let start_row: ::std::os::raw::c_longlong = 0;
