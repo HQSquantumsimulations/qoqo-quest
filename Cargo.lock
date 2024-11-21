@@ -936,8 +936,6 @@ dependencies = [
 [[package]]
 name = "qoqo"
 version = "1.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb149c6bad5cf44c94e804f431f22da47aa0faabd1dd37cbbe51e9e8f3242428"
 dependencies = [
  "bincode",
  "ndarray",
@@ -950,6 +948,7 @@ dependencies = [
  "qoqo_calculator",
  "qoqo_calculator_pyo3",
  "quote",
+ "rayon",
  "regex",
  "roqoqo",
  "schemars",
@@ -964,8 +963,6 @@ dependencies = [
 [[package]]
 name = "qoqo-macros"
 version = "1.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b193bb664637dfcab2f881b49d3753835afb6404b4d5a672c6b6757618c6430"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1144,8 +1141,6 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 [[package]]
 name = "roqoqo"
 version = "1.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de80e71c8121c96196a7fb763669887d38027d08357a2acf7343fe7d5c7a2489"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1159,6 +1154,7 @@ dependencies = [
  "quote",
  "rand",
  "rand_distr",
+ "rayon",
  "roqoqo-derive",
  "serde",
  "struqture 1.9.2",
@@ -1169,8 +1165,6 @@ dependencies = [
 [[package]]
 name = "roqoqo-derive"
 version = "1.16.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09960c4fea9959fe523953cae8bf5df182076162833c441938f0a2d2d212ebfe"
 dependencies = [
  "proc-macro2",
  "quote",
