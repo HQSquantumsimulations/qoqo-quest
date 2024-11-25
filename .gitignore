@@ -12,3 +12,4 @@ target/*
 *.profraw
 *.lcov
 *zig-cache*
+*.so
