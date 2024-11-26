@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.14.6
+
+* Bugfix for number of used qubits for PragmaSetDensityMatrix and PragmaSetStateVector
+
 ## 0.14.5
 
 * Updated to qoqo 1.16.0
