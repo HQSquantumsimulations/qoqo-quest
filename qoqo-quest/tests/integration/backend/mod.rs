@@ -269,10 +269,8 @@ fn test_new_run_br() {
             circuits: vec![Circuit::new(), circ1.internal],
             input: bri,
         };
-
         let backend_type = py.get_type_bound::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
-
         let _result: HashMap<String, f64> = backend
             .downcast::<BackendWrapper>()
             .unwrap()
@@ -280,6 +278,13 @@ fn test_new_run_br() {
             .unwrap()
             .extract()
             .unwrap();
+        let _result_par: Vec<HashMap<String, f64>> = backend
+        .downcast::<BackendWrapper>()
+        .unwrap()
+        .call_method1("run_program_parallel", (program, vec![vec![0.0], vec![0.0]]))
+        .unwrap()
+        .extract()
+        .unwrap();
         let err = backend
             .downcast::<BackendWrapper>()
             .unwrap()

@@ -371,6 +371,20 @@ impl BackendWrapper {
             .map_err(|err| PyRuntimeError::new_err(format!("{}", err,)))?;
         Ok(results)
     }
+    ///
+    pub fn run_program_parallel(
+        &self,
+        program: &Bound<PyAny>,
+        parameters: Vec<Vec<f64>>,
+    ) -> PyResult<Vec<Option<HashMap<String, f64>>>> {
+        let program = qoqo::convert_into_quantum_program(program)
+            .map_err(|err| PyTypeError::new_err(format!("{}", err,)))?;
+        let backend = self.internal.clone();
+        let results = program
+            .run_parallel(backend, parameters)
+            .map_err(|err| PyRuntimeError::new_err(format!("{}", err,)))?;
+        Ok(results)
+    }
 }
 
 /// Convert generic python object to [roqoqo_quest::Backend].
