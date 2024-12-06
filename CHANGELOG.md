@@ -7,6 +7,7 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 ## 0.14.6
 
 * Bugfix for number of used qubits for PragmaSetDensityMatrix and PragmaSetStateVector
+* Updated to Rust 1.76 and PyO3 0.22
 
 ## 0.14.5
 

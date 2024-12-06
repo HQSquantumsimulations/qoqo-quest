@@ -29,7 +29,7 @@ doctest = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies.pyo3]
-version = "0.21"
+version = "0.22"
 features = ["num-complex"]
 
 [dependencies]
@@ -44,8 +44,8 @@ test-case = "3.0"
 serde_json = "1.0"
 
 [build-dependencies]
-pyo3-build-config = "0.21"
-pyo3 = "0.21"
+pyo3-build-config = "0.22"
+pyo3 = "0.22"
 
 [features]
 extension-module = ["pyo3/extension-module"]
