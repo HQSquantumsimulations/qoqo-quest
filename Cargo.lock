@@ -435,9 +435,9 @@ checksum = "1e087f84d4f86bf4b218b927129862374b72199ae7d8657835f1e89000eea4fb"
 
 [[package]]
 name = "heck"
-version = "0.4.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8"
+checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "hermit-abi"
@@ -568,16 +568,6 @@ name = "linux-raw-sys"
 version = "0.4.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "78b3ae25bc7c8c38cec158d1f2757ee79e9b3740fbc7ccf0e59e4b08d793fa89"
-
-[[package]]
-name = "lock_api"
-version = "0.4.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07af8b9cdd281b7915f413fa73f29ebd5d55d0d3f0155584dade1ff18cea1b17"
-dependencies = [
- "autocfg",
- "scopeguard",
-]
 
 [[package]]
 name = "log"
@@ -719,9 +709,9 @@ dependencies = [
 
 [[package]]
 name = "numpy"
-version = "0.21.0"
+version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec170733ca37175f5d75a5bea5911d6ff45d2cd52849ce98b685394e4f2f37f4"
+checksum = "edb929bc0da91a4d85ed6c0a84deaa53d411abfb387fc271124f91bf6b89f14e"
 dependencies = [
  "libc",
  "ndarray",
@@ -751,29 +741,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a3a0ed77d2794d2b9a59123e60e874190626c22b7124ce38959fe59386e317fa"
 dependencies = [
  "cc",
-]
-
-[[package]]
-name = "parking_lot"
-version = "0.12.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f1bf18183cf54e8d6059647fc3063646a1801cf30896933ec2311622cc4b9a27"
-dependencies = [
- "lock_api",
- "parking_lot_core",
-]
-
-[[package]]
-name = "parking_lot_core"
-version = "0.9.10"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e401f977ab385c9e4e3ab30627d6f26d00e2c73eef317493c4ec6d468726cf8"
-dependencies = [
- "cfg-if",
- "libc",
- "redox_syscall",
- "smallvec",
- "windows-targets",
 ]
 
 [[package]]
@@ -870,9 +837,9 @@ dependencies = [
 
 [[package]]
 name = "pyo3"
-version = "0.21.2"
+version = "0.22.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5e00b96a521718e08e03b1a622f01c8a8deb50719335de3f60b3b3950f069d8"
+checksum = "f402062616ab18202ae8319da13fa4279883a2b8a9d9f83f20dbade813ce1884"
 dependencies = [
  "cfg-if",
  "indoc",
@@ -880,7 +847,7 @@ dependencies = [
  "libc",
  "memoffset",
  "num-complex",
- "parking_lot",
+ "once_cell",
  "portable-atomic",
  "pyo3-build-config",
  "pyo3-ffi",
@@ -890,9 +857,9 @@ dependencies = [
 
 [[package]]
 name = "pyo3-build-config"
-version = "0.21.2"
+version = "0.22.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7883df5835fafdad87c0d888b266c8ec0f4c9ca48a5bed6bbb592e8dedee1b50"
+checksum = "b14b5775b5ff446dd1056212d778012cbe8a0fbffd368029fd9e25b514479c38"
 dependencies = [
  "once_cell",
  "target-lexicon",
@@ -900,9 +867,9 @@ dependencies = [
 
 [[package]]
 name = "pyo3-ffi"
-version = "0.21.2"
+version = "0.22.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "01be5843dc60b916ab4dad1dca6d20b9b4e6ddc8e15f50c47fe6d85f1fb97403"
+checksum = "9ab5bcf04a2cdcbb50c7d6105de943f543f9ed92af55818fd17b660390fc8636"
 dependencies = [
  "libc",
  "pyo3-build-config",
@@ -910,9 +877,9 @@ dependencies = [
 
 [[package]]
 name = "pyo3-macros"
-version = "0.21.2"
+version = "0.22.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "77b34069fc0682e11b31dbd10321cbf94808394c56fd996796ce45217dfac53c"
+checksum = "0fd24d897903a9e6d80b968368a34e1525aeb719d568dba8b3d4bfa5dc67d453"
 dependencies = [
  "proc-macro2",
  "pyo3-macros-backend",
@@ -922,9 +889,9 @@ dependencies = [
 
 [[package]]
 name = "pyo3-macros-backend"
-version = "0.21.2"
+version = "0.22.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08260721f32db5e1a5beae69a55553f56b99bd0e1c3e6e0a5e8851a9d0f5a85c"
+checksum = "36c011a03ba1e50152b4b394b479826cad97e7a21eb52df179cd91ac411cbfbe"
 dependencies = [
  "heck",
  "proc-macro2",
@@ -935,9 +902,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo"
-version = "1.16.0"
+version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cb149c6bad5cf44c94e804f431f22da47aa0faabd1dd37cbbe51e9e8f3242428"
+checksum = "ffd82cc27e0559580d239f912391c3a50856b605d743b3ca8f1c5e44151f2023"
 dependencies = [
  "bincode",
  "ndarray",
@@ -955,7 +922,7 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture 1.9.2",
+ "struqture 1.10.1",
  "struqture-py",
  "syn",
  "thiserror",
@@ -963,13 +930,13 @@ dependencies = [
 
 [[package]]
 name = "qoqo-macros"
-version = "1.16.0"
+version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b193bb664637dfcab2f881b49d3753835afb6404b4d5a672c6b6757618c6430"
+checksum = "7d9fd88741f08f15b490201b64e389eb5099e9b7f06101ed461618d6bf350e72"
 dependencies = [
  "proc-macro2",
  "quote",
- "struqture 1.9.2",
+ "struqture 1.10.1",
  "syn",
 ]
 
@@ -989,9 +956,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo_calculator"
-version = "1.2.4"
+version = "1.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6e28a55d15becd3c5793245b83f8652e5eb44e60ce1e234c6b9ae373e67ef5d"
+checksum = "cc2918943b496c8a2851f284710e7f835968425b84ef3aad29e9f265ac254dfd"
 dependencies = [
  "num-complex",
  "schemars",
@@ -1001,9 +968,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo_calculator_pyo3"
-version = "1.2.4"
+version = "1.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8314e9b99c847b544cc2a3d65d8f05cad20b2c78a59d645719966db96261eb38"
+checksum = "d04c0a32412b697c56d18882677933cc116a7afb65cee3e2f9b8840794f77f66"
 dependencies = [
  "num-complex",
  "pyo3",
@@ -1104,15 +1071,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "redox_syscall"
-version = "0.5.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b6dfecf2c74bce2466cabf93f6664d6998a69eb21e39f4207930065b27b771f"
-dependencies = [
- "bitflags",
-]
-
-[[package]]
 name = "regex"
 version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1143,9 +1101,9 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
 name = "roqoqo"
-version = "1.16.0"
+version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "de80e71c8121c96196a7fb763669887d38027d08357a2acf7343fe7d5c7a2489"
+checksum = "a12d7f52e5a07dec5ceedb5ddc79e6bdcb73c77a82a58b482f25595198851166"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1161,16 +1119,16 @@ dependencies = [
  "rand_distr",
  "roqoqo-derive",
  "serde",
- "struqture 1.9.2",
+ "struqture 1.10.1",
  "syn",
  "thiserror",
 ]
 
 [[package]]
 name = "roqoqo-derive"
-version = "1.16.0"
+version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "09960c4fea9959fe523953cae8bf5df182076162833c441938f0a2d2d212ebfe"
+checksum = "19ac3189e1b10014b6fce28926f7f821890bafddd4afa44f03c3457f6be87b4b"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1276,12 +1234,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "scopeguard"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
-
-[[package]]
 name = "serde"
 version = "1.0.210"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1353,16 +1305,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "smallvec"
-version = "1.13.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
-
-[[package]]
 name = "struqture"
-version = "1.9.2"
+version = "1.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7d2f2566561f41f3ea377bd6d952bdec12430fc9f322ee0fb291080e2a012f42"
+checksum = "a0680c81ffbf2e5abbbf66113bc1f580ab692da09199853dc24a026d50439a8b"
 dependencies = [
  "itertools 0.13.0",
  "ndarray",
@@ -1377,9 +1323,9 @@ dependencies = [
 
 [[package]]
 name = "struqture"
-version = "2.0.0-alpha.3"
+version = "2.0.0-alpha.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f5164769bf87c5ba799f89d51526152e1ba1cf36735cfa59ddefa3ddcb480541"
+checksum = "8ec79acf34c1f18f4f29f6331d97380da7fac3d0d152003f4693ec46b3fadc31"
 dependencies = [
  "indexmap",
  "itertools 0.12.1",
@@ -1387,7 +1333,7 @@ dependencies = [
  "num-complex",
  "qoqo_calculator",
  "serde",
- "struqture 1.9.2",
+ "struqture 1.10.1",
  "test-case",
  "thiserror",
  "tinyvec",
@@ -1395,9 +1341,9 @@ dependencies = [
 
 [[package]]
 name = "struqture-py"
-version = "1.9.2"
+version = "1.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0997e709a607cd7aaf3465b63a1a84eafa2919eeb21e7ee98ae883417c3e09d"
+checksum = "30272106351a8e2642adcd31d14fa7b71e43559e1470f6947e4ff13625c7913e"
 dependencies = [
  "bincode",
  "num-complex",
@@ -1412,8 +1358,8 @@ dependencies = [
  "schemars",
  "serde",
  "serde_json",
- "struqture 1.9.2",
- "struqture 2.0.0-alpha.3",
+ "struqture 1.10.1",
+ "struqture 2.0.0-alpha.4",
  "struqture-py-macros",
  "syn",
  "thiserror",
@@ -1421,9 +1367,9 @@ dependencies = [
 
 [[package]]
 name = "struqture-py-macros"
-version = "1.9.2"
+version = "1.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d868323a28c24607112dbb2b047113d6f457579ddf6fa07eb909fc32be372a71"
+checksum = "83ebf65705b188167447d7df2de62091079d1725e32cc3b749ce4d3b8a27bad4"
 dependencies = [
  "num-complex",
  "proc-macro2",

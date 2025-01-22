@@ -353,7 +353,7 @@ fn test_convert_from_pyany() {
     Python::with_gil(|py| {
         let backend_type = py.get_type_bound::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
-        let _ = convert_into_backend(backend.as_gil_ref()).unwrap();
-        let _ = convert_into_backend(backend_type.as_gil_ref()).is_err();
+        let _ = convert_into_backend(backend.as_ref()).unwrap();
+        let _ = convert_into_backend(backend_type.as_ref()).is_err();
     })
 }
