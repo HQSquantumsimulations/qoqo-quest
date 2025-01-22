@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.15.0
+
+* Updated to qoqo 1.17.0, struqture 1.10.0, struqture 2.0.0-alpha.4 and pyo3 0.22
+
 ## 0.14.5
 
 * Updated to qoqo 1.16.0
