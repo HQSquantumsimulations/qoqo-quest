@@ -227,9 +227,8 @@ impl BackendWrapper {
                     err
                 ))
             })?;
-        let const_circuit = get_constant_circuit
-            .extract::<Option<&PyAny>>()
-            .map_err(|err| {
+        let const_circuit: Option<Bound<PyAny>> =
+            get_constant_circuit.extract().map_err(|err| {
                 PyTypeError::new_err(format!(
                     "Cannot extract constant circuit from measurement {:?}",
                     err
@@ -252,12 +251,14 @@ impl BackendWrapper {
                 err
             ))
         })?;
-        let circuit_list = get_circuit_list.extract::<Vec<&PyAny>>().map_err(|err| {
-            PyTypeError::new_err(format!(
-                "Cannot extract circuit list from measurement {:?}",
-                err
-            ))
-        })?;
+        let circuit_list = get_circuit_list
+            .extract::<Vec<Bound<PyAny>>>()
+            .map_err(|err| {
+                PyTypeError::new_err(format!(
+                    "Cannot extract circuit list from measurement {:?}",
+                    err
+                ))
+            })?;
 
         for c in circuit_list {
             run_circuits.push(
@@ -376,7 +377,9 @@ impl BackendWrapper {
 /// Convert generic python object to [roqoqo_quest::Backend].
 ///
 /// Fallible conversion of generic python object to [roqoqo_quest::Backend].
-pub fn convert_into_backend(input: &PyAny) -> Result<roqoqo_quest::Backend, QoqoBackendError> {
+pub fn convert_into_backend(
+    input: &Bound<PyAny>,
+) -> Result<roqoqo_quest::Backend, QoqoBackendError> {
     if let Ok(try_downcast) = input.extract::<BackendWrapper>() {
         Ok(try_downcast.internal)
     } else {
