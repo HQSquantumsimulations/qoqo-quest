@@ -6,7 +6,7 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## 0.15.0
 
-* Updated to qoqo 1.18.0, struqture 1.11.1, struqture 2.0.0-alpha.7, pyo3 0.22 and ndarray 0.16
+* Updated to qoqo-calculator 1.4.4, qoqo 1.18.0, struqture 1.11.1, struqture 2.0.0-alpha.7, pyo3 0.22 and ndarray 0.16
 
 ## 0.14.5
 
