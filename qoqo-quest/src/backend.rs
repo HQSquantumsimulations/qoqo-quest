@@ -399,25 +399,23 @@ pub fn convert_into_backend(
 
 #[inline]
 fn warn_pragma_getstatevec_getdensitymat(circuit: Circuit) {
-    if circuit.count_occurences(&["PragmaGetStateVector", "PragmaGetDensityMatrix"]) > 0 {
-        for op in circuit.iter() {
-            match op {
-                Operation::PragmaGetStateVector(op) => {
-                    if !op.circuit().is_none() {
-                        Python::with_gil(|py| {
-                            py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetStateVector is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
-                        });
-                    }
+    for op in circuit.iter() {
+        match op {
+            Operation::PragmaGetStateVector(op) => {
+                if !op.circuit().is_none() {
+                    Python::with_gil(|py| {
+                        py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetStateVector is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
+                    });
                 }
-                Operation::PragmaGetDensityMatrix(op) => {
-                    if !op.circuit().is_none() {
-                        Python::with_gil(|py| {
-                            py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetDensityMatrix is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
-                        });
-                    }
-                }
-                _ => {}
             }
+            Operation::PragmaGetDensityMatrix(op) => {
+                if !op.circuit().is_none() {
+                    Python::with_gil(|py| {
+                        py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetDensityMatrix is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
+                    });
+                }
+            }
+            _ => {}
         }
     }
 }
