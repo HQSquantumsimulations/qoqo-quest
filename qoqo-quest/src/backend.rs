@@ -17,10 +17,10 @@ use pyo3::types::{PyByteArray, PyType};
 use qoqo::convert_into_circuit;
 use qoqo::QoqoBackendError;
 use roqoqo::backends::EvaluatingBackend;
+use roqoqo::operations::*;
 use roqoqo::registers::{BitOutputRegister, ComplexOutputRegister, FloatOutputRegister};
 use roqoqo::Circuit;
 use std::collections::HashMap;
-
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
@@ -190,6 +190,7 @@ impl BackendWrapper {
                 err
             ))
         })?;
+        warn_pragma_getstatevec_getdensitymat(circuit.clone());
         EvaluatingBackend::run_circuit(&self.internal, &circuit)
             .map_err(|err| PyRuntimeError::new_err(format!("Running Circuit failed {:?}", err)))
     }
@@ -277,6 +278,7 @@ impl BackendWrapper {
         let mut complex_registers: HashMap<String, ComplexOutputRegister> = HashMap::new();
 
         for circuit in run_circuits {
+            warn_pragma_getstatevec_getdensitymat(circuit.clone());
             let (tmp_bit_reg, tmp_float_reg, tmp_complex_reg) = self
                 .internal
                 .run_circuit_iterator(circuit.iter())
@@ -392,5 +394,28 @@ pub fn convert_into_backend(
             .extract::<Vec<u8>>()
             .map_err(|_| QoqoBackendError::CannotExtractObject)?;
         deserialize(&bytes[..]).map_err(|_| QoqoBackendError::CannotExtractObject)
+    }
+}
+
+#[inline]
+fn warn_pragma_getstatevec_getdensitymat(circuit: Circuit) {
+    for op in circuit.iter() {
+        match op {
+            Operation::PragmaGetStateVector(op) => {
+                if !op.circuit().is_none() {
+                    Python::with_gil(|py| {
+                        py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetStateVector is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
+                    });
+                }
+            }
+            Operation::PragmaGetDensityMatrix(op) => {
+                if !op.circuit().is_none() {
+                    Python::with_gil(|py| {
+                        py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetDensityMatrix is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
+                    });
+                }
+            }
+            _ => {}
+        }
     }
 }
