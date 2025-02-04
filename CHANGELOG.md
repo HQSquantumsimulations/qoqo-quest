@@ -4,6 +4,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+* Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
+
 ## 0.15.1
 
 * Relaxed numpy requirement (removing `>=2.0`).
