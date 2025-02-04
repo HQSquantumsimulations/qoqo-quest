@@ -4,6 +4,9 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.15.1
+
+* Relaxed numpy requirement (removing `>=2.0`).
 * Added warning to any circuits using `PragmaGetStateVector` or `PragmaGetDensityMatrix` with a non-empty Circuit argument passed that this circuit isn't used. This was added to `run_measurement_registers` and `run_circuit` in qoqo-quest only.
 
 ## 0.15.0
