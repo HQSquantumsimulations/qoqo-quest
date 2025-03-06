@@ -6,6 +6,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## 0.16.0
 
+* Updated minimum supported Python version to 3.9.
+* Updated minimum supported Rust versio to 1.76.
 * Updated to pyo3 0.23.
 * Updated to qoqo-calculator 1.5, qoqo 1.19 and rand 0.9.
 * Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
