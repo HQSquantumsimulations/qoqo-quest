@@ -19,6 +19,7 @@ jobs:
       # Test code coverage of rust core is over 90 percent
       test_code_coverage: true
       rust_package_name: "roqoqo-quest"
+      features: "openmp async parallelization"
 
   build_tests:
     uses: HQSquantumsimulations/reusable_workflows/.github/workflows/reusable_build_tests_rust_pyo3.yml@main
