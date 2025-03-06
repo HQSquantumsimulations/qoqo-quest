@@ -205,13 +205,13 @@ pub type bitEncoding = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct PauliHamil {
-    #[doc = "! The Pauli operators acting on each qubit, flattened over every operator.\n! This is a flat array of length PauliHamil.numSumTerms * PauliHamil.numQubits."]
+    #[doc = "The Pauli operators acting on each qubit, flattened over every operator.\n! This is a flat array of length PauliHamil.numSumTerms * PauliHamil.numQubits."]
     pub pauliCodes: *mut pauliOpType,
-    #[doc = "! The real coefficient of each Pauli product. This is an array of length PauliHamil.numSumTerms;"]
+    #[doc = "The real coefficient of each Pauli product. This is an array of length PauliHamil.numSumTerms;"]
     pub termCoeffs: *mut f64,
-    #[doc = "! The number of terms in the weighted sum, or the number of Pauli products."]
+    #[doc = "The number of terms in the weighted sum, or the number of Pauli products."]
     pub numSumTerms: ::std::os::raw::c_int,
-    #[doc = "! The number of qubits informing the Hilbert dimension of the Hamiltonian."]
+    #[doc = "The number of qubits informing the Hilbert dimension of the Hamiltonian."]
     pub numQubits: ::std::os::raw::c_int,
 }
 #[test]
@@ -241,19 +241,19 @@ fn bindgen_test_layout_PauliHamil() {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct DiagonalOp {
-    #[doc = "! The number of qubits this operator can act on (informing its size)"]
+    #[doc = "The number of qubits this operator can act on (informing its size)"]
     pub numQubits: ::std::os::raw::c_int,
-    #[doc = "! The number of the 2^numQubits amplitudes stored on each distributed node"]
+    #[doc = "The number of the 2^numQubits amplitudes stored on each distributed node"]
     pub numElemsPerChunk: ::std::os::raw::c_longlong,
-    #[doc = "! The number of nodes between which the elements of this operator are split"]
+    #[doc = "The number of nodes between which the elements of this operator are split"]
     pub numChunks: ::std::os::raw::c_int,
-    #[doc = "! The position of the chunk of the operator held by this process in the full operator"]
+    #[doc = "The position of the chunk of the operator held by this process in the full operator"]
     pub chunkId: ::std::os::raw::c_int,
-    #[doc = "! The real values of the 2^numQubits complex elements"]
+    #[doc = "The real values of the 2^numQubits complex elements"]
     pub real: *mut f64,
-    #[doc = "! The imaginary values of the 2^numQubits complex elements"]
+    #[doc = "The imaginary values of the 2^numQubits complex elements"]
     pub imag: *mut f64,
-    #[doc = "! A copy of the elements stored persistently on the GPU"]
+    #[doc = "A copy of the elements stored persistently on the GPU"]
     pub deviceOperator: ComplexArray,
 }
 #[test]
@@ -295,13 +295,13 @@ fn bindgen_test_layout_DiagonalOp() {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct SubDiagonalOp {
-    #[doc = "! The number of target qubits which this SubDiagonalOp can operate upon"]
+    #[doc = "The number of target qubits which this SubDiagonalOp can operate upon"]
     pub numQubits: ::std::os::raw::c_int,
-    #[doc = "! The number of diagonal elements, i.e. 2^numQubits"]
+    #[doc = "The number of diagonal elements, i.e. 2^numQubits"]
     pub numElems: ::std::os::raw::c_longlong,
-    #[doc = "! The real values of the 2^numQubits complex elements"]
+    #[doc = "The real values of the 2^numQubits complex elements"]
     pub real: *mut f64,
-    #[doc = "! The imaginary values of the 2^numQubits complex elements"]
+    #[doc = "The imaginary values of the 2^numQubits complex elements"]
     pub imag: *mut f64,
 }
 #[test]
@@ -331,35 +331,35 @@ fn bindgen_test_layout_SubDiagonalOp() {
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct Qureg {
-    #[doc = "! Whether this instance is a density-state representation"]
+    #[doc = "Whether this instance is a density-state representation"]
     pub isDensityMatrix: ::std::os::raw::c_int,
-    #[doc = "! The number of qubits represented in either the state-vector or density matrix"]
+    #[doc = "The number of qubits represented in either the state-vector or density matrix"]
     pub numQubitsRepresented: ::std::os::raw::c_int,
-    #[doc = "! Number of qubits in the state-vector - this is double the number represented for mixed states"]
+    #[doc = "Number of qubits in the state-vector - this is double the number represented for mixed states"]
     pub numQubitsInStateVec: ::std::os::raw::c_int,
-    #[doc = "! Number of probability amplitudes held in stateVec by this process\n! In the non-MPI version, this is the total number of amplitudes"]
+    #[doc = "Number of probability amplitudes held in stateVec by this process\n! In the non-MPI version, this is the total number of amplitudes"]
     pub numAmpsPerChunk: ::std::os::raw::c_longlong,
-    #[doc = "! Total number of amplitudes, which are possibly distributed among machines"]
+    #[doc = "Total number of amplitudes, which are possibly distributed among machines"]
     pub numAmpsTotal: ::std::os::raw::c_longlong,
-    #[doc = "! The position of the chunk of the state vector held by this process in the full state vector"]
+    #[doc = "The position of the chunk of the state vector held by this process in the full state vector"]
     pub chunkId: ::std::os::raw::c_int,
-    #[doc = "! Number of chunks the state vector is broken up into -- the number of MPI processes used"]
+    #[doc = "Number of chunks the state vector is broken up into -- the number of MPI processes used"]
     pub numChunks: ::std::os::raw::c_int,
-    #[doc = "! Computational state amplitudes - a subset thereof in the MPI version"]
+    #[doc = "Computational state amplitudes - a subset thereof in the MPI version"]
     pub stateVec: ComplexArray,
-    #[doc = "! Temporary storage for a chunk of the state vector received from another process in the MPI version"]
+    #[doc = "Temporary storage for a chunk of the state vector received from another process in the MPI version"]
     pub pairStateVec: ComplexArray,
-    #[doc = "! Storage for wavefunction amplitudes in the GPU version"]
+    #[doc = "Storage for wavefunction amplitudes in the GPU version"]
     pub deviceStateVec: ComplexArray,
-    #[doc = "! Storage for reduction of probabilities on GPU"]
+    #[doc = "Storage for reduction of probabilities on GPU"]
     pub firstLevelReduction: *mut f64,
-    #[doc = "! Storage for reduction of probabilities on GPU"]
+    #[doc = "Storage for reduction of probabilities on GPU"]
     pub secondLevelReduction: *mut f64,
-    #[doc = "! Storage for wavefunction amplitues and config (copy of QuESTEnv's handle) in cuQuantum deployment"]
+    #[doc = "Storage for wavefunction amplitues and config (copy of QuESTEnv's handle) in cuQuantum deployment"]
     pub cuStateVec: *mut ::std::os::raw::c_void,
     pub deviceCuStateVec: *mut ::std::os::raw::c_void,
     pub cuConfig: *mut *mut ::std::os::raw::c_void,
-    #[doc = "! Storage for generated QASM output"]
+    #[doc = "Storage for generated QASM output"]
     pub qasmLog: *mut QASMLogger,
 }
 #[test]
