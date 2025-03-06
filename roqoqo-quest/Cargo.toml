@@ -21,11 +21,11 @@ doctest = false
 
 [dependencies]
 quest-sys = { version = "~0.15", path = "../quest-sys", default-features = false }
-roqoqo = { version = "~1.18", features = ["serialize"] }
-qoqo_calculator = { version = "~1.4" }
+roqoqo = { version = "~1.19", features = ["serialize"] }
+qoqo_calculator = { version = "~1.5" }
 num-complex = { version = "0.4" }
 serde = { version = "1.0", features = ["derive"] }
-rand = "0.8"
+rand = "0.9"
 ndarray = "0.16"
 async-trait = { version = "0.1", optional = true }
 futures = { version = "0.3", optional = true }

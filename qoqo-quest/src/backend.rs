@@ -12,6 +12,7 @@
 
 use bincode::{deserialize, serialize};
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
+use pyo3::ffi::c_str;
 use pyo3::prelude::*;
 use pyo3::types::{PyByteArray, PyType};
 use qoqo::convert_into_circuit;
@@ -21,6 +22,7 @@ use roqoqo::operations::*;
 use roqoqo::registers::{BitOutputRegister, ComplexOutputRegister, FloatOutputRegister};
 use roqoqo::Circuit;
 use std::collections::HashMap;
+
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
@@ -102,7 +104,7 @@ impl BackendWrapper {
         let serialized = serialize(&self.internal)
             .map_err(|_| PyValueError::new_err("Cannot serialize Backend to bytes"))?;
         let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
-            PyByteArray::new_bound(py, &serialized[..]).into()
+            PyByteArray::new(py, &serialized[..]).into()
         });
         Ok(b)
     }
@@ -404,14 +406,14 @@ fn warn_pragma_getstatevec_getdensitymat(circuit: Circuit) {
             Operation::PragmaGetStateVector(op) => {
                 if !op.circuit().is_none() {
                     Python::with_gil(|py| {
-                        py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetStateVector is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
+                        py.run(c_str!("import warnings; warnings.warn(\"Circuit parameter of PragmaGetStateVector is not used in qoqo-quest.\", stacklevel=2)"), None, None).unwrap();
                     });
                 }
             }
             Operation::PragmaGetDensityMatrix(op) => {
                 if !op.circuit().is_none() {
                     Python::with_gil(|py| {
-                        py.run_bound("import warnings; warnings.warn(\"Circuit parameter of PragmaGetDensityMatrix is not used in qoqo-quest.\", stacklevel=2)", None, None).unwrap();
+                        py.run(c_str!("import warnings; warnings.warn(\"Circuit parameter of PragmaGetDensityMatrix is not used in qoqo-quest.\", stacklevel=2)"), None, None).unwrap();
                     });
                 }
             }

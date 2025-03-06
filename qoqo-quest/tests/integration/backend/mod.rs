@@ -33,7 +33,7 @@ use roqoqo::Circuit;
 fn test_creating_backend() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let _backend = backend_type
             .call1((2,))
             .unwrap()
@@ -42,7 +42,7 @@ fn test_creating_backend() {
     });
 
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let _backend = backend_type
             .call1((2,))
             .unwrap()
@@ -69,7 +69,7 @@ fn test_running_circuit() {
     };
 
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = backend
             .downcast::<BackendWrapper>()
@@ -94,7 +94,7 @@ fn test_backend_seed() {
     pyo3::prepare_freethreaded_python();
     let seeds = vec![555, 555, 555, 555, 555, 555];
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = backend
             .downcast::<BackendWrapper>()
@@ -141,7 +141,7 @@ fn test_running_measurement() {
         internal: cr_measurement,
     };
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = backend
             .downcast::<BackendWrapper>()
@@ -202,7 +202,7 @@ fn test_running_measurement_registers() {
         internal: ch_measurement,
     };
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let small_backend = backend_type.call1((1,)).unwrap();
         let backend = backend_type.call1((6,)).unwrap();
         let _ = backend
@@ -233,7 +233,7 @@ fn test_running_measurement_registers() {
 fn test_new_run_br() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let input_type = py.get_type_bound::<PauliZProductInputWrapper>();
+        let input_type = py.get_type::<PauliZProductInputWrapper>();
         let input_instance = input_type.call1((3, false)).unwrap();
         let _ = input_instance
             .downcast::<PauliZProductInputWrapper>()
@@ -246,12 +246,12 @@ fn test_new_run_br() {
         circ1.internal += operations::RotateX::new(0, 0.0.into());
         circ1.internal += operations::DefinitionBit::new("ro".to_string(), 1, true);
         circs.push(circ1.clone());
-        let br_type = py.get_type_bound::<PauliZProductWrapper>();
+        let br_type = py.get_type::<PauliZProductWrapper>();
         let input = br_type
             .call1((Some(CircuitWrapper::new()), circs.clone(), input_instance))
             .unwrap();
 
-        let program_type = py.get_type_bound::<QuantumProgramWrapper>();
+        let program_type = py.get_type::<QuantumProgramWrapper>();
         let binding = program_type
             .call1((
                 input.downcast::<PauliZProductWrapper>().unwrap(),
@@ -270,7 +270,7 @@ fn test_new_run_br() {
             input: bri,
         };
 
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
 
         let _result: HashMap<String, f64> = backend
@@ -292,7 +292,7 @@ fn test_new_run_br() {
 fn test_copy_deepcopy() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _copy_backend = backend.call_method0("__copy__").unwrap();
         let _deepcopy_backend = backend.call_method1("__deepcopy__", ("",)).unwrap();
@@ -303,7 +303,7 @@ fn test_copy_deepcopy() {
 fn test_bincode() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let bytes = backend.call_method0("to_bincode").unwrap();
         let _ = backend
@@ -328,7 +328,7 @@ fn test_bincode() {
 fn test_json() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let json = backend.call_method0("to_json").unwrap();
         let _ = backend.call_method1("from_json", (json.clone(),)).unwrap();
@@ -351,7 +351,7 @@ fn test_json() {
 fn test_convert_from_pyany() {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| {
-        let backend_type = py.get_type_bound::<BackendWrapper>();
+        let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = convert_into_backend(backend.as_ref()).unwrap();
         let _ = convert_into_backend(backend_type.as_ref()).is_err();
