@@ -1,11 +1,11 @@
 
 [package]
 name = "quest-sys"
-version = "0.15.1"
+version = "0.16.0"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0 AND MIT AND BSD-3-Clause"
 edition = "2021"
-rust-version = "1.70"
+rust-version = "1.76"
 categories = ["science", "simulation"]
 readme = "../README.md"
 repository = "https://github.com/HQSquantumsimulations/qoqo-quest"

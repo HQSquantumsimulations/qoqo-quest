@@ -11,8 +11,8 @@
 // limitations under the License.
 
 use crate::Qureg;
-use rand::distributions::WeightedIndex;
-use rand::prelude::*;
+use rand::distr::weighted::WeightedIndex;
+use rand::{prelude::*, rng};
 use roqoqo::devices::Device;
 use roqoqo::operations::*;
 use roqoqo::registers::{BitOutputRegister, BitRegister, ComplexRegister, FloatRegister};
@@ -301,7 +301,7 @@ pub fn execute_pragma_random_noise(
     qureg: &mut Qureg,
 ) -> Result<(), RoqoqoBackendError> {
     let mut rng = create_rng(qureg)?;
-    let r0 = rng.gen_range(0.0..1.0);
+    let r0 = rng.random_range(0.0..1.0);
     let rates = [
         operation.depolarising_rate().float()? / 4.0,
         operation.depolarising_rate().float()? / 4.0,
@@ -627,11 +627,7 @@ fn create_rng(qureg: &mut Qureg) -> Result<StdRng, RoqoqoBackendError> {
             }
         })?))
     } else {
-        Ok(
-            StdRng::from_rng(thread_rng()).map_err(|err| RoqoqoBackendError::GenericError {
-                msg: format!("Unable to create the rng: {err}"),
-            })?,
-        )
+        Ok(StdRng::from_rng(&mut rng()))
     }
 }
 #[cfg(test)]
