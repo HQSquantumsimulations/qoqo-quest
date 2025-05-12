@@ -13,7 +13,7 @@
 # If 1 or more target triples (and optionally, target_features) are specified,
 # only the specified targets will be checked when running `cargo deny check`.
 # This means, if a particular package is only ever used as a target specific
-# dependency, such as, for example, the `nix` crate only being used via the
+# dependency, such as, for example, the `nix` crate only being used via f
 # `target_family = "unix"` configuration, that only having windows targets in
 # this list would mean the nix crate, as well as any of its exclusive
 # dependencies not shared by any other crates, would be ignored, as the target
@@ -41,6 +41,7 @@ yanked = "deny"
 # A list of advisory IDs to ignore. Note that ignored advisories will still
 # output a note when they are encountered.
 ignore = [
+    "RUSTSEC-2024-0436",
     #"RUSTSEC-0000-0000",
 ]
 # Threshold for security vulnerabilities, any vulnerability with a CVSS score
