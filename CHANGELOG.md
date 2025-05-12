@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.16.1
+
+* Updated to pyo3 0.24.
+
 ## 0.16.0
 
 * Updated minimum supported Python version to 3.9.

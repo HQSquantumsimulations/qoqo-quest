@@ -1,6 +1,6 @@
 [package]
 name = "qoqo-quest"
-version = "0.16.0"
+version = "0.16.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
@@ -29,7 +29,7 @@ doctest = false
 crate-type = ["cdylib", "rlib"]
 
 [dependencies.pyo3]
-version = "0.23"
+version = "0.24"
 features = ["num-complex"]
 
 [dependencies]
@@ -44,8 +44,8 @@ test-case = "3.0"
 serde_json = "1.0"
 
 [build-dependencies]
-pyo3-build-config = "0.23"
-pyo3 = "0.23"
+pyo3-build-config = "0.24"
+pyo3 = "0.24"
 
 [features]
 extension-module = ["pyo3/extension-module"]
