@@ -227,7 +227,7 @@ pub struct ComplexMatrixN {
     /// Internally stored C ComplexMatrix.
     pub complex_matrix: quest_sys::ComplexMatrixN,
     /// The dimension of the complex matrix
-    pub dimension: usize,
+    pub(crate) dimension: usize,
 }
 
 impl ComplexMatrixN {
