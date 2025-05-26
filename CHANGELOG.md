@@ -4,6 +4,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+* Added the `run_circuit_imperfect` method to the Backend to run with readout errors.
+
 ## 0.16.2
 
 * Fixed unsound API by hiding "dimension" field of `ComplexMatrixN`.
