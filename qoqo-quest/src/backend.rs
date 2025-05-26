@@ -239,7 +239,6 @@ impl BackendWrapper {
             EvaluatingBackend::run_circuit(&self.internal, &circuit).map_err(|err| {
                 PyRuntimeError::new_err(format!("Running Circuit failed {:?}", err))
             })?;
-        println!("AHAHAHAH");
 
         let bit_register =
             roqoqo_quest::apply_noisy_readouts(bit_register, &noise_model, self.get_random_seed());
