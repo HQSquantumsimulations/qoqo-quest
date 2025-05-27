@@ -361,6 +361,44 @@ impl BackendWrapper {
         Ok((bit_registers, float_registers, complex_registers))
     }
 
+    /// Run all circuits corresponding to one measurement with the QuEST backend.
+    ///
+    /// An expectation value measurement in general involves several circuits.
+    /// Each circuit is passes to the backend and executed separately.
+    /// A circuit is passed to the backend and executed.
+    /// During execution values are written to and read from classical registers
+    /// (List[bool], List[float], List[complex]).
+    /// To produce sufficient statistics for evaluating expectation values,
+    /// circuits have to be run multiple times.
+    /// The results of each repetition are concatenated in OutputRegisters
+    /// (List[List[bool]], List[List[float]], List[List[complex]]).  
+    ///
+    ///
+    /// Args:
+    ///     measurement (Measurement): The measurement that is run on the backend.
+    ///
+    /// Returns:
+    ///     Tuple[Dict[str, List[List[bool]]], Dict[str, List[List[float]]]], Dict[str, List[List[complex]]]]: The output registers written by the evaluated circuits.
+    ///
+    /// Raises:
+    ///     TypeError: Cannot extract constant circuit from measurement
+    ///     RuntimeError: Running Circuit failed
+    pub fn run_measurement_registers_imperfect(
+        &self,
+        measurement: &Bound<PyAny>,
+        noise_model: &Bound<PyAny>,
+    ) -> PyResult<Registers> {
+        let noise_model = match ImperfectReadoutModelWrapper::from_pyany(noise_model)? {
+            roqoqo::noise_models::NoiseModel::ImperfectReadoutModel(model) => model,
+            _ => return Err(PyTypeError::new_err("args: noise_model must be an instance of ImperfectReadoutModel, got {noise_model} instead."))
+        };
+        let (mut bit_registers, float_registers, complex_registers) =
+            self.run_measurement_registers(measurement)?;
+        bit_registers =
+            roqoqo_quest::apply_noisy_readouts(bit_registers, &noise_model, self.get_random_seed());
+        Ok((bit_registers, float_registers, complex_registers))
+    }
+
     /// Evaluates expectation values of a measurement with the backend.
     ///
     ///
