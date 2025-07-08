@@ -11,7 +11,7 @@
 // limitations under the License.
 
 use crate::interface::{
-    call_operation_with_device, execute_pragma_repeated_measurement,
+    apply_noisy_readouts, call_operation_with_device, execute_pragma_repeated_measurement,
     execute_replaced_repeated_measurement, get_number_used_qubits_and_registers,
 };
 #[cfg(feature = "async")]
@@ -480,7 +480,7 @@ impl Backend {
         }
         if let Some(imperfect_readout_model) = &self.imperfect_readout_model {
             // Apply imperfect readout model to output registers
-            bit_registers_output = super::apply_noisy_readouts(
+            bit_registers_output = apply_noisy_readouts(
                 bit_registers_output,
                 imperfect_readout_model,
                 self.get_random_seed(),

@@ -24,8 +24,8 @@ use pragma_operations::*;
 mod gate_operations;
 use gate_operations::*;
 mod postprocessing;
-pub use postprocessing::apply_noisy_readouts;
 mod preprocessing;
+pub use postprocessing::apply_noisy_readouts;
 pub(crate) use pragma_operations::{
     execute_pragma_repeated_measurement, execute_replaced_repeated_measurement,
 };
