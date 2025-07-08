@@ -19,6 +19,7 @@ use pyo3::Python;
 use qoqo::measurements::CheatedWrapper;
 use qoqo::measurements::ClassicalRegisterWrapper;
 use qoqo::measurements::{PauliZProductInputWrapper, PauliZProductWrapper};
+use qoqo::noise_models::ImperfectReadoutModelWrapper;
 use qoqo::CircuitWrapper;
 use qoqo::QuantumProgramWrapper;
 use qoqo_quest::convert_into_backend;
@@ -28,6 +29,7 @@ use roqoqo::measurements::CheatedInput;
 use roqoqo::measurements::ClassicalRegister;
 use roqoqo::measurements::{PauliZProduct, PauliZProductInput};
 use roqoqo::operations;
+use roqoqo::registers::Registers;
 use roqoqo::Circuit;
 #[test]
 fn test_creating_backend() {
@@ -355,5 +357,82 @@ fn test_convert_from_pyany() {
         let backend = backend_type.call1((3,)).unwrap();
         let _ = convert_into_backend(backend.as_ref()).unwrap();
         let _ = convert_into_backend(backend_type.as_ref()).is_err();
+    })
+}
+
+#[test]
+fn test_imperfect_model() {
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 2, true);
+    circuit += operations::PauliX::new(0);
+    circuit += operations::PauliX::new(1);
+    circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+    circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+    let circuit_wrapper = CircuitWrapper { internal: circuit };
+
+    let mut noise_model = ImperfectReadoutModelWrapper::new();
+    noise_model = noise_model.set_error_probabilites(0, 0.0, 1.0).unwrap();
+    noise_model = noise_model.set_error_probabilites(1, 0.0, 1.0).unwrap();
+
+    pyo3::prepare_freethreaded_python();
+    Python::with_gil(|py| {
+        let backend_type = py.get_type::<BackendWrapper>();
+        let backend = backend_type.call1((2,)).unwrap();
+
+        let res = backend
+            .downcast::<BackendWrapper>()
+            .unwrap()
+            .call_method1("run_circuit", (circuit_wrapper.clone(),))
+            .unwrap();
+        assert_eq!(
+            res.extract::<Registers>().unwrap().0.get("ro").unwrap(),
+            &vec![vec![true, true]]
+        );
+
+        backend
+            .downcast::<BackendWrapper>()
+            .unwrap()
+            .call_method1("set_imperfect_readout_model", (noise_model.clone(),))
+            .unwrap();
+
+        let res = backend
+            .downcast::<BackendWrapper>()
+            .unwrap()
+            .call_method1("run_circuit", (circuit_wrapper.clone(),))
+            .unwrap();
+        assert_eq!(
+            res.extract::<Registers>().unwrap().0.get("ro").unwrap(),
+            &vec![vec![false, false]]
+        );
+
+        assert_eq!(
+            backend
+                .downcast::<BackendWrapper>()
+                .unwrap()
+                .call_method0("get_imperfect_readout_model")
+                .unwrap()
+                .extract::<Option<ImperfectReadoutModelWrapper>>()
+                .unwrap(),
+            Some(noise_model)
+        );
+
+        backend
+            .downcast::<BackendWrapper>()
+            .unwrap()
+            .call_method1(
+                "set_imperfect_readout_model",
+                (None::<ImperfectReadoutModelWrapper>,),
+            )
+            .unwrap();
+
+        let res = backend
+            .downcast::<BackendWrapper>()
+            .unwrap()
+            .call_method1("run_circuit", (circuit_wrapper,))
+            .unwrap();
+        assert_eq!(
+            res.extract::<Registers>().unwrap().0.get("ro").unwrap(),
+            &vec![vec![true, true]]
+        );
     })
 }

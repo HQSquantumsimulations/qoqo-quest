@@ -24,6 +24,7 @@ use roqoqo::backends::AsyncEvaluatingBackend;
 use roqoqo::backends::EvaluatingBackend;
 #[cfg(feature = "parallelization")]
 use roqoqo::measurements::Measure;
+use roqoqo::noise_models::ImperfectReadoutModel;
 #[cfg(feature = "parallelization")]
 use roqoqo::registers::Registers;
 #[cfg(feature = "parallelization")]
@@ -43,7 +44,7 @@ use std::collections::HashMap;
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
 /// If different instances of the backend are running in parallel, the results won't be deterministic,
 /// even with a random_seed set.
-#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Backend {
     /// Number of qubits supported by the backend
     pub number_qubits: usize,
@@ -51,6 +52,8 @@ pub struct Backend {
     pub repetitions: usize,
     /// Random seed
     pub random_seed: Option<Vec<u64>>,
+    /// Imperfect readout model
+    pub imperfect_readout_model: Option<ImperfectReadoutModel>,
 }
 
 impl Backend {
@@ -64,6 +67,7 @@ impl Backend {
             number_qubits,
             repetitions: 1,
             random_seed,
+            imperfect_readout_model: None,
         }
     }
 
@@ -85,6 +89,29 @@ impl Backend {
     /// `Option<Vec<u64>>` - The current random seed
     pub fn get_random_seed(&self) -> Option<Vec<u64>> {
         self.random_seed.clone()
+    }
+
+    /// Sets the imperfect readout model for the backend.
+    /// If it is set, the backend will apply the imperfect readout model to the output registers
+    /// after each run of a circuit.
+    ///
+    /// # Arguments
+    ///
+    /// `imperfect_readout_model` - The imperfect readout model to use for the backend
+    pub fn set_imperfect_readout_model(
+        &mut self,
+        imperfect_readout_model: Option<ImperfectReadoutModel>,
+    ) {
+        self.imperfect_readout_model = imperfect_readout_model;
+    }
+
+    /// Gets the current imperfect readout model set for the backend.
+    ///
+    /// # Returns
+    ///
+    /// `Option<ImperfectReadoutModel>` - The current imperfect readout model
+    pub fn get_imperfect_readout_model(&self) -> Option<ImperfectReadoutModel> {
+        self.imperfect_readout_model.clone()
     }
 
     /// Sets the number of repetitions used for stochastic circuit simulations
@@ -450,6 +477,14 @@ impl Backend {
                     register.push(tmp_reg.to_owned())
                 }
             }
+        }
+        if let Some(imperfect_readout_model) = &self.imperfect_readout_model {
+            // Apply imperfect readout model to output registers
+            bit_registers_output = super::apply_noisy_readouts(
+                bit_registers_output,
+                imperfect_readout_model,
+                self.get_random_seed(),
+            );
         }
         Ok((
             bit_registers_output,

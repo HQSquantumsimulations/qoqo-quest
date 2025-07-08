@@ -30,7 +30,7 @@ use std::collections::HashMap;
 /// If different instances of the backend are running in parallel, the results won't be deterministic,
 /// even with a random_seed set.
 #[pyclass(name = "Backend", module = "qoqo_quest")]
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct BackendWrapper {
     /// Internal storage of [roqoqo_quest::Backend]
     pub internal: roqoqo_quest::Backend,
@@ -57,6 +57,52 @@ impl BackendWrapper {
         Ok(Self {
             internal: roqoqo_quest::Backend::new(number_qubits, None),
         })
+    }
+
+    /// Set the imperfect readout model used by the backend.
+    /// If it is set, the backend will apply the imperfect readout model to the output registers
+    /// after each run of a circuit.
+    ///
+    /// Args:
+    ///     imperfect_readout_model (ImperfectReadoutModel): The imperfect readout model to use.
+    ///
+    /// Raises:
+    ///     TypeError: ImperfectReadoutModel argument cannot be converted to qoqo ImperfectReadoutModel
+    pub fn set_imperfect_readout_model(
+        &mut self,
+        imperfect_readout_model: Option<Bound<PyAny>>,
+    ) -> PyResult<()> {
+        if let Some(imperfect_bound) = imperfect_readout_model {
+            let imperfect_noise_model = match ImperfectReadoutModelWrapper::from_pyany(&imperfect_bound)? {
+                roqoqo::noise_models::NoiseModel::ImperfectReadoutModel(model) => model,
+                _ => return Err(PyTypeError::new_err("args: noise_model must be an instance of ImperfectReadoutModel, got {imperfect_readout_model} instead."))
+            };
+            self.internal
+                .set_imperfect_readout_model(Some(imperfect_noise_model));
+        } else {
+            self.internal.set_imperfect_readout_model(None);
+        }
+        Ok(())
+    }
+
+    /// Get the current imperfect readout model set for the backend.
+    ///
+    /// Returns:
+    ///     ImperfectReadoutModel: The current imperfect readout model
+    pub fn get_imperfect_readout_model(&self) -> Option<ImperfectReadoutModelWrapper> {
+        if let Some(imperfect_model) = self.internal.get_imperfect_readout_model() {
+            let mut noise_model = ImperfectReadoutModelWrapper::new();
+            for qubit in 0..self.internal.number_qubits {
+                let prob_detect_0_as_1 = imperfect_model.prob_detect_0_as_1(&qubit);
+                let prob_detect_1_as_0 = imperfect_model.prob_detect_1_as_0(&qubit);
+                noise_model = noise_model
+                    .set_error_probabilites(qubit, prob_detect_0_as_1, prob_detect_1_as_0)
+                    .expect("Error setting error probabilities in ImperfectReadoutModelWrapper");
+            }
+            Some(noise_model)
+        } else {
+            None
+        }
     }
 
     /// Set the random seed used by the backend.
@@ -197,54 +243,6 @@ impl BackendWrapper {
             .map_err(|err| PyRuntimeError::new_err(format!("Running Circuit failed {:?}", err)))
     }
 
-    /// Run a circuit with the QuEST backend.
-    ///
-    /// A circuit is passed to the backend and executed.
-    /// During execution values are written to and read from classical registers
-    /// (List[bool], List[float], List[complex]).
-    /// To produce sufficient statistics for evaluating expectation values,
-    /// circuits have to be run multiple times.
-    /// The results of each repetition are concatenated in OutputRegisters
-    /// (List[List[bool]], List[List[float]], List[List[complex]]).
-    /// As a simulater Backend the QuEST backend also allows to direclty read out
-    /// the statevector, density matrix or the expectation values of products of PauliOperators
-    ///
-    ///
-    /// Args:
-    ///     circuit (Circuit): The circuit that is run on the backend.
-    ///     noise_model (NoiseModel): The noise model to be applied to the circuit.
-    /// Returns:
-    ///     Tuple[Dict[str, List[List[bool]]], Dict[str, List[List[float]]]], Dict[str, List[List[complex]]]]: The output registers written by the evaluated circuits.
-    ///
-    /// Raises:
-    ///     TypeError: Circuit argument cannot be converted to qoqo Circuit
-    ///     RuntimeError: Running Circuit failed
-    pub fn run_circuit_imperfect(
-        &self,
-        circuit: &Bound<PyAny>,
-        noise_model: &Bound<PyAny>,
-    ) -> PyResult<Registers> {
-        let circuit = convert_into_circuit(circuit).map_err(|err| {
-            PyTypeError::new_err(format!(
-                "Circuit argument cannot be converted to qoqo Circuit {:?}",
-                err
-            ))
-        })?;
-        let noise_model = match ImperfectReadoutModelWrapper::from_pyany(noise_model)? {
-            roqoqo::noise_models::NoiseModel::ImperfectReadoutModel(model) => model,
-            _ => return Err(PyTypeError::new_err("args: noise_model must be an instance of ImperfectReadoutModel, got {noise_model} instead."))
-        };
-        warn_pragma_getstatevec_getdensitymat(circuit.clone());
-        let (bit_register, float_register, complex_register) =
-            EvaluatingBackend::run_circuit(&self.internal, &circuit).map_err(|err| {
-                PyRuntimeError::new_err(format!("Running Circuit failed {:?}", err))
-            })?;
-
-        let bit_register =
-            roqoqo_quest::apply_noisy_readouts(bit_register, &noise_model, self.get_random_seed());
-        Ok((bit_register, float_register, complex_register))
-    }
-
     /// Run all circuits corresponding to one measurement with the QuEST backend.
     ///
     /// An expectation value measurement in general involves several circuits.
@@ -358,44 +356,6 @@ impl BackendWrapper {
                 }
             }
         }
-        Ok((bit_registers, float_registers, complex_registers))
-    }
-
-    /// Run all circuits corresponding to one measurement with the QuEST backend.
-    ///
-    /// An expectation value measurement in general involves several circuits.
-    /// Each circuit is passes to the backend and executed separately.
-    /// A circuit is passed to the backend and executed.
-    /// During execution values are written to and read from classical registers
-    /// (List[bool], List[float], List[complex]).
-    /// To produce sufficient statistics for evaluating expectation values,
-    /// circuits have to be run multiple times.
-    /// The results of each repetition are concatenated in OutputRegisters
-    /// (List[List[bool]], List[List[float]], List[List[complex]]).  
-    ///
-    ///
-    /// Args:
-    ///     measurement (Measurement): The measurement that is run on the backend.
-    ///
-    /// Returns:
-    ///     Tuple[Dict[str, List[List[bool]]], Dict[str, List[List[float]]]], Dict[str, List[List[complex]]]]: The output registers written by the evaluated circuits.
-    ///
-    /// Raises:
-    ///     TypeError: Cannot extract constant circuit from measurement
-    ///     RuntimeError: Running Circuit failed
-    pub fn run_measurement_registers_imperfect(
-        &self,
-        measurement: &Bound<PyAny>,
-        noise_model: &Bound<PyAny>,
-    ) -> PyResult<Registers> {
-        let noise_model = match ImperfectReadoutModelWrapper::from_pyany(noise_model)? {
-            roqoqo::noise_models::NoiseModel::ImperfectReadoutModel(model) => model,
-            _ => return Err(PyTypeError::new_err("args: noise_model must be an instance of ImperfectReadoutModel, got {noise_model} instead."))
-        };
-        let (mut bit_registers, float_registers, complex_registers) =
-            self.run_measurement_registers(measurement)?;
-        bit_registers =
-            roqoqo_quest::apply_noisy_readouts(bit_registers, &noise_model, self.get_random_seed());
         Ok((bit_registers, float_registers, complex_registers))
     }
 
