@@ -27,7 +27,6 @@ use roqoqo::{
     Circuit,
 };
 use roqoqo_quest::{call_operation, call_operation_with_device, Qureg};
-use rusty_fork::rusty_fork_test;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use test_case::test_case;
@@ -361,6 +360,7 @@ fn test_general_noise(operation: PragmaNoiseOperation) {
     }
 }
 
+#[test_case(operations::PragmaNoiseOperation::from(operations::PragmaRandomNoise::new(0, 1.0.into(),  1.0.into(), 0.0.into())); "PragmaRandomNoise")]
 fn test_random_noise(operation: PragmaNoiseOperation) {
     let number_repetitions = 1000;
     let c0: Complex64 = Complex::new(0.0, 0.0);
@@ -435,15 +435,6 @@ fn test_random_noise(operation: PragmaNoiseOperation) {
     }
     for dm in density_matrix_collection.iter() {
         assert!(density_matrices.contains(dm));
-    }
-}
-
-rusty_fork_test! {
-    /// Tests in this scope will be run in new processes.
-    /// That way their rng can't be influenced by an other test running in parallel.
-    #[test]
-    fn test_random_noise_pragma_random_noise() {
-        test_random_noise(operations::PragmaNoiseOperation::from(operations::PragmaRandomNoise::new(0, 1.0.into(),  1.0.into(), 0.0.into())));
     }
 }
 
