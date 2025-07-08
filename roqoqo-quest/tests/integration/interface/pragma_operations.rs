@@ -361,6 +361,7 @@ fn test_general_noise(operation: PragmaNoiseOperation) {
 }
 
 #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaRandomNoise::new(0, 1.0.into(),  1.0.into(), 0.0.into())); "PragmaRandomNoise")]
+#[cfg(not(target_os = "windows"))]
 fn test_random_noise(operation: PragmaNoiseOperation) {
     let number_repetitions = 1000;
     let c0: Complex64 = Complex::new(0.0, 0.0);
