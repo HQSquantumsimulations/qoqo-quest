@@ -51,7 +51,7 @@ pub fn execute_pragma_repeated_measurement(
 
     let distribution =
         WeightedIndex::new(&probabilities).map_err(|err| RoqoqoBackendError::GenericError {
-            msg: format!("Probabilites from quantum register {:?}", err),
+            msg: format!("Probabilites from quantum register {err:?}"),
         })?;
     let mut rng = create_rng(qureg)?;
     let existing_register = bit_registers
@@ -113,7 +113,7 @@ pub fn execute_replaced_repeated_measurement(
 
     let distribution =
         WeightedIndex::new(&probabilities).map_err(|err| RoqoqoBackendError::GenericError {
-            msg: format!("Probabilites from quantum register {:?}", err),
+            msg: format!("Probabilites from quantum register {err:?}"),
         })?;
     let mut rng = create_rng(qureg)?;
     let existing_register = bit_registers
@@ -321,7 +321,7 @@ pub fn execute_pragma_random_noise(
         let choices = [1, 2, 3];
         let distribution =
             WeightedIndex::new(probas).map_err(|err| RoqoqoBackendError::GenericError {
-                msg: format!("Probabilites from quantum register {:?}", err),
+                msg: format!("Probabilites from quantum register {err:?}"),
             })?;
         match choices[distribution.sample(&mut rng)] {
             1 => {
@@ -352,7 +352,7 @@ pub fn execute_pragma_random_noise(
                 Ok(())
             }
             x => Err(RoqoqoBackendError::GenericError {
-                msg: format!("Incorrect Pauli selected: {:?}", x),
+                msg: format!("Incorrect Pauli selected: {x:?}"),
             }),
         }
     }
@@ -595,8 +595,7 @@ fn sanitize_probabilities(probabilities: &mut Vec<f64>) -> Result<(), RoqoqoBack
         if *val < NEGATIVE_PROBABILITIES_CUTOFF {
             return Err(RoqoqoBackendError::GenericError {
                 msg: format!(
-                    "Negative state occupation probabilites encountered {:?}",
-                    probabilities
+                    "Negative state occupation probabilites encountered {probabilities:?}"
                 ),
             });
         } else if *val < 0.0 {

@@ -325,7 +325,7 @@ impl Backend {
             _ => false,
         });
         if number_measurements.is_some() && !found_fitting_measurement {
-            return Err(RoqoqoBackendError::GenericError { msg: format!("No matching measurement found for PragmaSetNumberOfMeasurements for readout `{}`",repeated_measurement_readout) });
+            return Err(RoqoqoBackendError::GenericError { msg: format!("No matching measurement found for PragmaSetNumberOfMeasurements for readout `{repeated_measurement_readout}`") });
         }
 
         // Switch between repeated measurement mode and rerunning the whole circuit

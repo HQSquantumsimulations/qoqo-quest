@@ -234,13 +234,12 @@ impl BackendWrapper {
     pub fn run_circuit(&self, circuit: &Bound<PyAny>) -> PyResult<Registers> {
         let circuit = convert_into_circuit(circuit).map_err(|err| {
             PyTypeError::new_err(format!(
-                "Circuit argument cannot be converted to qoqo Circuit {:?}",
-                err
+                "Circuit argument cannot be converted to qoqo Circuit {err:?}"
             ))
         })?;
         warn_pragma_getstatevec_getdensitymat(circuit.clone());
         EvaluatingBackend::run_circuit(&self.internal, &circuit)
-            .map_err(|err| PyRuntimeError::new_err(format!("Running Circuit failed {:?}", err)))
+            .map_err(|err| PyRuntimeError::new_err(format!("Running Circuit failed {err:?}")))
     }
 
     /// Run all circuits corresponding to one measurement with the QuEST backend.
@@ -272,23 +271,20 @@ impl BackendWrapper {
             .call_method0("constant_circuit")
             .map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract constant circuit from measurement {:?}",
-                    err
+                    "Cannot extract constant circuit from measurement {err:?}"
                 ))
             })?;
         let const_circuit: Option<Bound<PyAny>> =
             get_constant_circuit.extract().map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract constant circuit from measurement {:?}",
-                    err
+                    "Cannot extract constant circuit from measurement {err:?}"
                 ))
             })?;
 
         let constant_circuit = match const_circuit {
             Some(x) => convert_into_circuit(&x.as_borrowed()).map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract constant circuit from measurement {:?}",
-                    err
+                    "Cannot extract constant circuit from measurement {err:?}"
                 ))
             })?,
             None => Circuit::new(),
@@ -296,16 +292,14 @@ impl BackendWrapper {
 
         let get_circuit_list = measurement.call_method0("circuits").map_err(|err| {
             PyTypeError::new_err(format!(
-                "Cannot extract circuit list from measurement {:?}",
-                err
+                "Cannot extract circuit list from measurement {err:?}"
             ))
         })?;
         let circuit_list = get_circuit_list
             .extract::<Vec<Bound<PyAny>>>()
             .map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract circuit list from measurement {:?}",
-                    err
+                    "Cannot extract circuit list from measurement {err:?}"
                 ))
             })?;
 
@@ -314,8 +308,7 @@ impl BackendWrapper {
                 constant_circuit.clone()
                     + convert_into_circuit(&c.as_borrowed()).map_err(|err| {
                         PyTypeError::new_err(format!(
-                            "Cannot extract circuit of circuit list from measurement {:?}",
-                            err
+                            "Cannot extract circuit of circuit list from measurement {err:?}"
                         ))
                     })?,
             )
@@ -331,7 +324,7 @@ impl BackendWrapper {
                 .internal
                 .run_circuit_iterator(circuit.iter())
                 .map_err(|err| {
-                    PyRuntimeError::new_err(format!("Running a circuit failed {:?}", err))
+                    PyRuntimeError::new_err(format!("Running a circuit failed {err:?}"))
                 })?;
 
             for (key, mut val) in tmp_bit_reg.into_iter() {
@@ -384,8 +377,7 @@ impl BackendWrapper {
             )
             .map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Measurement evaluate function could not be used: {:?}",
-                    err
+                    "Measurement evaluate function could not be used: {err:?}"
                 ))
             })?;
         get_expectation_values
@@ -415,11 +407,11 @@ impl BackendWrapper {
         parameters: Vec<f64>,
     ) -> PyResult<Option<HashMap<String, f64>>> {
         let program = qoqo::convert_into_quantum_program(program)
-            .map_err(|err| PyTypeError::new_err(format!("{}", err,)))?;
+            .map_err(|err| PyTypeError::new_err(format!("{err}",)))?;
         let backend = self.internal.clone();
         let results = program
             .run(backend, &parameters)
-            .map_err(|err| PyRuntimeError::new_err(format!("{}", err,)))?;
+            .map_err(|err| PyRuntimeError::new_err(format!("{err}",)))?;
         Ok(results)
     }
 }

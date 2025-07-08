@@ -389,7 +389,7 @@ pub fn call_operation_with_device(
                 quest_sys::rotateX(
                     qureg.quest_qureg,
                     *op.qubit() as c_int,
-                    std::f64::consts::FRAC_PI_2 * -1.0,
+                    -std::f64::consts::FRAC_PI_2,
                 )
             }
             Ok(())
@@ -413,7 +413,7 @@ pub fn call_operation_with_device(
                 quest_sys::rotateY(
                     qureg.quest_qureg,
                     *op.qubit() as c_int,
-                    std::f64::consts::FRAC_PI_2 * -1.0,
+                    -std::f64::consts::FRAC_PI_2,
                 )
             }
             Ok(())
@@ -718,9 +718,8 @@ fn check_acts_on_qubits_in_qureg(
             if *q >= number_qubits {
                 return Err(RoqoqoBackendError::GenericError {
                     msg: format!(
-                        "Not enough qubits reserved. QuEST simulator used {} qubits but operation \
-                         acting on {}",
-                        number_qubits, q
+                        "Not enough qubits reserved. QuEST simulator used {number_qubits} qubits but operation \
+                         acting on {q}"
                     ),
                 });
             }
