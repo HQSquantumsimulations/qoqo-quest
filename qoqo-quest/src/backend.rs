@@ -15,14 +15,14 @@ use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::ffi::c_str;
 use pyo3::prelude::*;
 use pyo3::types::{PyByteArray, PyType};
-use qoqo::convert_into_circuit;
-use qoqo::QoqoBackendError;
-use roqoqo::backends::EvaluatingBackend;
-use roqoqo::operations::*;
-use roqoqo::registers::{BitOutputRegister, ComplexOutputRegister, FloatOutputRegister};
-use roqoqo::Circuit;
+use qoqo::{convert_into_circuit, noise_models::ImperfectReadoutModelWrapper, QoqoBackendError};
+use roqoqo::{
+    backends::EvaluatingBackend,
+    operations::*,
+    registers::{BitOutputRegister, ComplexOutputRegister, FloatOutputRegister},
+    Circuit,
+};
 use std::collections::HashMap;
-
 /// QuEST backend
 ///
 /// provides functions to run circuits and measurements on with the QuEST quantum simulator.
@@ -30,7 +30,7 @@ use std::collections::HashMap;
 /// If different instances of the backend are running in parallel, the results won't be deterministic,
 /// even with a random_seed set.
 #[pyclass(name = "Backend", module = "qoqo_quest")]
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct BackendWrapper {
     /// Internal storage of [roqoqo_quest::Backend]
     pub internal: roqoqo_quest::Backend,
@@ -57,6 +57,58 @@ impl BackendWrapper {
         Ok(Self {
             internal: roqoqo_quest::Backend::new(number_qubits, None),
         })
+    }
+
+    /// Set the imperfect readout model used by the backend.
+    /// If it is set, the backend will apply the imperfect readout model to the output registers
+    /// after each run of a circuit.
+    ///
+    /// Args:
+    ///     imperfect_readout_model (ImperfectReadoutModel): The imperfect readout model to use.
+    ///
+    /// Raises:
+    ///     TypeError: ImperfectReadoutModel argument cannot be converted to qoqo ImperfectReadoutModel
+    pub fn set_imperfect_readout_model(
+        &mut self,
+        imperfect_readout_model: Option<Bound<PyAny>>,
+    ) -> PyResult<()> {
+        if let Some(imperfect_bound) = imperfect_readout_model {
+            let imperfect_noise_model = match ImperfectReadoutModelWrapper::from_pyany(&imperfect_bound)? {
+                roqoqo::noise_models::NoiseModel::ImperfectReadoutModel(model) => model,
+                _ => return Err(PyTypeError::new_err("args: noise_model must be an instance of ImperfectReadoutModel, got {imperfect_readout_model} instead."))
+            };
+            self.internal
+                .set_imperfect_readout_model(Some(imperfect_noise_model));
+        } else {
+            self.internal.set_imperfect_readout_model(None);
+        }
+        Ok(())
+    }
+
+    /// Get the current imperfect readout model set for the backend.
+    ///
+    /// Returns:
+    ///     ImperfectReadoutModel: The current imperfect readout model
+    pub fn get_imperfect_readout_model<'py>(
+        &'py self,
+        py: Python<'py>,
+    ) -> Option<Bound<'py, PyAny>> {
+        if let Some(imperfect_model) = self.internal.get_imperfect_readout_model() {
+            let mut noise_model = ImperfectReadoutModelWrapper::new();
+            for qubit in 0..self.internal.number_qubits {
+                let prob_detect_0_as_1 = imperfect_model.prob_detect_0_as_1(&qubit);
+                let prob_detect_1_as_0 = imperfect_model.prob_detect_1_as_0(&qubit);
+                noise_model = noise_model
+                    .set_error_probabilites(qubit, prob_detect_0_as_1, prob_detect_1_as_0)
+                    .expect("Error setting error probabilities in ImperfectReadoutModelWrapper");
+            }
+            noise_model
+                .into_pyobject(py)
+                .map(|bound| bound.as_any().clone())
+                .ok()
+        } else {
+            None
+        }
     }
 
     /// Set the random seed used by the backend.
@@ -188,13 +240,12 @@ impl BackendWrapper {
     pub fn run_circuit(&self, circuit: &Bound<PyAny>) -> PyResult<Registers> {
         let circuit = convert_into_circuit(circuit).map_err(|err| {
             PyTypeError::new_err(format!(
-                "Circuit argument cannot be converted to qoqo Circuit {:?}",
-                err
+                "Circuit argument cannot be converted to qoqo Circuit {err:?}"
             ))
         })?;
         warn_pragma_getstatevec_getdensitymat(circuit.clone());
         EvaluatingBackend::run_circuit(&self.internal, &circuit)
-            .map_err(|err| PyRuntimeError::new_err(format!("Running Circuit failed {:?}", err)))
+            .map_err(|err| PyRuntimeError::new_err(format!("Running Circuit failed {err:?}")))
     }
 
     /// Run all circuits corresponding to one measurement with the QuEST backend.
@@ -226,23 +277,20 @@ impl BackendWrapper {
             .call_method0("constant_circuit")
             .map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract constant circuit from measurement {:?}",
-                    err
+                    "Cannot extract constant circuit from measurement {err:?}"
                 ))
             })?;
         let const_circuit: Option<Bound<PyAny>> =
             get_constant_circuit.extract().map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract constant circuit from measurement {:?}",
-                    err
+                    "Cannot extract constant circuit from measurement {err:?}"
                 ))
             })?;
 
         let constant_circuit = match const_circuit {
             Some(x) => convert_into_circuit(&x.as_borrowed()).map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract constant circuit from measurement {:?}",
-                    err
+                    "Cannot extract constant circuit from measurement {err:?}"
                 ))
             })?,
             None => Circuit::new(),
@@ -250,16 +298,14 @@ impl BackendWrapper {
 
         let get_circuit_list = measurement.call_method0("circuits").map_err(|err| {
             PyTypeError::new_err(format!(
-                "Cannot extract circuit list from measurement {:?}",
-                err
+                "Cannot extract circuit list from measurement {err:?}"
             ))
         })?;
         let circuit_list = get_circuit_list
             .extract::<Vec<Bound<PyAny>>>()
             .map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Cannot extract circuit list from measurement {:?}",
-                    err
+                    "Cannot extract circuit list from measurement {err:?}"
                 ))
             })?;
 
@@ -268,8 +314,7 @@ impl BackendWrapper {
                 constant_circuit.clone()
                     + convert_into_circuit(&c.as_borrowed()).map_err(|err| {
                         PyTypeError::new_err(format!(
-                            "Cannot extract circuit of circuit list from measurement {:?}",
-                            err
+                            "Cannot extract circuit of circuit list from measurement {err:?}"
                         ))
                     })?,
             )
@@ -285,7 +330,7 @@ impl BackendWrapper {
                 .internal
                 .run_circuit_iterator(circuit.iter())
                 .map_err(|err| {
-                    PyRuntimeError::new_err(format!("Running a circuit failed {:?}", err))
+                    PyRuntimeError::new_err(format!("Running a circuit failed {err:?}"))
                 })?;
 
             for (key, mut val) in tmp_bit_reg.into_iter() {
@@ -338,8 +383,7 @@ impl BackendWrapper {
             )
             .map_err(|err| {
                 PyTypeError::new_err(format!(
-                    "Measurement evaluate function could not be used: {:?}",
-                    err
+                    "Measurement evaluate function could not be used: {err:?}"
                 ))
             })?;
         get_expectation_values
@@ -369,11 +413,11 @@ impl BackendWrapper {
         parameters: Vec<f64>,
     ) -> PyResult<Option<HashMap<String, f64>>> {
         let program = qoqo::convert_into_quantum_program(program)
-            .map_err(|err| PyTypeError::new_err(format!("{}", err,)))?;
+            .map_err(|err| PyTypeError::new_err(format!("{err}",)))?;
         let backend = self.internal.clone();
         let results = program
             .run(backend, &parameters)
-            .map_err(|err| PyRuntimeError::new_err(format!("{}", err,)))?;
+            .map_err(|err| PyRuntimeError::new_err(format!("{err}",)))?;
         Ok(results)
     }
 }

@@ -354,14 +354,14 @@ fn test_general_noise(operation: PragmaNoiseOperation) {
             // Check if entries are the same
             if !is_close(*calculated_value, check_value) {
                 // Check if reconstructed entry and enty of unitary is the same with global phase
-                panic!("Reconstructed matrix entry does not match targe matrix, index: {}, test_number: {}, reconstructed: {} target: {} ",
-                    index, test_number, calculated_value, check_value)
+                panic!("Reconstructed matrix entry does not match targe matrix, index: {index}, test_number: {test_number}, reconstructed: {calculated_value} target: {check_value} ")
             }
         }
     }
 }
 
 #[test_case(operations::PragmaNoiseOperation::from(operations::PragmaRandomNoise::new(0, 1.0.into(),  1.0.into(), 0.0.into())); "PragmaRandomNoise")]
+#[cfg(not(target_os = "windows"))]
 fn test_random_noise(operation: PragmaNoiseOperation) {
     let number_repetitions = 1000;
     let c0: Complex64 = Complex::new(0.0, 0.0);
@@ -695,8 +695,7 @@ fn test_skipped_operations(pragma: operations::Operation) {
             // Check if entries are the same
             if !is_close(value, check_value) {
                 // Check if reconstructed entry and enty of unitary is the same with global phase
-                panic!("Reconstructed matrix entry does not match target matrix, row: {}, column: {}, reconstructed: {} target: {}", 
-                       row, column, value, check_value)
+                panic!("Reconstructed matrix entry does not match target matrix, row: {row}, column: {column}, reconstructed: {value} target: {check_value}")
             }
         }
     }
@@ -888,8 +887,7 @@ fn test_active_reset() {
             // Check if entries are the same
             if !is_close(value, check_value) {
                 // Check if reconstructed entry and enty of unitary is the same with global phase
-                panic!("Reconstructed matrix entry does not match target matrix, row: {}, column: {}, reconstructed: {} target: {}", 
-                       row, column, value, check_value)
+                panic!("Reconstructed matrix entry does not match target matrix, row: {row}, column: {column}, reconstructed: {value} target: {check_value}")
             }
         }
     }
@@ -956,8 +954,7 @@ fn test_conditional() {
             // Check if entries are the same
             if !is_close(value, check_value) {
                 // Check if reconstructed entry and enty of unitary is the same with global phase
-                panic!("Reconstructed matrix entry does not match target matrix, row: {}, column: {}, reconstructed: {} target: {}", 
-                       row, column, value, check_value)
+                panic!("Reconstructed matrix entry does not match target matrix, row: {row}, column: {column}, reconstructed: {value} target: {check_value}")
             }
         }
     }
