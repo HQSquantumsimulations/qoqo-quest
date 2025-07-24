@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qoqo_quest.Backend &mdash; qoqo_quest 0.16.1 documentation</title>
+  <title>qoqo_quest.Backend &mdash; qoqo_quest 0.16.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=19b58ebd"></script>
+      <script src="../../_static/documentation_options.js?v=63033552"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
@@ -109,20 +109,26 @@ even with a random_seed set.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.from_json" title="qoqo_quest.Backend.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>()</p></td>
 <td><p>Convert the json representation of a Backend to a Backend.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.get_random_seed" title="qoqo_quest.Backend.get_random_seed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_random_seed</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.get_imperfect_readout_model" title="qoqo_quest.Backend.get_imperfect_readout_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_imperfect_readout_model</span></code></a>()</p></td>
+<td><p>Get the current imperfect readout model set for the backend.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.get_random_seed" title="qoqo_quest.Backend.get_random_seed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_random_seed</span></code></a>()</p></td>
 <td><p>Get the current random seed set for the backend.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_circuit" title="qoqo_quest.Backend.run_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_circuit</span></code></a>(circuit)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_circuit" title="qoqo_quest.Backend.run_circuit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_circuit</span></code></a>(circuit)</p></td>
 <td><p>Run a circuit with the QuEST backend.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_measurement" title="qoqo_quest.Backend.run_measurement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_measurement</span></code></a>(measurement)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_measurement" title="qoqo_quest.Backend.run_measurement"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_measurement</span></code></a>(measurement)</p></td>
 <td><p>Evaluates expectation values of a measurement with the backend.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_measurement_registers" title="qoqo_quest.Backend.run_measurement_registers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_measurement_registers</span></code></a>(measurement)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_measurement_registers" title="qoqo_quest.Backend.run_measurement_registers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_measurement_registers</span></code></a>(measurement)</p></td>
 <td><p>Run all circuits corresponding to one measurement with the QuEST backend.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_program" title="qoqo_quest.Backend.run_program"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_program</span></code></a>(program, parameters)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.run_program" title="qoqo_quest.Backend.run_program"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_program</span></code></a>(program, parameters)</p></td>
 <td><p>Runs a QuantumProgram with the backend.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.set_imperfect_readout_model" title="qoqo_quest.Backend.set_imperfect_readout_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_imperfect_readout_model</span></code></a>(...)</p></td>
+<td><p>Set the imperfect readout model used by the backend.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="../qoqo_quest.html#qoqo_quest.Backend.set_random_seed" title="qoqo_quest.Backend.set_random_seed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_random_seed</span></code></a>(random_seed)</p></td>
 <td><p>Set the random seed used by the backend.</p></td>
@@ -174,6 +180,20 @@ even with a random_seed set.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> -- Input cannot be deserialized to Backend.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qoqo_quest.Backend.get_imperfect_readout_model">
+<span class="sig-name descname"><span class="pre">get_imperfect_readout_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.get_imperfect_readout_model" title="Link to this definition"></a></dt>
+<dd><p>Get the current imperfect readout model set for the backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current imperfect readout model</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ImperfectReadoutModel</p>
 </dd>
 </dl>
 </dd></dl>
@@ -301,6 +321,22 @@ The results of each repetition are concatenated in OutputRegisters
 <li><p><strong>TypeError</strong> -- Measurement evaluate function could not be used</p></li>
 <li><p><strong>RuntimeError</strong> -- Internal error measurement.evaluation returned unknown type</p></li>
 </ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="qoqo_quest.Backend.set_imperfect_readout_model">
+<span class="sig-name descname"><span class="pre">set_imperfect_readout_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imperfect_readout_model</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.set_imperfect_readout_model" title="Link to this definition"></a></dt>
+<dd><p>Set the imperfect readout model used by the backend.
+If it is set, the backend will apply the imperfect readout model to the output registers
+after each run of a circuit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>imperfect_readout_model</strong> (<em>ImperfectReadoutModel</em>) -- The imperfect readout model to use.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> -- ImperfectReadoutModel argument cannot be converted to qoqo ImperfectReadoutModel</p>
 </dd>
 </dl>
 </dd></dl>
