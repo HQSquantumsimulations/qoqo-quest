@@ -89,7 +89,10 @@ impl BackendWrapper {
     ///
     /// Returns:
     ///     ImperfectReadoutModel: The current imperfect readout model
-    pub fn get_imperfect_readout_model(&self) -> Option<ImperfectReadoutModelWrapper> {
+    pub fn get_imperfect_readout_model<'py>(
+        &'py self,
+        py: Python<'py>,
+    ) -> Option<Bound<'py, PyAny>> {
         if let Some(imperfect_model) = self.internal.get_imperfect_readout_model() {
             let mut noise_model = ImperfectReadoutModelWrapper::new();
             for qubit in 0..self.internal.number_qubits {
@@ -99,7 +102,10 @@ impl BackendWrapper {
                     .set_error_probabilites(qubit, prob_detect_0_as_1, prob_detect_1_as_0)
                     .expect("Error setting error probabilities in ImperfectReadoutModelWrapper");
             }
-            Some(noise_model)
+            noise_model
+                .into_pyobject(py)
+                .map(|bound| bound.as_any().clone())
+                .ok()
         } else {
             None
         }
