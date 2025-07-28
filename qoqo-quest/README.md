@@ -15,13 +15,14 @@ This repository contains three components:
 [![GitHub Workflow Status](https://github.com/HQSquantumsimulations/qoqo-quest/workflows/hqs-ci-test-rust-pyo3/badge.svg)](https://github.com/HQSquantumsimulations/qoqo-quest/actions)
 [![PyPI](https://img.shields.io/pypi/v/qoqo-quest)](https://pypi.org/project/qoqo-quest/)
 [![PyPI - Format](https://img.shields.io/pypi/format/qoqo-quest)](https://pypi.org/project/qoqo-quest/)
+[![Documentation Status](https://img.shields.io/badge/docs-read-blue)](https://hqsquantumsimulations.github.io/qoqo-quest/generated/qoqo_quest.html)
 
 [QuEST](https://github.com/QuEST-Kit/QuEST) based simulator backend for the qoqo quantum toolkit by [HQS Quantum Simulations](https://quantumsimulations.de).
 
 qoqo-quest allows to simulate the execution of qoqo quantum circuits with the help of the QuEST quantum simulator.
 Based on QuEST qoqo supports the simulation of error-free and noisy quantum computers.
 qoqo-quest is designed to be able to simulate all operations that are part of qoqo.
-For usage examples see the examples section of [qoqo](https://github.com/HQSquantumsimulations/qoqo/)
+For usage examples see the examples section of [qoqo](https://github.com/HQSquantumsimulations/qoqo/) and refer to the [API documentation](https://hqsquantumsimulations.github.io/qoqo-quest/generated/qoqo_quest.html) for further technical details.
 
 ### Installation
 
