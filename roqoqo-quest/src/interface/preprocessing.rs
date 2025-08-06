@@ -18,8 +18,7 @@ use std::collections::HashSet;
 #[inline]
 fn format_error_msg(reg_type: &str, reg_name: &str, op: &str, missing_op: &str) -> String {
     format!(
-        "No {} readout register {} defined for {} operation. Did you forget to add a {} operation?",
-        reg_type, reg_name, op, missing_op
+        "No {reg_type} readout register {reg_name} defined for {op} operation. Did you forget to add a {missing_op} operation?"
     )
 }
 
@@ -89,10 +88,9 @@ pub fn get_number_used_qubits_and_registers(
                             if x >= length {
                                 return Err(RoqoqoBackendError::GenericError {
                                     msg: format!(
-                                        "Trying to write a qubit measurement in index {} or a bit \
-                                         register of length {}. Did you define a large enough \
-                                         register with the DefinitionBit operation?",
-                                        x, length
+                                        "Trying to write a qubit measurement in index {x} or a bit \
+                                         register of length {length}. Did you define a large enough \
+                                         register with the DefinitionBit operation?"
                                     ),
                                 });
                             }

@@ -18,6 +18,7 @@ use roqoqo::devices::AllToAllDevice;
 use roqoqo::devices::Device;
 use roqoqo::measurements::ClassicalRegister;
 use roqoqo::measurements::PauliProductsToExpVal;
+use roqoqo::noise_models::ImperfectReadoutModel;
 use roqoqo::operations;
 use rusty_fork::rusty_fork_test;
 
@@ -662,6 +663,39 @@ fn test_replaced_repeated_measurement_fewer_qubits() {
     let backend = Backend::new(3, None);
     let res = backend.run_circuit_iterator(circuit.iter());
     assert!(res.is_ok());
+}
+
+#[test]
+fn test_imperfect_model() {
+    let mut circuit = Circuit::new();
+    circuit += operations::DefinitionBit::new("ro".to_string(), 2, true);
+    circuit += operations::PauliX::new(0);
+    circuit += operations::PauliX::new(1);
+    circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+    circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+
+    let mut noise_model = ImperfectReadoutModel::new();
+    noise_model = noise_model.set_error_probabilites(0, 0.0, 1.0).unwrap();
+    noise_model = noise_model.set_error_probabilites(1, 0.0, 1.0).unwrap();
+    let mut backend = Backend::new(2, None);
+
+    let res = backend.run_circuit_iterator(circuit.iter());
+    assert!(res.is_ok());
+    assert_eq!(res.unwrap().0.get("ro").unwrap(), &vec![vec![true, true]]);
+
+    backend.set_imperfect_readout_model(Some(noise_model.clone()));
+
+    let res = backend.run_circuit_iterator(circuit.iter());
+    assert!(res.is_ok());
+    assert_eq!(res.unwrap().0.get("ro").unwrap(), &vec![vec![false, false]]);
+
+    assert_eq!(backend.get_imperfect_readout_model(), Some(noise_model));
+
+    backend.set_imperfect_readout_model(None);
+
+    let res = backend.run_circuit_iterator(circuit.iter());
+    assert!(res.is_ok());
+    assert_eq!(res.unwrap().0.get("ro").unwrap(), &vec![vec![true, true]]);
 }
 
 rusty_fork_test! {

@@ -4,8 +4,13 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.17.0
+
+* Updated to pyo3 0.25 and bincode 2.0.
+
 ## 0.16.2
 
+* Added an optional `imperfect_readout_model` attribute to the `Backend`. If set the `NoiseModel` will be used to simulate readout errors.
 * Fixed unsound API by hiding "dimension" field of `ComplexMatrixN`.
 
 ## 0.16.1

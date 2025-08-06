@@ -305,8 +305,7 @@ fn test_two_qubit_gate(operation: operations::TwoQubitGateOperation) {
             // Check if entries are the same
             if !is_close(value, *check_value) {
                 // Check if reconstructed entry and enty of unitary is the same with global phase
-                panic!("Reconstructed matrix entry does not match targe matrix, row: {}, column: {}, reconstructed: {} target: {} ", 
-                    row, column, value, check_value)
+                panic!("Reconstructed matrix entry does not match targe matrix, row: {row}, column: {column}, reconstructed: {value} target: {check_value} ")
             }
         }
     }
@@ -378,8 +377,7 @@ fn test_three_qubit_gate(operation: operations::ThreeQubitGateOperation) {
             // Check if entries are the same
             if !is_close(value, *check_value) {
                 // Check if reconstructed entry and enty of unitary is the same with global phase
-                panic!("Reconstructed matrix entry does not match targe matrix, row: {}, column: {}, reconstructed: {} target: {} ", 
-                    row, column, value, check_value)
+                panic!("Reconstructed matrix entry does not match targe matrix, row: {row}, column: {column}, reconstructed: {value} target: {check_value} ")
             }
         }
     }
@@ -447,8 +445,7 @@ fn test_multi_qubit_gate(operation: operations::MultiQubitGateOperation) {
             // Check if entries are the same
             if !is_close(value, *check_value) {
                 // Check if reconstructed entry and enty of unitary is the same with global phase
-                panic!("Reconstructed matrix entry does not match targe matrix, row: {}, column: {}, reconstructed: {} target: {} ", 
-                    row, column, value, check_value)
+                panic!("Reconstructed matrix entry does not match targe matrix, row: {row}, column: {column}, reconstructed: {value} target: {check_value} ")
             }
         }
     }
