@@ -312,13 +312,17 @@ fn test_bincode() {
             .call_method1("from_bincode", (bytes.clone(),))
             .unwrap();
         let _ = backend_type.call_method1("from_bincode", (bytes,)).unwrap();
-
-        let deserialised_error =
-            backend.call_method1("from_bincode", (bincode::serialize("fails").unwrap(),));
+        let config = bincode::config::legacy();
+        let deserialised_error = backend.call_method1(
+            "from_bincode",
+            (bincode::serde::encode_to_vec("fails", config).unwrap(),),
+        );
         assert!(deserialised_error.is_err());
 
-        let deserialised_error =
-            backend.call_method1("from_bincode", (bincode::serialize(&vec![0]).unwrap(),));
+        let deserialised_error = backend.call_method1(
+            "from_bincode",
+            (bincode::serde::encode_to_vec(&vec![0], config).unwrap(),),
+        );
         assert!(deserialised_error.is_err());
 
         let deserialised_error = backend.call_method0("from_bincode");
