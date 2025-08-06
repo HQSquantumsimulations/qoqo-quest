@@ -10,7 +10,6 @@
 // express or implied. See the License for the specific language governing permissions and
 // limitations under the License.
 
-use bincode::{deserialize, serialize};
 use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::ffi::c_str;
 use pyo3::prelude::*;
@@ -93,22 +92,12 @@ impl BackendWrapper {
         &'py self,
         py: Python<'py>,
     ) -> Option<Bound<'py, PyAny>> {
-        if let Some(imperfect_model) = self.internal.get_imperfect_readout_model() {
-            let mut noise_model = ImperfectReadoutModelWrapper::new();
-            for qubit in 0..self.internal.number_qubits {
-                let prob_detect_0_as_1 = imperfect_model.prob_detect_0_as_1(&qubit);
-                let prob_detect_1_as_0 = imperfect_model.prob_detect_1_as_0(&qubit);
-                noise_model = noise_model
-                    .set_error_probabilites(qubit, prob_detect_0_as_1, prob_detect_1_as_0)
-                    .expect("Error setting error probabilities in ImperfectReadoutModelWrapper");
-            }
-            noise_model
+        self.internal.get_imperfect_readout_model().map(|model| {
+            ImperfectReadoutModelWrapper { internal: model }
                 .into_pyobject(py)
-                .map(|bound| bound.as_any().clone())
                 .ok()
-        } else {
-            None
-        }
+                .map(|bound| bound.as_any().clone())
+        })?
     }
 
     /// Set the random seed used by the backend.
@@ -153,7 +142,7 @@ impl BackendWrapper {
     /// Raises:
     ///     ValueError: Cannot serialize Backend to bytes.
     pub fn to_bincode(&self) -> PyResult<Py<PyByteArray>> {
-        let serialized = serialize(&self.internal)
+        let serialized = bincode::serde::encode_to_vec(&self.internal, bincode::config::legacy())
             .map_err(|_| PyValueError::new_err("Cannot serialize Backend to bytes"))?;
         let b: Py<PyByteArray> = Python::with_gil(|py| -> Py<PyByteArray> {
             PyByteArray::new(py, &serialized[..]).into()
@@ -179,8 +168,9 @@ impl BackendWrapper {
             .map_err(|_| PyTypeError::new_err("Input cannot be converted to byte array"))?;
 
         Ok(BackendWrapper {
-            internal: deserialize(&bytes[..])
-                .map_err(|_| PyValueError::new_err("Input cannot be deserialized to Backend"))?,
+            internal: bincode::serde::decode_from_slice(&bytes[..], bincode::config::legacy())
+                .map_err(|_| PyValueError::new_err("Input cannot be deserialized to Backend"))?
+                .0,
         })
     }
 
@@ -439,7 +429,9 @@ pub fn convert_into_backend(
         let bytes = get_bytes
             .extract::<Vec<u8>>()
             .map_err(|_| QoqoBackendError::CannotExtractObject)?;
-        deserialize(&bytes[..]).map_err(|_| QoqoBackendError::CannotExtractObject)
+        bincode::serde::decode_from_slice(&bytes[..], bincode::config::legacy())
+            .map_err(|_| QoqoBackendError::CannotExtractObject)
+            .map(|(deserialized, _)| deserialized)
     }
 }
 
