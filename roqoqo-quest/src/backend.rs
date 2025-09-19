@@ -220,7 +220,11 @@ impl Backend {
         circuit: impl Iterator<Item = &'a Operation>,
         device: &mut Option<Box<dyn roqoqo::devices::Device>>,
     ) -> RegisterResult {
+        #[cfg(feature = "unstable_operation_definition")]
         let mut circuit_vec: Vec<&Operation> = circuit.into_iter().collect();
+
+        #[cfg(not(feature = "unstable_operation_definition"))]
+        let circuit_vec: Vec<&Operation> = circuit.into_iter().collect();
 
         #[cfg(feature = "unstable_operation_definition")]
         let mut _keep_alive: Option<roqoqo::Circuit> = None;
