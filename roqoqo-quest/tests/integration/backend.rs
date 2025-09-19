@@ -703,28 +703,29 @@ fn test_imperfect_model() {
 fn test_gate_definition() {
     let mut gate_circ = Circuit::new();
     gate_circ += PauliX::new(0);
-    gate_circ += PauliY::new(1);
-    gate_circ += RotateX::new(
-        0,
-        qoqo_calculator::CalculatorFloat::Str("param1".to_owned()),
-    );
+    gate_circ += CNOT::new(0, 1);
     let mut circuit = Circuit::new();
-    circuit += GateDefinition::new(
-        gate_circ,
-        "custom_gate".to_owned(),
-        vec![0, 1],
-        vec!["param1".to_string()],
-    );
-    circuit += CallDefinedGate::new("custom_gate".to_owned(), vec![2, 1], vec![1.57.into()]);
-    circuit += CNOT::new(0, 2);
-    circuit += CallDefinedGate::new(
-        "custom_gate".to_owned(),
-        vec![0, 1],
-        vec![CalculatorFloat::PI],
-    );
+    circuit += operations::DefinitionBit::new("ro".to_string(), 2, true);
+    circuit += operations::PauliX::new(1);
+    circuit += GateDefinition::new(gate_circ, "custom_gate".to_owned(), vec![0, 1], vec![]);
+    circuit += CallDefinedGate::new("custom_gate".to_owned(), vec![0, 1], vec![]);
+    circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+    circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
 
+    let mut ref_circuit = Circuit::new();
+    ref_circuit += operations::DefinitionBit::new("ro".to_string(), 2, true);
+    ref_circuit += operations::PauliX::new(1);
+    ref_circuit += operations::PauliX::new(0);
+    ref_circuit += operations::CNOT::new(0, 1);
+    ref_circuit += operations::MeasureQubit::new(0, "ro".to_string(), 0);
+    ref_circuit += operations::MeasureQubit::new(1, "ro".to_string(), 1);
+
+    let backend = Backend::new(2, None);
     let res = backend.run_circuit_iterator(circuit.iter());
     assert!(res.is_ok());
+
+    let res_ref = backend.run_circuit_iterator(ref_circuit.iter());
+    assert_eq!(res, res_ref);
 }
 
 rusty_fork_test! {
