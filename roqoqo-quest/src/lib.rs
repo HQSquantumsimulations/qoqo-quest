@@ -24,6 +24,8 @@
 //! roqoqo-quest provides a backend to simulate roqoqo quantum circuits with the QuEST simulator
 
 mod interface;
+#[cfg(feature = "unstable_operation_definition")]
+pub use interface::replace_custom_gates;
 pub use interface::{call_circuit, call_operation, call_operation_with_device};
 mod backend;
 pub use backend::Backend;

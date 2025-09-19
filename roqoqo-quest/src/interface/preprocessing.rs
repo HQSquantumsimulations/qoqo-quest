@@ -11,6 +11,8 @@
 // limitations under the License.
 
 use roqoqo::operations::*;
+#[cfg(feature = "unstable_operation_definition")]
+use roqoqo::Circuit;
 use roqoqo::RoqoqoBackendError;
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -170,6 +172,66 @@ pub fn get_number_used_qubits_and_registers(
     };
 
     Ok((largest_used_qubit, bit_registers))
+}
+
+#[cfg(feature = "unstable_operation_definition")]
+/// Replaces custom gates in a circuit with their definitions.
+///
+/// # Arguments
+/// * `circuit` - A reference to a vector of operations representing the circuit.
+///
+/// # Returns
+/// * `Result<Circuit, RoqoqoBackendError>` - A result containing the new circuit with custom gates replaced, or an error if the replacement fails.
+///
+/// # Errors
+/// * Returns a `RoqoqoBackendError` if a custom gate is called without being defined first, or if there are issues with parameter substitution or qubit remapping.
+///
+pub fn replace_custom_gates<'a>(
+    circuit: &Vec<&'a Operation>,
+) -> Result<Circuit, RoqoqoBackendError> {
+    let mut custom_gates: HashMap<String, (Vec<usize>, Vec<String>, Circuit)> = HashMap::new();
+    let mut new_circuit = Circuit::new();
+    for &op in circuit {
+        if let Operation::GateDefinition(custom_gate) = op {
+            custom_gates.insert(
+                custom_gate.name().clone(),
+                (
+                    custom_gate.qubits().clone(),
+                    custom_gate.free_parameters().clone(),
+                    custom_gate.circuit().clone(),
+                ),
+            );
+        } else if let Operation::CallDefinedGate(call_gate) = op {
+            use qoqo_calculator::Calculator;
+
+            let (qubit_indices, param_names, gate_circuit) = custom_gates
+                .get(call_gate.gate_name())
+                .expect("Custom gate not defined");
+            let mut calculator = Calculator::new();
+            for (name, value) in param_names.iter().zip(call_gate.free_parameters()) {
+                calculator.set_variable(
+                    name,
+                    *value
+                        .float()
+                        .expect("msg: Failed to convert parameter value to float"),
+                );
+            }
+            let mut mapping = HashMap::new();
+            for (from, to) in qubit_indices.iter().zip(call_gate.qubits()) {
+                mapping.insert(*from, *to);
+            }
+            for target in mapping.values().copied().collect::<Vec<_>>() {
+                if !mapping.contains_key(&target) {
+                    mapping.insert(target, target);
+                }
+            }
+            let gate_circuit = gate_circuit.substitute_parameters(&calculator)?;
+            new_circuit += gate_circuit.remap_qubits(&mapping)?;
+        } else {
+            new_circuit += op.clone();
+        }
+    }
+    Ok(new_circuit)
 }
 
 #[cfg(test)]
@@ -360,5 +422,45 @@ mod tests {
         let cmp_register = HashMap::from([("ro".to_string(), 2)]);
         assert_eq!(cmp_register, reg);
         assert_eq!(used, 1);
+    }
+
+    #[cfg(feature = "unstable_operation_definition")]
+    #[test]
+    fn test_replace_custom_gates() {
+        use qoqo_calculator::CalculatorFloat;
+        use serde::de::Expected;
+        let mut gate_circ = Circuit::new();
+        gate_circ += PauliX::new(0);
+        gate_circ += PauliY::new(1);
+        gate_circ += RotateX::new(
+            0,
+            qoqo_calculator::CalculatorFloat::Str("param1".to_owned()),
+        );
+        let mut c = Circuit::new();
+        c += GateDefinition::new(
+            gate_circ,
+            "custom_gate".to_owned(),
+            vec![0, 1],
+            vec!["param1".to_string()],
+        );
+        c += CallDefinedGate::new("custom_gate".to_owned(), vec![2, 1], vec![1.57.into()]);
+        c += CNOT::new(0, 2);
+        c += CallDefinedGate::new(
+            "custom_gate".to_owned(),
+            vec![0, 1],
+            vec![CalculatorFloat::PI],
+        );
+
+        let replaced_circuit = replace_custom_gates(&c.iter().collect()).unwrap();
+
+        let mut expected_circuit = Circuit::new();
+        expected_circuit += PauliX::new(2);
+        expected_circuit += PauliY::new(1);
+        expected_circuit += RotateX::new(2, 1.57.into());
+        expected_circuit += CNOT::new(0, 2);
+        expected_circuit += PauliX::new(0);
+        expected_circuit += PauliY::new(1);
+        expected_circuit += RotateX::new(0, CalculatorFloat::PI);
+        assert_eq!(expected_circuit, replaced_circuit);
     }
 }

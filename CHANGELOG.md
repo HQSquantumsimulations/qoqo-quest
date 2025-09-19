@@ -4,6 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+## 0.17.1
+
+* Added the optional feature `unstable_operation_definition` to run circuit with `GateDefinition` and `CallDefinedGate`.
+
 ## 0.17.0
 
 * Updated to pyo3 0.25 and bincode 2.0.

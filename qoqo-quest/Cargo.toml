@@ -1,6 +1,6 @@
 [package]
 name = "qoqo-quest"
-version = "0.17.0"
+version = "0.17.1"
 authors = ["HQS Quantum Simulations <info@quantumsimulations.de>"]
 license = "Apache-2.0"
 edition = "2021"
@@ -53,3 +53,4 @@ default = ["extension-module"]
 openmp = ["roqoqo-quest/openmp"]
 cuda = ["roqoqo-quest/cuda"]
 cuquantum = ["roqoqo-quest/cuquantum"]
+unstable_operation_definition = ["qoqo/unstable_operation_definition", "roqoqo/unstable_operation_definition", "roqoqo-quest/unstable_operation_definition"]
