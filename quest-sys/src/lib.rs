@@ -20,7 +20,6 @@
 #![allow(non_snake_case)]
 #![cfg_attr(test, allow(deref_nullptr))]
 
-#[allow(clippy::doc_overindented_list_items)]
 #[cfg(feature = "rebuild")]
 use std::env;
 use std::include;
@@ -31,4 +30,5 @@ extern crate openmp_sys;
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 #[cfg(not(feature = "rebuild"))]
+#[allow(clippy::doc_overindented_list_items)]
 include!("bindings.rs");
