@@ -18,9 +18,9 @@
 #![allow(non_camel_case_types)]
 #![allow(non_upper_case_globals)]
 #![allow(non_snake_case)]
-#[allow(clippy::doc_overindented_list_items)]
 #![cfg_attr(test, allow(deref_nullptr))]
 
+#[allow(clippy::doc_overindented_list_items)]
 #[cfg(feature = "rebuild")]
 use std::env;
 use std::include;
