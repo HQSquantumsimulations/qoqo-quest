@@ -206,14 +206,19 @@ pub fn replace_custom_gates<'a>(
 
             let (qubit_indices, param_names, gate_circuit) = custom_gates
                 .get(call_gate.gate_name())
-                .expect("Custom gate not defined");
+                .ok_or(RoqoqoBackendError::GenericError {
+                    msg: format!(
+                        "Custom gate must be defined before being called: {}",
+                        call_gate.gate_name()
+                    ),
+                })?;
             let mut calculator = Calculator::new();
             for (name, value) in param_names.iter().zip(call_gate.free_parameters()) {
                 calculator.set_variable(
                     name,
                     *value
                         .float()
-                        .expect("msg: Failed to convert parameter value to float"),
+                        .map_err(|e| RoqoqoBackendError::CalculatorError(e))?,
                 );
             }
             let mut mapping = HashMap::new();
@@ -436,22 +441,22 @@ mod tests {
             0,
             qoqo_calculator::CalculatorFloat::Str("param1".to_owned()),
         );
-        let mut c = Circuit::new();
-        c += GateDefinition::new(
+        let mut circuit = Circuit::new();
+        circuit += GateDefinition::new(
             gate_circ,
             "custom_gate".to_owned(),
             vec![0, 1],
             vec!["param1".to_string()],
         );
-        c += CallDefinedGate::new("custom_gate".to_owned(), vec![2, 1], vec![1.57.into()]);
-        c += CNOT::new(0, 2);
-        c += CallDefinedGate::new(
+        circuit += CallDefinedGate::new("custom_gate".to_owned(), vec![2, 1], vec![1.57.into()]);
+        circuit += CNOT::new(0, 2);
+        circuit += CallDefinedGate::new(
             "custom_gate".to_owned(),
             vec![0, 1],
             vec![CalculatorFloat::PI],
         );
 
-        let replaced_circuit = replace_custom_gates(&c.iter().collect()).unwrap();
+        let replaced_circuit = replace_custom_gates(&circuit.iter().collect()).unwrap();
 
         let mut expected_circuit = Circuit::new();
         expected_circuit += PauliX::new(2);

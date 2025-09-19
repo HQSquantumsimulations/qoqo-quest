@@ -698,6 +698,35 @@ fn test_imperfect_model() {
     assert_eq!(res.unwrap().0.get("ro").unwrap(), &vec![vec![true, true]]);
 }
 
+#[cfg(feature = "unstable_operation_definition")]
+#[test]
+fn test_gate_definition() {
+    let mut gate_circ = Circuit::new();
+    gate_circ += PauliX::new(0);
+    gate_circ += PauliY::new(1);
+    gate_circ += RotateX::new(
+        0,
+        qoqo_calculator::CalculatorFloat::Str("param1".to_owned()),
+    );
+    let mut circuit = Circuit::new();
+    circuit += GateDefinition::new(
+        gate_circ,
+        "custom_gate".to_owned(),
+        vec![0, 1],
+        vec!["param1".to_string()],
+    );
+    circuit += CallDefinedGate::new("custom_gate".to_owned(), vec![2, 1], vec![1.57.into()]);
+    circuit += CNOT::new(0, 2);
+    circuit += CallDefinedGate::new(
+        "custom_gate".to_owned(),
+        vec![0, 1],
+        vec![CalculatorFloat::PI],
+    );
+
+    let res = backend.run_circuit_iterator(circuit.iter());
+    assert!(res.is_ok());
+}
+
 rusty_fork_test! {
     /// Tests in this scope will be run in new processes.
     /// That way their rng can't be influenced by an other test running in parallel.
