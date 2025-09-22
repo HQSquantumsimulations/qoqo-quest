@@ -30,6 +30,8 @@ pub(crate) use pragma_operations::{
     execute_pragma_repeated_measurement, execute_replaced_repeated_measurement,
 };
 pub use preprocessing::get_number_used_qubits_and_registers;
+#[cfg(feature = "unstable_operation_definition")]
+pub use preprocessing::replace_custom_gates;
 use std::os::raw::c_int;
 
 // Pragma operations that are ignored by backend and do not throw an error

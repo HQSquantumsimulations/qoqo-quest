@@ -22,12 +22,20 @@
 
 #[cfg(feature = "rebuild")]
 use std::env;
-use std::include;
 #[cfg(feature = "openmp")]
 extern crate openmp_sys;
 
-#[cfg(feature = "rebuild")]
-include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+#[doc(hidden)]
+#[allow(clippy::doc_overindented_list_items)]
+mod bindings {
+    use std::include;
 
-#[cfg(not(feature = "rebuild"))]
-include!("bindings.rs");
+    #[cfg(feature = "rebuild")]
+    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+
+    #[cfg(not(feature = "rebuild"))]
+    include!("bindings.rs");
+}
+
+// Re-export all items so paths remain as before (crate root).
+pub use bindings::*;

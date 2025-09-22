@@ -30,6 +30,8 @@ use roqoqo::registers::Registers;
 #[cfg(feature = "parallelization")]
 use roqoqo::Circuit;
 // use roqoqo::measurements::Measure;
+#[cfg(feature = "unstable_operation_definition")]
+use crate::interface::replace_custom_gates;
 use crate::Qureg;
 use roqoqo::backends::RegisterResult;
 use roqoqo::operations::*;
@@ -218,8 +220,24 @@ impl Backend {
         circuit: impl Iterator<Item = &'a Operation>,
         device: &mut Option<Box<dyn roqoqo::devices::Device>>,
     ) -> RegisterResult {
-        let circuit_vec: Vec<&'a Operation> = circuit.into_iter().collect();
+        #[cfg(feature = "unstable_operation_definition")]
+        let mut circuit_vec: Vec<&Operation> = circuit.into_iter().collect();
 
+        #[cfg(not(feature = "unstable_operation_definition"))]
+        let circuit_vec: Vec<&Operation> = circuit.into_iter().collect();
+
+        #[cfg(feature = "unstable_operation_definition")]
+        let mut _keep_alive: Option<roqoqo::Circuit> = None;
+
+        #[cfg(feature = "unstable_operation_definition")]
+        if circuit_vec
+            .iter()
+            .any(|op| matches!(op, Operation::GateDefinition(_)))
+        {
+            let expanded = replace_custom_gates(&circuit_vec)?;
+            let expanded_ref = _keep_alive.insert(expanded);
+            circuit_vec = expanded_ref.iter().collect();
+        }
         // Automatically switch to density matrix mode if operations are present in the
         // circuit that require density matrix mode
         let is_density_matrix = circuit_vec.iter().any(find_pragma_op);
