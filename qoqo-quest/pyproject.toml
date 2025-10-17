@@ -1,15 +1,15 @@
 [project]
 name = "qoqo-quest"
 version = "0.18.0"
-dependencies = ["numpy", "qoqo>=1.19", "qoqo_calculator_pyo3>=1.5"]
+dependencies = ["numpy", "qoqo>=1.21", "qoqo_calculator_pyo3>=1.7"]
 license = { text = "Apache-2.0 AND Apache-2.0 with LLVM-exception AND MIT AND Unicode-DFS-2016 AND BSD-2-Clause AND BSD-3-CLause" }
 maintainers = [
   { name = "HQS Quantum Simulations GmbH", email = "info@quantumsimulations.de" },
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [build-system]
-requires = ["maturin>=1.4"]
+requires = ["maturin>=1.4,<2.0"]
 build-backend = "maturin"
 
 [tool.maturin]

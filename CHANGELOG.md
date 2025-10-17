@@ -4,6 +4,8 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
+* Updated the minimum supported Python version to 3.10.
+
 ## 0.18.0
 
 * Added the optional feature `unstable_operation_definition` to run circuit with `GateDefinition` and `CallDefinedGate`.
