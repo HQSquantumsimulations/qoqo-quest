@@ -96,7 +96,6 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
             .opt_level(2)
             .debug(false)
             .warnings(false)
-            .static_flag(true)
             .out_dir(out_path.clone())
             .flag("-std=c99")
             .flag("-mavx")
@@ -110,7 +109,6 @@ fn build_with_cc(out_dir: PathBuf) -> PathBuf {
             .opt_level(2)
             .debug(false)
             .warnings(false)
-            .static_flag(true)
             .out_dir(out_path.clone())
             .flag("-std=c99")
             .compile("QuEST");
