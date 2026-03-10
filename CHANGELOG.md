@@ -4,53 +4,10 @@ This changelog track changes to the qoqo-quest project starting at version 0.1.0
 
 ## Unpublished
 
-## 0.18.1
+* Fixed error not using repetitions when `PragmaActiveReset` operations are present in circuit.
 
-* Bugfix for number of used qubits for PragmaSetDensityMatrix and PragmaSetStateVector
-* Updated the minimum supported Python version to 3.10.
+## 0.14.4-alpha.3
 
-## 0.18.0
-
-* Added the optional feature `unstable_operation_definition` to run circuit with `GateDefinition` and `CallDefinedGate`.
-
-## 0.17.0
-
-* Updated to pyo3 0.25 and bincode 2.0.
-
-## 0.16.2
-
-* Added an optional `imperfect_readout_model` attribute to the `Backend`. If set the `NoiseModel` will be used to simulate readout errors.
-* Fixed unsound API by hiding "dimension" field of `ComplexMatrixN`.
-
-## 0.16.1
-
-* Updated to pyo3 0.24.
-
-## 0.16.0
-
-* Updated minimum supported Python version to 3.9.
-* Updated minimum supported Rust versio to 1.76.
-* Updated to pyo3 0.23.
-* Updated to qoqo-calculator 1.5, qoqo 1.19 and rand 0.9.
-* Added qoqo/.cargo/config file with aarch64 and x86_64 targets for macos.
-
-## 0.15.1
-
-* Relaxed numpy requirement (removing `>=2.0`).
-* Added warning to any circuits using `PragmaGetStateVector` or `PragmaGetDensityMatrix` with a non-empty Circuit argument passed that this circuit isn't used. This was added to `run_measurement_registers` and `run_circuit` in qoqo-quest only.
-
-## 0.15.0
-
-* Updated to qoqo-calculator 1.4.4, qoqo 1.18.0, struqture 1.11.1, struqture 2.0.0-alpha.7, pyo3 0.22 and ndarray 0.16
-
-## 0.14.5
-
-* Updated to qoqo 1.16.0
-* Removed unused dependencies
-
-## 0.14.4
-
-* Added the `set_random_seed` and `get_random_seed` methods to the `Backend`
 * Set clap version to "=4.4" for it to use rust-version 1.70.0
 * Updated to qoqo 1.15.2-alpha.3 and qoqo-calculator 1.2.3
 * Removed faulty check for number of qubits in PragmaGetPauliProduct

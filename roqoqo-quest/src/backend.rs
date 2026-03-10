@@ -262,7 +262,9 @@ impl Backend {
         let mut repetitions = match circuit_vec.iter().find(|x| {
             matches!(
                 x,
-                Operation::PragmaRandomNoise(_) | Operation::PragmaOverrotation(_)
+                Operation::PragmaRandomNoise(_)
+                    | Operation::PragmaOverrotation(_)
+                    | Operation::PragmaActiveReset(_)
             )
         }) {
             Some(_) => self.repetitions,
@@ -353,7 +355,7 @@ impl Backend {
         // 2. A qubit in the conditional measurement is acted upon after the conditional measurement
         let mut measured_qubits: Vec<usize> = Vec::new();
         let mut measured_qubits_in_repeated_measurement: Vec<usize> = Vec::new();
-        let mut temporary_repetitions = self.repetitions;
+        let mut temporary_repetitions = repetitions;
         for op in circuit_vec.iter() {
             match op {
                 Operation::MeasureQubit(o) => {
@@ -375,6 +377,13 @@ impl Backend {
                         } else {
                             measured_qubits.push(*o.qubit())
                         }
+                    }
+                }
+                Operation::PragmaActiveReset(_) => {
+                    if let Some(nm) = number_measurements {
+                        replace_measurements = None;
+                        temporary_repetitions = nm * repetitions;
+                        number_measurements = None;
                     }
                 }
                 Operation::PragmaRepeatedMeasurement(o) => {
@@ -434,7 +443,6 @@ impl Backend {
             }
         }
         repetitions = temporary_repetitions;
-
         // Create a repeated measurement operation
         let repeated_measurement_pragma: Option<PragmaRepeatedMeasurement> =
             if replace_measurements.is_some() {
