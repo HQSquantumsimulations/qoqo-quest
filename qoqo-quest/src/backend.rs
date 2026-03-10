@@ -117,6 +117,37 @@ impl BackendWrapper {
     pub fn get_random_seed(&self) -> Option<Vec<u64>> {
         self.internal.random_seed.clone()
     }
+    
+    /// Sets the number of repetitions used for stochastic circuit simulations
+    ///
+    /// The number of repetitions of the actual simulation is set to one by default.
+    /// The repetitions are not to be confused with the number of simulated measurements per simulation run
+    /// set with PragmaRepeatedMeasurement or PragmaSetNumberMeasurements.
+    /// Should only be different from one if a stochastic unravelling of a noisy simulation is used
+    /// with PragmaRandomNoise, PragmaOverrotation or PragmaActiveReset
+    ///
+    /// Args:
+    ///      repetitions(int): The number of repetitions that is set
+    #[setter]
+    pub fn set_repetitions(&mut self, repetitions: usize) {
+        self.internal = self.internal.clone().set_repetitions(repetitions);
+    }
+
+ 
+    /// The number of repetitions used for stochastic circuit simulations
+    ///
+    /// The number of repetitions of the actual simulation is set to one by default.
+    /// The repetitions are not to be confused with the number of simulated measurements per simulation run
+    /// set with PragmaRepeatedMeasurement or PragmaSetNumberMeasurements.
+    /// Should only be different from one if a stochastic unravelling of a noisy simulation is used
+    /// with PragmaRandomNoise, PragmaOverrotation or PragmaActiveReset
+    ///
+    /// Returns:
+    ///      int: The number of repetitions
+    #[getter]
+    pub fn repetitions(&mut self) -> usize {
+        self.internal.repetitions
+    }
 
     /// Return a copy of the Backend (copy here produces a deepcopy).
     ///

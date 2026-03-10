@@ -68,6 +68,16 @@ pub fn get_number_used_qubits_and_registers(
                     });
                 }
             }
+            Operation::PragmaSetDensityMatrix(set_op) => {
+                let length = set_op.density_matrix().len();
+                let number_qubits = length.ilog(4) as usize;
+                used_qubits.extend(0..number_qubits);
+            }
+            Operation::PragmaSetStateVector(set_op) => {
+                let length = set_op.statevector().len();
+                let number_qubits = length.ilog2() as usize;
+                used_qubits.extend(0..number_qubits);
+            }
             Operation::PragmaGetStateVector(get_op) => {
                 if let Some(length) = complex_registers.get(get_op.readout()) {
                     let number_qubits = (*length).ilog2() as usize;

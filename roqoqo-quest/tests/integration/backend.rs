@@ -79,6 +79,22 @@ fn test_failing_set_number_of_measurments() {
 }
 
 #[test]
+fn test_set_repetitions_and_pragma_active_reset() {
+    let backend = Backend::new(2);
+    let mut circuit = Circuit::new();
+    circuit += DefinitionComplex::new("ro".to_string(), 2, true);
+    circuit += PragmaActiveReset::new(0);
+    circuit += PragmaGetStateVector::new("ro".to_string(), None);
+    assert_eq!(backend.repetitions, 1);
+    let (_, _, complex_res_one) = backend.run_circuit(&circuit).unwrap();
+    assert_eq!(complex_res_one.get("ro").unwrap().len(), 1);
+    let backend = backend.set_repetitions(10);
+    assert_eq!(backend.repetitions, 10);
+    let (_, _, complex_res) = backend.run_circuit(&circuit).unwrap();
+    assert_eq!(complex_res.get("ro").unwrap().len(), 10);
+}
+
+#[test]
 fn test_failing_two_set_measurments() {
     let mut circuit = Circuit::new();
     circuit += DefinitionBit::new("ro".to_string(), 1, true);
