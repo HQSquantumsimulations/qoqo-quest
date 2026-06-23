@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>qoqo_quest &mdash; qoqo_quest 0.18.1 documentation</title>
+  <title>qoqo_quest &mdash; qoqo_quest 0.19.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=98e82f24"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=7b661131"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -115,14 +115,14 @@
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="qoqo_quest.Backend">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">qoqo_quest.</span></span><span class="sig-name descname"><span class="pre">Backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_qubits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">qoqo_quest.</span></span><span class="sig-name descname"><span class="pre">Backend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_qubits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend" title="Link to this definition"></a></dt>
 <dd><p>QuEST backend</p>
 <p>provides functions to run circuits and measurements on with the QuEST quantum simulator.</p>
 <p>If different instances of the backend are running in parallel, the results won't be deterministic,
 even with a random_seed set.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="qoqo_quest.Backend.from_bincode">
-<span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.from_bincode" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_bincode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.from_bincode" title="Link to this definition"></a></dt>
 <dd><p>Convert the bincode representation of the Backend to a Backend using the [bincode] crate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -145,7 +145,7 @@ even with a random_seed set.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="qoqo_quest.Backend.from_json">
-<span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.from_json" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#qoqo_quest.Backend.from_json" title="Link to this definition"></a></dt>
 <dd><p>Convert the json representation of a Backend to a Backend.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
