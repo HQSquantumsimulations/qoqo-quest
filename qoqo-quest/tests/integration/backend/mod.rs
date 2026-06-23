@@ -33,29 +33,29 @@ use roqoqo::registers::Registers;
 use roqoqo::Circuit;
 #[test]
 fn test_creating_backend() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let _backend = backend_type
             .call1((2,))
             .unwrap()
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap();
     });
 
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let _backend = backend_type
             .call1((2,))
             .unwrap()
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap();
     })
 }
 
 #[test]
 fn test_running_circuit() {
-    pyo3::prepare_freethreaded_python();
+    Python::initialize();
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("readout".to_string(), 3, true);
     circuit += operations::RotateX::new(0, 0.0.into());
@@ -70,21 +70,21 @@ fn test_running_circuit() {
         internal: big_circuit,
     };
 
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_circuit", (circuit_wrapper,))
             .unwrap();
         let err = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_circuit", (big_circuit_wrapper,));
         assert!(err.is_err());
         let err = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_circuit", (backend_type,));
         assert!(err.is_err());
@@ -93,18 +93,18 @@ fn test_running_circuit() {
 
 #[test]
 fn test_backend_seed() {
-    pyo3::prepare_freethreaded_python();
+    Python::initialize();
     let seeds = vec![555, 555, 555, 555, 555, 555];
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("set_random_seed", (seeds.clone(),))
             .unwrap();
         let seeds_type = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method0("get_random_seed")
             .unwrap();
@@ -115,7 +115,7 @@ fn test_backend_seed() {
 
 #[test]
 fn test_running_measurement() {
-    pyo3::prepare_freethreaded_python();
+    Python::initialize();
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("readout".to_string(), 3, true);
     circuit += operations::RotateX::new(0, 0.0.into());
@@ -142,21 +142,21 @@ fn test_running_measurement() {
     let crm_wrapper = ClassicalRegisterWrapper {
         internal: cr_measurement,
     };
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_measurement", (chm_wrapper,))
             .unwrap();
         let err = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_measurement", (crm_wrapper,));
         assert!(err.is_err());
         let err = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_measurement", (backend_type,));
         assert!(err.is_err());
@@ -165,7 +165,7 @@ fn test_running_measurement() {
 
 #[test]
 fn test_running_measurement_registers() {
-    pyo3::prepare_freethreaded_python();
+    Python::initialize();
     let mut circuit = Circuit::new();
     circuit += operations::DefinitionBit::new("readout".to_string(), 3, true);
     circuit += operations::RotateX::new(0, 0.0.into());
@@ -203,27 +203,27 @@ fn test_running_measurement_registers() {
     let chm_wrapper = CheatedWrapper {
         internal: ch_measurement,
     };
-    Python::with_gil(|py| {
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let small_backend = backend_type.call1((1,)).unwrap();
         let backend = backend_type.call1((6,)).unwrap();
         let _ = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_measurement_registers", (crm_wrapper,))
             .unwrap();
         let _ = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_measurement_registers", (chm_wrapper.clone(),))
             .unwrap();
         let err = small_backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_measurement_registers", (chm_wrapper,));
         assert!(err.is_err());
         let err = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_measurement_registers", (backend_type,));
         assert!(err.is_err());
@@ -233,12 +233,12 @@ fn test_running_measurement_registers() {
 /// Test new and run functions of QuantumProgram with all PauliZProduct measurement input
 #[test]
 fn test_new_run_br() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let input_type = py.get_type::<PauliZProductInputWrapper>();
         let input_instance = input_type.call1((3, false)).unwrap();
         let _ = input_instance
-            .downcast::<PauliZProductInputWrapper>()
+            .cast::<PauliZProductInputWrapper>()
             .unwrap()
             .call_method1("add_pauliz_product", ("ro", vec![0]))
             .unwrap();
@@ -256,12 +256,12 @@ fn test_new_run_br() {
         let program_type = py.get_type::<QuantumProgramWrapper>();
         let binding = program_type
             .call1((
-                input.downcast::<PauliZProductWrapper>().unwrap(),
+                input.cast::<PauliZProductWrapper>().unwrap(),
                 vec!["test".to_string()],
             ))
             .unwrap();
 
-        let program = binding.downcast::<QuantumProgramWrapper>().unwrap();
+        let program = binding.cast::<QuantumProgramWrapper>().unwrap();
         let _program_wrapper = program.extract::<QuantumProgramWrapper>().unwrap();
 
         let mut bri = PauliZProductInput::new(3, false);
@@ -276,14 +276,14 @@ fn test_new_run_br() {
         let backend = backend_type.call1((3,)).unwrap();
 
         let _result: HashMap<String, f64> = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_program", (program, vec![0.0]))
             .unwrap()
             .extract()
             .unwrap();
         let err = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_program", (backend_type, vec![0, 0]));
         assert!(err.is_err());
@@ -292,8 +292,8 @@ fn test_new_run_br() {
 
 #[test]
 fn test_copy_deepcopy() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _copy_backend = backend.call_method0("__copy__").unwrap();
@@ -303,8 +303,8 @@ fn test_copy_deepcopy() {
 
 #[test]
 fn test_bincode() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let bytes = backend.call_method0("to_bincode").unwrap();
@@ -321,7 +321,7 @@ fn test_bincode() {
 
         let deserialised_error = backend.call_method1(
             "from_bincode",
-            (bincode::serde::encode_to_vec(&vec![0], config).unwrap(),),
+            (bincode::serde::encode_to_vec(vec![0], config).unwrap(),),
         );
         assert!(deserialised_error.is_err());
 
@@ -332,8 +332,8 @@ fn test_bincode() {
 
 #[test]
 fn test_json() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let json = backend.call_method0("to_json").unwrap();
@@ -355,8 +355,8 @@ fn test_json() {
 
 #[test]
 fn test_convert_from_pyany() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((3,)).unwrap();
         let _ = convert_into_backend(backend.as_ref()).unwrap();
@@ -378,13 +378,13 @@ fn test_imperfect_model() {
     noise_model = noise_model.set_error_probabilites(0, 0.0, 1.0).unwrap();
     noise_model = noise_model.set_error_probabilites(1, 0.0, 1.0).unwrap();
 
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
+    Python::initialize();
+    Python::attach(|py| {
         let backend_type = py.get_type::<BackendWrapper>();
         let backend = backend_type.call1((2,)).unwrap();
 
         let res = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_circuit", (circuit_wrapper.clone(),))
             .unwrap();
@@ -394,13 +394,13 @@ fn test_imperfect_model() {
         );
 
         backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("set_imperfect_readout_model", (noise_model.clone(),))
             .unwrap();
 
         let res = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_circuit", (circuit_wrapper.clone(),))
             .unwrap();
@@ -411,7 +411,7 @@ fn test_imperfect_model() {
 
         assert_eq!(
             backend
-                .downcast::<BackendWrapper>()
+                .cast::<BackendWrapper>()
                 .unwrap()
                 .call_method0("get_imperfect_readout_model")
                 .unwrap()
@@ -421,7 +421,7 @@ fn test_imperfect_model() {
         );
 
         backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1(
                 "set_imperfect_readout_model",
@@ -430,7 +430,7 @@ fn test_imperfect_model() {
             .unwrap();
 
         let res = backend
-            .downcast::<BackendWrapper>()
+            .cast::<BackendWrapper>()
             .unwrap()
             .call_method1("run_circuit", (circuit_wrapper,))
             .unwrap();

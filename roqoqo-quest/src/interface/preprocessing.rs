@@ -37,21 +37,15 @@ pub fn get_number_used_qubits_and_registers(
             used_qubits.extend(&n)
         }
         match op {
-            Operation::DefinitionBit(def) => {
-                if *def.is_output() {
-                    bit_registers.insert(def.name().clone(), *def.length());
-                }
+            Operation::DefinitionBit(def) if *def.is_output() => {
+                bit_registers.insert(def.name().clone(), *def.length());
             }
-            Operation::DefinitionFloat(def) => {
-                if *def.is_output() {
-                    float_registers.insert(def.name().clone(), *def.length());
-                }
+            Operation::DefinitionFloat(def) if *def.is_output() => {
+                float_registers.insert(def.name().clone(), *def.length());
             }
-            Operation::DefinitionComplex(def) => {
-                if *def.is_output() {
-                    // Size of register = 4^(qubits_used)
-                    complex_registers.insert(def.name().clone(), *def.length());
-                }
+            Operation::DefinitionComplex(def) if *def.is_output() => {
+                // Size of register = 4^(qubits_used)
+                complex_registers.insert(def.name().clone(), *def.length());
             }
             Operation::PragmaGetDensityMatrix(get_op) => {
                 if let Some(length) = complex_registers.get(get_op.readout()) {

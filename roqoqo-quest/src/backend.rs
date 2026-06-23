@@ -293,20 +293,14 @@ impl Backend {
 
         for op in circuit_vec.iter() {
             match op {
-                Operation::DefinitionBit(def) => {
-                    if *def.is_output() {
-                        bit_registers_output.insert(def.name().clone(), Vec::new());
-                    }
+                Operation::DefinitionBit(def) if *def.is_output() => {
+                    bit_registers_output.insert(def.name().clone(), Vec::new());
                 }
-                Operation::DefinitionFloat(def) => {
-                    if *def.is_output() {
-                        float_registers_output.insert(def.name().clone(), Vec::new());
-                    }
+                Operation::DefinitionFloat(def) if *def.is_output() => {
+                    float_registers_output.insert(def.name().clone(), Vec::new());
                 }
-                Operation::DefinitionComplex(def) => {
-                    if *def.is_output() {
-                        complex_registers_output.insert(def.name().clone(), Vec::new());
-                    }
+                Operation::DefinitionComplex(def) if *def.is_output() => {
+                    complex_registers_output.insert(def.name().clone(), Vec::new());
                 }
                 _ => (),
             }
