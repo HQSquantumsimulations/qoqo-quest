@@ -21,20 +21,20 @@ doctest = false
 
 [dependencies]
 quest-sys = { version = "~0.18", path = "../quest-sys", default-features = false }
-roqoqo = { version = "~1.21", features = ["serialize"] }
-qoqo_calculator = { version = "~1.7" }
+roqoqo = { version = "~1.22", features = ["serialize"] }
+qoqo_calculator = { version = "~1.9" }
 num-complex = { version = "0.4" }
 serde = { version = "1.0", features = ["derive"] }
-rand = "0.9"
-ndarray = "0.16"
+rand = "0.10"
+ndarray = "0.17"
 async-trait = { version = "0.1", optional = true }
 futures = { version = "0.3", optional = true }
 rayon = { version = "1.5", optional = true }
-sha2 = "0.10"
+sha2 = "0.11"
 
 [dev-dependencies]
 test-case = "3.0"
-criterion = { version = "0.7" }
+criterion = { version = "0.8" }
 rusty-fork = "0.3.0"
 
 [features]
