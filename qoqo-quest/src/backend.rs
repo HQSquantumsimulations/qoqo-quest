@@ -28,7 +28,7 @@ use std::collections::HashMap;
 ///
 /// If different instances of the backend are running in parallel, the results won't be deterministic,
 /// even with a random_seed set.
-#[pyclass(name = "Backend", module = "qoqo_quest")]
+#[pyclass(from_py_object, name = "Backend", module = "qoqo_quest")]
 #[derive(Clone, Debug, PartialEq)]
 pub struct BackendWrapper {
     /// Internal storage of [roqoqo_quest::Backend]
@@ -439,19 +439,15 @@ pub fn convert_into_backend(
 fn warn_pragma_getstatevec_getdensitymat(circuit: Circuit) {
     for op in circuit.iter() {
         match op {
-            Operation::PragmaGetStateVector(op) => {
-                if !op.circuit().is_none() {
-                    Python::attach(|py| {
-                        py.run(c_str!("import warnings; warnings.warn(\"Circuit parameter of PragmaGetStateVector is not used in qoqo-quest.\", stacklevel=2)"), None, None).unwrap();
-                    });
-                }
+            Operation::PragmaGetStateVector(op) if !op.circuit().is_none() => {
+                Python::attach(|py| {
+                    py.run(c_str!("import warnings; warnings.warn(\"Circuit parameter of PragmaGetStateVector is not used in qoqo-quest.\", stacklevel=2)"), None, None).unwrap();
+                });
             }
-            Operation::PragmaGetDensityMatrix(op) => {
-                if !op.circuit().is_none() {
-                    Python::attach(|py| {
-                        py.run(c_str!("import warnings; warnings.warn(\"Circuit parameter of PragmaGetDensityMatrix is not used in qoqo-quest.\", stacklevel=2)"), None, None).unwrap();
-                    });
-                }
+            Operation::PragmaGetDensityMatrix(op) if !op.circuit().is_none() => {
+                Python::attach(|py| {
+                    py.run(c_str!("import warnings; warnings.warn(\"Circuit parameter of PragmaGetDensityMatrix is not used in qoqo-quest.\", stacklevel=2)"), None, None).unwrap();
+                });
             }
             _ => {}
         }
