@@ -1018,9 +1018,9 @@ dependencies = [
 
 [[package]]
 name = "qoqo-macros"
-version = "1.22.0"
+version = "1.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dbb0e6552bbe54c7db3e5c8343760ed6fb1085f8f89e87c6b23868dd68b8ef52"
+checksum = "cacaea8447fdf3552b05829e856a3e203c79b6d36e9a3c88e567996f4222bd2f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1030,7 +1030,7 @@ dependencies = [
 
 [[package]]
 name = "qoqo-quest"
-version = "0.18.1"
+version = "0.19.0"
 dependencies = [
  "bincode",
  "pyo3",
@@ -1068,7 +1068,7 @@ dependencies = [
 
 [[package]]
 name = "quest-sys"
-version = "0.18.1"
+version = "0.19.0"
 dependencies = [
  "bindgen",
  "cc",
@@ -1200,9 +1200,9 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 
 [[package]]
 name = "roqoqo"
-version = "1.22.0"
+version = "1.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6fc605c9b823dd8dd43b9c32df15893244ae02d3bd4f62eb41dbacaf791ec4ab"
+checksum = "de4e958161f84906c74df03693355c78eb66f26ac00e401bdb76e31f0e842148"
 dependencies = [
  "async-trait",
  "bincode",
@@ -1226,9 +1226,9 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-derive"
-version = "1.22.0"
+version = "1.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2cb87e5e94a5a54cad2bc391298521618474caeded2ce62c0e1e34b0dfb22962"
+checksum = "2dc89bc2b4232001684b62552a239479c18ee1930e3bb83282a886322c56f318"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1237,7 +1237,7 @@ dependencies = [
 
 [[package]]
 name = "roqoqo-quest"
-version = "0.18.1"
+version = "0.19.0"
 dependencies = [
  "async-trait",
  "criterion",
